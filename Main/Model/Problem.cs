@@ -21,6 +21,11 @@ namespace Main.Model
             get {return VehicleFleet.Vehicles.Select(v => v.Route).ToList(); }
         }
 
+        public double CurrentProfit
+        {
+            get { return VehicleFleet.Vehicles.Select(v => v.Route).ToList().Sum(r => r.GetProfit()); }
+        }
+
         public bool IsSolution
         {
             get { return VehicleFleet.Vehicles.All(v => v.MaxDistance >= v.Route.GetDistance(Map)); }

@@ -47,6 +47,8 @@
     <Compile Include="Brkga\IPopulation.cs" />
     <Compile Include="Brkga\IProblemManager.cs" />
     <Compile Include="Factory\ProblemFactory.cs" />
+    <Compile Include="FileIO\FileManager.cs" />
+    <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\Destination.cs" />
     <Compile Include="Model\Map.cs" />
     <Compile Include="Model\Problem.cs" />
@@ -58,6 +60,50 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Cases\Chao\Set_64_234\p6.2.a.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.b.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.c.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.d.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.e.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.f.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.g.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.h.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.i.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.j.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.k.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.l.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.m.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.2.n.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.a.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.b.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.c.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.d.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.e.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.f.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.g.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.h.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.i.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.j.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.k.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.l.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.m.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.3.n.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.a.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.b.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.c.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.d.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.e.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.f.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.g.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.h.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.i.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.j.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.k.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.l.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.m.txt" />
+    <Content Include="Cases\Chao\Set_64_234\p6.4.n.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
