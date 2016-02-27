@@ -22,13 +22,17 @@ namespace Main.Model
 
         public double GetDistance(int idFrom, int idTo)
         {
-            var from = Destinations.FirstOrDefault(d => d.Id == idFrom);
-            var to = Destinations.FirstOrDefault(d => d.Id == idTo);
-
-            if(from == null || to == null)
-                throw new Exception(string.Format("Uno de los dos Ids esta fuera de rango. From: {0}. To: {1}. Cantidad de destinations: {2}", idFrom, idTo, Destinations.Count));
-
+            var from = GetDestination(idFrom);
+            var to = GetDestination(idTo);
             return GetDistance(from, to);
+        }
+
+        private Destination GetDestination(int id)
+        {
+            var dest = Destinations.FirstOrDefault(d => d.Id == id);
+            if (dest == null)
+                throw new Exception(string.Format("Destination out of range. Id: {0}. Amount of destinations: {1}", id, Destinations.Count));
+            return dest;
         }
 
         public double GetDistance(Destination destinationFrom, Destination destinationTo)

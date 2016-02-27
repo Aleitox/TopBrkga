@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace Main.Factory
 {
-    public static class ProblemFactory
+    public static class ProblemProviderFactory
     {
-        public static Problem CreateProblem(List<List<string>> input)
+        public static ProblemResourceProvider CreateProblemProvider(List<List<string>> input)
         {
             var amountOfVehicles = Convert.ToInt32(input[1][1]);
             var vehicleMaxDistance = Convert.ToDouble(input[2][1]);
@@ -15,16 +15,16 @@ namespace Main.Factory
             var profits = new List<double>();
             var coordinates = new List<Coordinate>();
 
-            for (var index = 3; index < input.Count - 1; index++)
+            for (var index = 3; index < input.Count; index++)
             {
                 profits.Add(Convert.ToDouble(input[index][2]));
                 coordinates.Add(new Coordinate(Convert.ToDouble(input[index][0]), Convert.ToDouble(input[index][1])));
             }
 
-            return CreateProblem(profits, coordinates, amountOfVehicles, vehicleMaxDistance);
+            return CreateProblemProvider(profits, coordinates, amountOfVehicles, vehicleMaxDistance);
         }
 
-        public static Problem CreateProblem(List<double> profits, List<Coordinate> coordinates, int amountOfVehicles, double vehicleMaxDistance)
+        private static ProblemResourceProvider CreateProblemProvider(List<double> profits, List<Coordinate> coordinates, int amountOfVehicles, double vehicleMaxDistance)
         {
             if (!ValidateArgs(profits, coordinates))
                 throw new Exception("Argumentos invalidos");
@@ -44,7 +44,7 @@ namespace Main.Factory
                 vehicleFleet.Vehicles.Add(vehicle);
             }
 
-            return new Problem(map, vehicleFleet);
+            return new ProblemResourceProvider(map, vehicleFleet);
         }
 
         private static bool ValidateArgs(List<double> profits, List<Coordinate> distances)

@@ -4,6 +4,13 @@ namespace Main.Model
 {
     public class Vehicle
     {
+        public Vehicle(int id, double maxDistance, Destination depot)
+        {
+            Id = id;
+            MaxDistance = maxDistance;
+            Route = new Route(depot);
+        }
+
         public Vehicle(int id, double maxDistance, Route route)
         {
             Id = id;

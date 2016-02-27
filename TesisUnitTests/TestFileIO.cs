@@ -8,12 +8,15 @@ namespace TesisUnitTests
     [TestClass]
     public class TestFileIO
     {
+        // TESTS obsoletos, perdi el archivo de prueba fuente. Tendria que volver a crearlos... y paja man
+
         [TestMethod]
         public void Test_Basic_File_Distances()
         {
             var fileManager = new FileManager(ConfigurationManager.AppSettings["fileNameTestDistances"], ConfigurationManager.AppSettings["filePath"]);
             var caso = fileManager.ReadFile();
-            var problema = ProblemFactory.CreateProblem(caso);
+            var problemaProvider = ProblemProviderFactory.CreateProblemProvider(caso);
+            var problema = problemaProvider.GetFreshProblem();
 
             // Cuadrante Positivo
             Assert.AreEqual(problema.Map.GetDistance(0, 1), problema.Map.Destinations[1].Profit);
@@ -36,7 +39,8 @@ namespace TesisUnitTests
         {
             var fileManager = new FileManager(ConfigurationManager.AppSettings["fileNameTestDistances"], ConfigurationManager.AppSettings["filePath"]);
             var caso = fileManager.ReadFile();
-            var problema = ProblemFactory.CreateProblem(caso);
+            var problemaProvider = ProblemProviderFactory.CreateProblemProvider(caso);
+            var problema = problemaProvider.GetFreshProblem();
 
             Assert.AreEqual(2, problema.VehicleFleet.Vehicles.Count);
 
@@ -55,7 +59,8 @@ namespace TesisUnitTests
         {
             var fileManager = new FileManager(ConfigurationManager.AppSettings["fileNameTestDistances"], ConfigurationManager.AppSettings["filePath"]);
             var caso = fileManager.ReadFile();
-            var problema = ProblemFactory.CreateProblem(caso);
+            var problemaProvider = ProblemProviderFactory.CreateProblemProvider(caso);
+            var problema = problemaProvider.GetFreshProblem();
 
             Assert.AreEqual(7, problema.Map.Destinations.Count);
 

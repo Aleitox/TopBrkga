@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -41,17 +42,21 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Brkga\Brkaga.cs" />
-    <Compile Include="Brkga\IGenerationEvolver.cs" />
-    <Compile Include="Brkga\IInitialKeyGenerator.cs" />
+    <Compile Include="BrkgaTop\EncodedProblem.cs" />
+    <Compile Include="BrkgaTop\IProblemDecoder.cs" />
+    <Compile Include="Brkga\Brkga.cs" />
+    <Compile Include="Brkga\BrkgaFactory.cs" />
+    <Compile Include="Brkga\IPopulationGenerator.cs" />
     <Compile Include="Brkga\IPopulation.cs" />
     <Compile Include="Brkga\IProblemManager.cs" />
-    <Compile Include="Factory\ProblemFactory.cs" />
+    <Compile Include="Factory\ProblemProviderFactory.cs" />
     <Compile Include="FileIO\FileManager.cs" />
     <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\Destination.cs" />
     <Compile Include="Model\Map.cs" />
     <Compile Include="Model\Problem.cs" />
+    <Compile Include="Model\ProblemResourceProvider.cs" />
+    <Compile Include="Model\RandomKeys.cs" />
     <Compile Include="Model\Route.cs" />
     <Compile Include="Model\Vehicle.cs" />
     <Compile Include="Model\VehicleFleet.cs" />
@@ -105,6 +110,7 @@
     <Content Include="Cases\Chao\Set_64_234\p6.4.m.txt" />
     <Content Include="Cases\Chao\Set_64_234\p6.4.n.txt" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

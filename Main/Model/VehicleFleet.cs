@@ -13,6 +13,8 @@ namespace Main.Model
         Route GetRoute(int idVehicle);
 
         double GetProfit();
+
+        Vehicle GetById(int id);
     }
 
     public class VehicleFleet : IVehicleFleet
@@ -23,7 +25,7 @@ namespace Main.Model
         }
 
         public List<Vehicle> Vehicles { get; set; }
-
+        
         public List<Route> GetRoutes()
         {
             return Vehicles.Select(v => v.Route).ToList();
@@ -40,6 +42,14 @@ namespace Main.Model
         public double GetProfit()
         {
             return Vehicles.Sum(v => v.Route.GetProfit());
+        }
+
+        public Vehicle GetById(int id)
+        {
+            var vehicle = Vehicles.FirstOrDefault(v => v.Id == id);
+            if(vehicle == null)
+                throw new Exception(string.Format("Vehicle with id '{0}', not found", id));
+            return vehicle;
         }
     }
 }
