@@ -3,14 +3,19 @@ namespace Main.Model
 {
     public class Coordinate
     {
-        public Coordinate(double x, double y)
+        public Coordinate(decimal x, decimal y)
         {
             X = x;
             Y = y;
         }
 
-        public double X { get; set; }
+        public decimal X { get; set; }
 
-        public double Y { get; set; }
+        public decimal Y { get; set; }
+
+        public override string ToString()
+        {
+            return string.Format("({0},{1})", X, Y);
+        }
     }
 }

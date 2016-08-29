@@ -1,26 +1,29 @@
 ﻿using System.Collections.Generic;
+using System.Security.AccessControl;
 
 namespace Main.Model
 {
     public class Vehicle
     {
-        public Vehicle(int id, double maxDistance, Destination depot)
+        public Vehicle(short number, decimal maxDistance, Destination startingPoint, Destination endingPoint)
         {
-            Id = id;
+            Number = number;
             MaxDistance = maxDistance;
-            Route = new Route(depot);
+            Route = new Route(startingPoint, endingPoint);
         }
 
-        public Vehicle(int id, double maxDistance, Route route)
+        public Vehicle(short number, decimal maxDistance, Route route)
         {
-            Id = id;
+            Number = number;
             MaxDistance = maxDistance;
             Route = route;
         }
 
         public int Id { get; set; }
 
-        public double MaxDistance { get; set; }
+        public short Number { get; set; }
+
+        public decimal MaxDistance { get; set; }
 
         public Route Route { get; set; }
     }

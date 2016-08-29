@@ -6,11 +6,13 @@ namespace Main.Model
 {
     public interface IMap
     {
-        Double GetDistance(int destinationFrom, int destinationTo);
+        decimal GetDistance(int destinationFrom, int destinationTo);
 
-        Double GetDistance(Destination destinationFrom, Destination destinationTo);
+        decimal GetDistance(Destination destinationFrom, Destination destinationTo);
 
         List<Destination> Destinations { get; }
+
+        List<Destination> GetNonProfitDestinations();
     }
 
     public class Map : IMap
@@ -20,7 +22,7 @@ namespace Main.Model
             Destinations = destinations;
         }
 
-        public double GetDistance(int idFrom, int idTo)
+        public decimal GetDistance(int idFrom, int idTo)
         {
             var from = GetDestination(idFrom);
             var to = GetDestination(idTo);
@@ -35,11 +37,20 @@ namespace Main.Model
             return dest;
         }
 
-        public double GetDistance(Destination destinationFrom, Destination destinationTo)
+        public decimal GetDistance(Destination destinationFrom, Destination destinationTo)
         {
-            return Math.Sqrt(Math.Pow(destinationFrom.Coordinate.X - destinationTo.Coordinate.X, 2) + Math.Pow(destinationFrom.Coordinate.Y - destinationTo.Coordinate.Y, 2));
+            var xDiff = destinationFrom.Coordinate.X - destinationTo.Coordinate.X;
+            var yDiff = destinationFrom.Coordinate.Y - destinationTo.Coordinate.Y;
+            return Convert.ToDecimal(Math.Sqrt((double)(xDiff * xDiff + yDiff * yDiff)));
         }
 
         public List<Destination> Destinations { get; private set; }
+
+        private List<Destination> nonProfitDestinations;
+
+        public List<Destination> GetNonProfitDestinations()
+        {
+            return nonProfitDestinations ?? (nonProfitDestinations = Destinations.Where(d => d.Profit == 0).ToList());
+        }
     }
 }

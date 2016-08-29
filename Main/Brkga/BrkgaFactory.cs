@@ -10,7 +10,7 @@ namespace Main.Brkga
 {
     public static class BrkgaFactory
     {
-        public static Brkga Get(Problem problem)
+        public static Brkga Get(Solution solution)
         {
             throw new Exception();
 

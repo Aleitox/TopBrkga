@@ -1,4 +1,8 @@
 ﻿
+using System.Collections.Generic;
+using System.Linq;
+using System.Security.AccessControl;
+
 namespace Main.Model
 {
     public class ProblemResourceProvider
@@ -8,29 +12,52 @@ namespace Main.Model
             Map = map;
             VehicleFleet = vehicleFleet;
         }
-
-
+        
         private IMap Map { get; set; }
 
         private IVehicleFleet VehicleFleet { get; set; }
+
+        public int GetAmountOfNonProfitDestinations()
+        {
+            return Map.GetNonProfitDestinations().Count;
+        }
 
 
         public IVehicleFleet GetFreshVehicleFleet()
         {
             var vehicleFleet = new VehicleFleet();
+            short vehicleNumber = 1;
             foreach (var vehicle in VehicleFleet.Vehicles)
-                vehicleFleet.Vehicles.Add(new Vehicle(vehicle.Id, vehicle.MaxDistance, vehicle.Route.Depot));
+            {
+                vehicleFleet.Vehicles.Add(new Vehicle(vehicleNumber, vehicle.MaxDistance, vehicle.Route.StartingPoint, vehicle.Route.EndingPoint));
+                vehicleNumber++;
+            }
             return vehicleFleet;
         }
 
-        public Problem GetFreshProblem()
+        public List<Destination> GetDestinations()
         {
-            return new Problem(Map, GetFreshVehicleFleet());
+            return Map.Destinations;
+        }
+
+        public Solution GetFreshProblem()
+        {
+            return new Solution(Map, GetFreshVehicleFleet());
         }
 
         public int GetAmountOfDestinations()
         {
             return Map.Destinations.Count;
+        }
+
+        public int GetAmountOfVehicles()
+        {
+            return VehicleFleet.Vehicles.Count;
+        }
+
+        public decimal GetVehiclesMaxDistance()
+        {
+            return VehicleFleet.Vehicles.First().MaxDistance;
         }
     }
 }

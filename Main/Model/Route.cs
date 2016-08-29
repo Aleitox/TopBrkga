@@ -6,24 +6,23 @@ namespace Main.Model
 {
     public class Route
     {
-        public Route(Destination depot)
+        public Route(Destination startingPoint, Destination endingPoint)
         {
             Destinations = new List<Destination>();
-            Depot = depot;
+            StartingPoint = startingPoint;
+            EndingPoint = endingPoint;
         }
 
         public List<Destination> Destinations { get; set; }
 
-        public Destination Depot { get; set; }
+        public Destination StartingPoint { get; set; }
+        public Destination EndingPoint { get; set; }
 
-        public Destination CurrentDestination {
+        public Destination CurrentLastDestination {
             get
             {
-                if (Destinations.Count > 0)
-                    return Destinations.Last();
-
-                return Depot;
-            } 
+                return Destinations.Count > 0 ? Destinations.Last() : StartingPoint;
+            }
         }
 
         public double GetProfit()
@@ -31,20 +30,22 @@ namespace Main.Model
             return Destinations.Sum(d => d.Profit);
         }
 
-        public double GetDistance(IMap map)
+        public decimal GetDistance(IMap map)
         {
-            if (!Destinations.Any()) return 0;
+            if (!Destinations.Any())
+                return map.GetDistance(StartingPoint, EndingPoint);
+
             var distance = GetDistanceWithoutFinalReturn(map);
-            distance += map.GetDistance(Destinations.Last(), Depot);
+            distance += map.GetDistance(Destinations.Last(), EndingPoint);
             return distance;
         }
 
-        public double GetDistanceWithoutFinalReturn(IMap map)
+        public decimal GetDistanceWithoutFinalReturn(IMap map)
         {
             if (Destinations.Count == 0)
                 return 0;
 
-            var distance = map.GetDistance(Depot, Destinations.First());
+            var distance = map.GetDistance(StartingPoint, Destinations.First());
 
             for (var index = 0; index < Destinations.Count - 1; index++)
                 distance += map.GetDistance(Destinations[index], Destinations[index + 1]);
@@ -55,6 +56,28 @@ namespace Main.Model
         public void AddDestination(Destination destination)
         {
             Destinations.Add(destination);
+        }
+
+        
+        public override string ToString()
+        {
+            var routeString = string.Empty;
+
+            for (var index = 0; index < Destinations.Count; index++)
+            {
+                routeString += Destinations[index].Coordinate.ToString();
+                if (index < Destinations.Count - 1)
+                    routeString += " -> ";
+            }
+            return routeString;
+        }
+
+        public bool IsEquivalentTo(Route anotherRoute)
+        {
+            if (Destinations.Count != anotherRoute.Destinations.Count)
+                return false;
+
+            return !Destinations.Where((t, index) => t.Id != anotherRoute.Destinations[index].Id).Any();
         }
     }
 }

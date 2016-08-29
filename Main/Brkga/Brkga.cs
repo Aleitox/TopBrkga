@@ -1,28 +1,35 @@
-﻿namespace Main.Brkga
+﻿using Main.BrkgaTop;
+using Main.Entities;
+using Main.Repositories;
+
+namespace Main.Brkga
 {
     // BIASED RANDOM-KEY GENETIC ALGORITHMS
     public class Brkga
     {
-        public Brkga(IPopulationGenerator populationGenerator, IProblemManager problemManager)
+        public Brkga(IProblemManager problemManager)
         {
-            PopulationGenerator = populationGenerator;
             ProblemManager = problemManager;
+            SolutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
         }
-
-        public IPopulationGenerator PopulationGenerator { get; set; }
-
+        
         public IProblemManager ProblemManager { get; set; }
+
+        public SolutionRepository SolutionRepository { get; set; }
+
+        public EncodedSolution EncodedSolution { get; set; }
 
         public void Start()
         {
-            ProblemManager.Population = PopulationGenerator.Generate();
-            ProblemManager.IterationNumber = 0;
+            ProblemManager.InitializePopulation();
 
             while (!ProblemManager.StoppingRuleFulfilled)
-            {
-                PopulationGenerator.Evolve(ProblemManager.Population);
-                ProblemManager.IterationNumber++;
-            }
+                ProblemManager.EvolvePopulation();
+
+            ProblemManager.Population.MarkSolutionsAsFinals();
+
+            EncodedSolution = ProblemManager.Population.GetMostProfitableSolution();
+            SolutionRepository.SaveSolution(EncodedSolution.GetSolution);
         }
     }
 }

@@ -15,6 +15,8 @@ namespace Main.Model
         double GetProfit();
 
         Vehicle GetById(int id);
+
+        Vehicle GetByNumber(int number);
     }
 
     public class VehicleFleet : IVehicleFleet
@@ -49,6 +51,14 @@ namespace Main.Model
             var vehicle = Vehicles.FirstOrDefault(v => v.Id == id);
             if(vehicle == null)
                 throw new Exception(string.Format("Vehicle with id '{0}', not found", id));
+            return vehicle;
+        }
+
+        public Vehicle GetByNumber(int number)
+        {
+            var vehicle = Vehicles.FirstOrDefault(v => v.Number == number);
+            if (vehicle == null)
+                throw new Exception(string.Format("Vehicle with Number '{0}', not found", number));
             return vehicle;
         }
     }

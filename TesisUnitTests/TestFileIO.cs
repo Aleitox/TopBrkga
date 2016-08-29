@@ -47,8 +47,8 @@ namespace TesisUnitTests
             foreach (var vehicle in problema.VehicleFleet.Vehicles)
             {
                 Assert.AreEqual(7.5, vehicle.MaxDistance);
-                Assert.AreEqual(0, vehicle.Route.Depot.Coordinate.X);
-                Assert.AreEqual(0, vehicle.Route.Depot.Coordinate.Y);
+                Assert.AreEqual(0, vehicle.Route.StartingPoint.Coordinate.X);
+                Assert.AreEqual(0, vehicle.Route.StartingPoint.Coordinate.Y);
                 Assert.AreEqual(0, vehicle.Route.GetProfit());
                 Assert.AreEqual(0, vehicle.Route.Destinations.Count);
             }

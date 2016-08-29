@@ -17,11 +17,14 @@ namespace Main
         {
             var fileManager = new FileManager(ConfigurationManager.AppSettings["fileNameTestDistances"], ConfigurationManager.AppSettings["filePath"]);
             var caso = fileManager.ReadFile();
+
             var problemProvider = ProblemProviderFactory.CreateProblemProvider(caso);
             var problemDecoder = new ProblemDecoder(problemProvider);
-            var populationGenerator = new PopulationGenerator(problemDecoder);
-            var problemManager = new ProblemManager();
-            var brkga = new Brkga.Brkga(populationGenerator, problemManager);
+            var populationGenerator = new PopulationGenerator(problemDecoder, problemProvider.GetAmountOfNonProfitDestinations());
+            var problemManager = new ProblemManager(populationGenerator, true);
+            var brkga = new Brkga.Brkga(problemManager);
+
+            brkga.Start();
         }
     }
 }

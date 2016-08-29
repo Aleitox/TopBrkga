@@ -7,7 +7,7 @@ namespace Main.BrkgaTop
 {
     public interface IProblemDecoder
     {
-        Problem Decode(List<RandomKey> randomKeys);
+        Solution Decode(EncodedSolution encodedSolution);
 
         ProblemResourceProvider Provider { get; set; }
     }
@@ -20,18 +20,18 @@ namespace Main.BrkgaTop
         }
 
 
-        public Problem Decode(List<RandomKey> randomKeys)
+        public Solution Decode(EncodedSolution encodedSolution)
         {
-            var orderedRandomKeys = randomKeys.OrderBy(rk => rk.Key).ToList();
+            var orderedRandomKeys = encodedSolution.GetOrderedRandomKeys();
 
             var problem = Provider.GetFreshProblem();
 
             var keyIndex = 0;
             var vehicle = problem.VehicleFleet.Vehicles[0];
-            while (keyIndex < randomKeys.Count)
+            while (keyIndex < orderedRandomKeys.Count)
             {
                 var currentDestination = problem.Map.Destinations[orderedRandomKeys[keyIndex].Position];
-                vehicle = GetNextAvailableVehicleFor(problem, currentDestination, vehicle.Id);
+                vehicle = GetNextAvailableVehicleFor(problem, currentDestination, vehicle.Number);
                 if(vehicle == null)
                     break;
 
@@ -44,19 +44,19 @@ namespace Main.BrkgaTop
 
         public ProblemResourceProvider Provider { get; set; }
 
-        public Vehicle GetNextAvailableVehicleFor(Problem problem, Destination destination, int currentVehicleId)
+        public Vehicle GetNextAvailableVehicleFor(Solution solution, Destination destination, int currentVehicleNumber)
         {
-            while (currentVehicleId < problem.VehicleFleet.Vehicles.Count)
+            while (currentVehicleNumber <= solution.VehicleFleet.Vehicles.Count)
             {
-                var currentVehicle = problem.VehicleFleet.GetById(currentVehicleId);
+                var currentVehicle = solution.VehicleFleet.GetByNumber(currentVehicleNumber);
 
-                var distanceFromCurrentDestinationToNewDestination = problem.Map.GetDistance(currentVehicle.Route.CurrentDestination, destination);
-                var distanceFromNewDestinationToDepot = problem.Map.GetDistance(destination, currentVehicle.Route.Depot);
+                var distanceFromCurrentDestinationToNewDestination = solution.Map.GetDistance(currentVehicle.Route.CurrentLastDestination, destination);
+                var distanceFromNewDestinationToEnding = solution.Map.GetDistance(destination, currentVehicle.Route.EndingPoint);
 
-                if (currentVehicle.Route.GetDistanceWithoutFinalReturn(problem.Map) + distanceFromCurrentDestinationToNewDestination + distanceFromNewDestinationToDepot <= currentVehicle.MaxDistance)
+                if (currentVehicle.Route.GetDistanceWithoutFinalReturn(solution.Map) + distanceFromCurrentDestinationToNewDestination + distanceFromNewDestinationToEnding <= currentVehicle.MaxDistance)
                     return currentVehicle;
 
-                currentVehicleId++;
+                currentVehicleNumber++;
             }
             return null;
         }
