@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography;
+using Main.GuidedLocalSearchHeuristics;
 
 namespace Main.Model
 {
@@ -11,12 +12,35 @@ namespace Main.Model
             Destinations = new List<Destination>();
             StartingPoint = startingPoint;
             EndingPoint = endingPoint;
+            IsCogActivated = false;
         }
 
-        public List<Destination> Destinations { get; set; }
+        protected List<Destination> Destinations { get; set; }
 
         public Destination StartingPoint { get; set; }
+
         public Destination EndingPoint { get; set; }
+
+        public CenterOfGravity CenterOfGravity { get; set; }
+ 
+
+        protected bool IsCogActivated { get; set; }
+
+        public void ActivateCog()
+        {
+            CenterOfGravity = new CenterOfGravity(Destinations);
+            IsCogActivated = true;
+        }
+
+        public int RouteLenght()
+        {
+            return Destinations.Count();
+        }
+
+        public Destination GetDestinationAt(int position)
+        {
+            return Destinations[position];
+        }
 
         public Destination CurrentLastDestination {
             get
@@ -25,7 +49,7 @@ namespace Main.Model
             }
         }
 
-        public double GetProfit()
+        public int GetProfit()
         {
             return Destinations.Sum(d => d.Profit);
         }
@@ -53,11 +77,25 @@ namespace Main.Model
             return distance;
         }
 
+        // WARNING: Usar sin modificar la lista ni sus elementos
+        public List<Destination> GetDestinations
+        {
+            get { return Destinations; }
+        }
+
         public void AddDestination(Destination destination)
         {
+            if(IsCogActivated)
+                CenterOfGravity.AddDestination(destination);
             Destinations.Add(destination);
         }
 
+        public void RemoveDestination(Destination destination)
+        {
+            if (IsCogActivated)
+                CenterOfGravity.RemoveDestination(destination);
+            Destinations.Add(destination);
+        }
         
         public override string ToString()
         {
@@ -78,6 +116,48 @@ namespace Main.Model
                 return false;
 
             return !Destinations.Where((t, index) => t.Id != anotherRoute.Destinations[index].Id).Any();
+        }
+
+        public decimal GetDistanceAdding(IMap map, Destination destination)
+        {
+            if (!Destinations.Any())
+                return map.GetDistance(StartingPoint, destination) + map.GetDistance(destination, EndingPoint);
+
+            var distance = GetDistanceWithoutFinalReturn(map);
+            distance += map.GetDistance(Destinations.Last(), destination);
+            distance += map.GetDistance(destination, EndingPoint);
+            return distance;
+        }
+
+        public List<Tract> GetCurrentTracks()
+        {
+            var tracks = new List<Tract>();
+
+            Tract track;
+            if (!Destinations.Any())
+            {
+                track = new Tract() { From = StartingPoint, To = EndingPoint};
+                tracks.Add(track);
+            }
+            else
+            {
+                track = new Tract() { From = StartingPoint, To = Destinations[0] };
+                tracks.Add(track);
+                for (var index = 0; index < Destinations.Count - 1; index++)
+                {
+                    track = new Tract() { From = Destinations[index], To = Destinations[index + 1] };
+                    tracks.Add(track);
+                }
+                track = new Tract() { From = Destinations[Destinations.Count - 1], To = EndingPoint };
+                tracks.Add(track);
+            }
+            return tracks;
+        }
+
+        // TODO: Test Method (Importante)
+        public void AddDestinationInPosition(Destination unvistedDestination, int bestInsertPosition)
+        {
+            Destinations.Insert(bestInsertPosition + 1, unvistedDestination);
         }
     }
 }

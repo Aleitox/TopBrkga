@@ -23,7 +23,7 @@ namespace Main.Repositories
             DbSet.Add(entity);
         }
 
-        public void Delete(T entity)
+        public virtual void Delete(T entity)
         {
             DbSet.Remove(entity);
         }

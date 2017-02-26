@@ -1,20 +1,26 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using Main.Model;
-using System;
 
-namespace Main.BrkgaTop
+namespace Main.BrkgaTop.Decoders
 {
-    public interface IProblemDecoder
-    {
-        Solution Decode(EncodedSolution encodedSolution);
+    /*
+        Este fue el primer decoder.
+        Logica simple. Toma destinos en orden. Por cada destino, intenta asignarlo al primer auto disponible.
+        Si entra, lo agrega y toma otro destino.
+        Si no entra, toma otro auto.
+        Si no hay autos termina.
+        
+        Pro: Lineal en funcion del suma autos + destinos
+        Contra: Vehiculos sin destino por la aparicion de un destino inalcanzable.
+    */
 
-        ProblemResourceProvider Provider { get; set; }
-    }
-
-    public class ProblemDecoder : IProblemDecoder
+    public class FirstSimpleDecoder : IProblemDecoder
     {
-        public ProblemDecoder(ProblemResourceProvider provider)
+        public FirstSimpleDecoder(ProblemResourceProvider provider)
         {
             Provider = provider;
         }

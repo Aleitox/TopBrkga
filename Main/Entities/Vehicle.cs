@@ -25,10 +25,8 @@ namespace Main.Entities
         public decimal TMax { get; set; }
         public decimal Distance { get; set; }
         public int SumProfit { get; set; }
-        public int SolutionStep { get; set; }
-        public bool IsFinalSolution { get; set; }
     
-        public virtual Solution Solution { get; set; }
         public virtual ICollection<VehiclesDestiny> VehiclesDestinies { get; set; }
+        public virtual Solution Solution { get; set; }
     }
 }

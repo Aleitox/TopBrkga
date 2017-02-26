@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Main.BrkgaTop.Decoders;
 using Main.Model;
 
 namespace Main.Brkga
@@ -10,22 +11,27 @@ namespace Main.Brkga
     {
         IProblemDecoder ProblemDecoder { get; set; }
 
-        Population Generate();
+        Population Generate(int amountToGenerate);
 
         int Generation { get; set; }
 
         Population Evolve(Population population);
+
+        int PopulationSize { get; set; }
     }
 
     public class PopulationGenerator : IPopulationGenerator
     {
-        public PopulationGenerator(IProblemDecoder problemDecoder, int nonProfitDestinations)
+        public PopulationGenerator(IProblemDecoder problemDecoder, int nonProfitDestinations, int populationSize = 100, decimal elitePercentage = 0, decimal mutantPercentage = 0, int eliteGenChance = 50)
         {
             ProblemDecoder = problemDecoder;
             AmountOfDestinations = problemDecoder.Provider.GetAmountOfDestinations();
-            PopulationSize = 8;
+            PopulationSize = populationSize;
             Generation = 0;
             NonProfitDestinations = nonProfitDestinations;
+            ElitePercentage = elitePercentage == 0 ? 3/10 : elitePercentage;
+            MutantPercentage = mutantPercentage == 0 ? 1/10 : mutantPercentage;
+            EliteGenChance = eliteGenChance;
         }
 
         private int NonProfitDestinations;
@@ -38,39 +44,77 @@ namespace Main.Brkga
 
         public int Generation { get; set; }
 
-        public int EliteSize { get { return PopulationSize * 3 / 10; } }
+        private int eliteSize { get; set; }
 
-        public int NonEliteSize { get { return PopulationSize - EliteSize; } }
+        public decimal ElitePercentage { get; set; }
+        public decimal MutantPercentage { get; set; }
 
-        public int EliteGenChance {
-            get { return 50; }
+        public int EliteSize {
+            get
+            {
+                if (eliteSize == 0)
+                    eliteSize = Convert.ToInt32(PopulationSize * ElitePercentage);
+                return eliteSize;
+            } 
         }
 
-        public Population Generate()
+        private int nonEliteSize { get; set; }
+
+        public int NonEliteSize
+        {
+            get
+            {
+                if (nonEliteSize == 0)
+                    nonEliteSize = (PopulationSize + MutatansSize) - EliteSize;
+                return nonEliteSize;
+            }
+        }
+        private int mutatansSize { get; set; }
+
+        public int MutatansSize
+        {
+            get
+            {
+                if (mutatansSize == 0)
+                    mutatansSize = Convert.ToInt32(PopulationSize * MutantPercentage);
+                return mutatansSize;
+            }
+        }
+
+
+        public int EliteGenChance { get; set; }
+
+        public Population Generate(int amountToGenerate)
         {
             var population = new Population();
 
             var randomGenerator = new Random();
-            for (var index = 0; index < PopulationSize; index++)
+            for (var index = 0; index < amountToGenerate; index++)
             {
-                EncodedSolution encodedSolution;
-                do
-                {
-                    var randomVector = GenerateRandomVector(AmountOfDestinations, randomGenerator.Next());
-                    encodedSolution = new EncodedSolution(ProblemDecoder, randomVector);
-                } while (population.EncodedProblems.Any(ep => ep.IsEquivalenteTo(encodedSolution))); 
-
+                var encodedSolution = GenerateEncodedSolution(randomGenerator, population.EncodedProblems);
                 population.EncodedProblems.Add(encodedSolution);
             }
 
             return population;
         }
 
+        public EncodedSolution GenerateEncodedSolution(Random randomGenerator, List<EncodedSolution> encodedSolutions)
+        {
+            EncodedSolution encodedSolution;
+            do
+            {
+                var randomVector = GenerateRandomVector(AmountOfDestinations, randomGenerator.Next());
+                encodedSolution = new EncodedSolution(ProblemDecoder, randomVector);
+            } while (encodedSolutions.Any(ep => ep.IsEquivalenteTo(encodedSolution)));
+
+            return encodedSolution;
+        }
+
         private List<RandomKey> GenerateRandomVector(int amountOfDestinations, int seed)
         {
             var randomVector = new List<RandomKey>();
             var randomGenerator = new Random(seed);
-            for (var index = NonProfitDestinations; index < amountOfDestinations; index++) // index != 0 => El depot siempre va a ser considerado como salida y llegada.
+            for (var index = NonProfitDestinations - 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
             {
                 var nextRandom = randomGenerator.Next(0, 1000);
                 while (randomVector.Any(r => r.Key == nextRandom))
@@ -87,12 +131,14 @@ namespace Main.Brkga
 
             var elitePopulation = population.EncodedProblems.Take(EliteSize).ToList();
             var nonElitePopulation = population.EncodedProblems.Skip(EliteSize).Take(NonEliteSize).ToList();
+            var mutatants = Generate(MutatansSize).EncodedProblems;
 
-            var evolvedPopulation = new Population(elitePopulation);
+            var evolvedPopulation = new Population(elitePopulation, mutatants);
 
             while (evolvedPopulation.CurrentPopulationSize() < PopulationSize)
                 evolvedPopulation.EncodedProblems.Add(Mate(GetRandomItem(elitePopulation), GetRandomItem(nonElitePopulation)));
-            
+
+            evolvedPopulation.GetMostProfitableSolution().GetSolution.BestInGeneration = true;
             Generation++;
 
             return evolvedPopulation;
@@ -104,6 +150,9 @@ namespace Main.Brkga
 
             for (var index = 0; index < eliteParent.RandomKeys.Count; index ++)
                 child.RandomKeys.Insert(index, TakeOne(eliteParent.RandomKeys[index].Key, nonEliteParent.RandomKeys[index].Key, index));
+
+            child.GetSolution.FatherId = eliteParent.GetSolution.Id;
+            child.GetSolution.MotherId = nonEliteParent.GetSolution.Id;
 
             return child;
         }

@@ -18,11 +18,11 @@ namespace TesisUnitTests
         public void LoadAlCases()
         {
             //const string path = @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Tsiligirides\Set_21_234";
-            return;
+            //return;
 
             var partialPaths = new List<string>()
             {
-                // @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Tsiligirides\Set_21_234",
+                @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Tsiligirides\Set_21_234",
                 @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Tsiligirides\Set_32_234",
                 @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Tsiligirides\Set_33_234",
                 @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Chao\Set_64_234",
@@ -30,6 +30,7 @@ namespace TesisUnitTests
                 @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Chao\Set_100_234",
                 @"D:\Desarrollo\VisualStudio\Tesis\TopBrkga\Main\Cases\Chao\Set_102_234"
             };
+
             foreach (var path in partialPaths)
             {
                 var set = path.Substring(path.LastIndexOf("\\", StringComparison.Ordinal) + 1);
@@ -43,11 +44,15 @@ namespace TesisUnitTests
 
                 foreach (var file in directoryInfo.GetFiles("*.txt"))
                 {
+                    //if (file.Name != "p2.2.a.txt")
+                    //    continue;
+
                     var fileManager = new FileManager(file.Name, path);
                     var caso = fileManager.ReadFile();
                     var problemProvider = ProblemProviderFactory.CreateProblemProvider(caso);
-                    if (instanceRepository.GetAll().All(x => x.Name != file.Name))
-                        instanceRepository.SaveInstance(problemProvider, file.Name, author, set);
+                    var name = Path.GetFileNameWithoutExtension(file.Name);
+                    if (instanceRepository.GetAll().All(x => x.Name != name))
+                        instanceRepository.SaveInstance(problemProvider, name, author, set);
                 }
             }
         }

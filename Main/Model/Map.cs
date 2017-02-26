@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Main.Helpers;
 
 namespace Main.Model
 {
@@ -13,6 +14,12 @@ namespace Main.Model
         List<Destination> Destinations { get; }
 
         List<Destination> GetNonProfitDestinations();
+
+        Destination GetStartingDestination();
+
+        Destination GetEndingDestination();
+
+        List<Destination> GetUnvisitedDestinations(List<Route> routes);
     }
 
     public class Map : IMap
@@ -22,6 +29,7 @@ namespace Main.Model
             Destinations = destinations;
         }
 
+        // TODO: Esta forma de calcular distancia se puede mejorar (igual solo se usa desde tests)
         public decimal GetDistance(int idFrom, int idTo)
         {
             var from = GetDestination(idFrom);
@@ -39,18 +47,40 @@ namespace Main.Model
 
         public decimal GetDistance(Destination destinationFrom, Destination destinationTo)
         {
-            var xDiff = destinationFrom.Coordinate.X - destinationTo.Coordinate.X;
-            var yDiff = destinationFrom.Coordinate.Y - destinationTo.Coordinate.Y;
-            return Convert.ToDecimal(Math.Sqrt((double)(xDiff * xDiff + yDiff * yDiff)));
+            return EuclidianCalculator.GetDistanceBetween(destinationFrom.Coordinate.X, destinationFrom.Coordinate.Y, destinationTo.Coordinate.X, destinationTo.Coordinate.Y);
         }
 
         public List<Destination> Destinations { get; private set; }
 
-        private List<Destination> nonProfitDestinations;
+        private List<Destination> NonProfitDestinations { get; set; }
 
         public List<Destination> GetNonProfitDestinations()
         {
-            return nonProfitDestinations ?? (nonProfitDestinations = Destinations.Where(d => d.Profit == 0).ToList());
+            return NonProfitDestinations ?? (NonProfitDestinations = Destinations.Where(d => d.Profit == 0).ToList());
+        }
+
+        private Destination StartingDestination { get; set; }
+
+        public Destination GetStartingDestination()
+        {
+            return StartingDestination ?? (StartingDestination = Destinations.First(d => d.Profit == 0));
+        }
+
+        private Destination EndingDestination { get; set; }
+
+        public Destination GetEndingDestination()
+        {
+            return EndingDestination ?? (EndingDestination = Destinations.Last(d => d.Profit == 0));
+        }
+
+        // TODO: Test Method
+        public List<Destination> GetUnvisitedDestinations(List<Route> routes)
+        {
+            var visitedDestinations = new List<Destination>();
+            foreach (var route in routes)
+                visitedDestinations.AddRange(route.GetDestinations);
+            
+            return Destinations.Where(destination => destination.Profit != 0 && visitedDestinations.All(vd => vd.Id != destination.Id)).ToList();
         }
     }
 }

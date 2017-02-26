@@ -1,7 +1,6 @@
 ﻿
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.AccessControl;
 
 namespace Main.Model
 {
@@ -11,11 +10,24 @@ namespace Main.Model
         {
             Map = map;
             VehicleFleet = vehicleFleet;
+            InstanceId = 0;
         }
-        
+
+        public ProblemResourceProvider(IMap map, IVehicleFleet vehicleFleet, int instanceId, string solutionName)
+        {
+            Map = map;
+            VehicleFleet = vehicleFleet;
+            InstanceId = instanceId;
+            SolutionName = solutionName;
+        }
+
+        private int InstanceId { get; set; }
+
         private IMap Map { get; set; }
 
         private IVehicleFleet VehicleFleet { get; set; }
+
+        private string SolutionName { get; set; }
 
         public int GetAmountOfNonProfitDestinations()
         {
@@ -42,7 +54,7 @@ namespace Main.Model
 
         public Solution GetFreshProblem()
         {
-            return new Solution(Map, GetFreshVehicleFleet());
+            return new Solution(Map, GetFreshVehicleFleet(), InstanceId, SolutionName);
         }
 
         public int GetAmountOfDestinations()

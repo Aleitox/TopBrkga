@@ -14,6 +14,7 @@
           <Property Name="X" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Y" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Profit" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
         <EntityType Name="Instances">
           <Key>
@@ -33,7 +34,15 @@
           </Key>
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="InstanceId" Type="int" Nullable="false" />
-          <Property Name="Name" Type="varchar" MaxLength="400" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="400" />
+          <Property Name="Generation" Type="int" Nullable="false" />
+          <Property Name="FatherId" Type="int" />
+          <Property Name="MotherId" Type="int" />
+          <Property Name="Mutant" Type="bit" Nullable="false" />
+          <Property Name="BestInGeneration" Type="bit" Nullable="false" />
+          <Property Name="BestOfAll" Type="bit" Nullable="false" />
+          <Property Name="LastGeneration" Type="bit" Nullable="false" />
+          <Property Name="TimeElapsedInMilliseconds" Type="bigint" />
         </EntityType>
         <EntityType Name="Vehicles">
           <Key>
@@ -45,8 +54,6 @@
           <Property Name="TMax" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="Distance" Type="decimal" Precision="10" Scale="2" Nullable="false" />
           <Property Name="SumProfit" Type="int" Nullable="false" />
-          <Property Name="SolutionStep" Type="int" Nullable="false" />
-          <Property Name="IsFinalSolution" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="VehiclesDestinies">
           <Key>
@@ -148,45 +155,69 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="TOPModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="TOPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="VehiclesDestinies" EntityType="TOPModel.VehiclesDestiny" />
+          <EntitySet Name="Destinies" EntityType="TOPModel.Destiny" />
+          <AssociationSet Name="FK_DestinyId" Association="TOPModel.FK_DestinyId">
+            <End Role="Destiny" EntitySet="Destinies" />
+            <End Role="VehiclesDestiny" EntitySet="VehiclesDestinies" />
+          </AssociationSet>
+          <EntitySet Name="Instances" EntityType="TOPModel.Instance" />
+          <AssociationSet Name="FK__Destinies__Insta__15502E78" Association="TOPModel.FK__Destinies__Insta__15502E78">
+            <End Role="Instance" EntitySet="Instances" />
+            <End Role="Destiny" EntitySet="Destinies" />
+          </AssociationSet>
+          <EntitySet Name="Vehicles" EntityType="TOPModel.Vehicle" />
+          <AssociationSet Name="FK_VehicleId" Association="TOPModel.FK_VehicleId">
+            <End Role="Vehicle" EntitySet="Vehicles" />
+            <End Role="VehiclesDestiny" EntitySet="VehiclesDestinies" />
+          </AssociationSet>
+          <EntitySet Name="Solutions" EntityType="TOPModel.Solution" />
+          <AssociationSet Name="FK_Instance" Association="TOPModel.FK_Instance">
+            <End Role="Instance" EntitySet="Instances" />
+            <End Role="Solution" EntitySet="Solutions" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Solution" Association="TOPModel.FK_Solution">
+            <End Role="Solution" EntitySet="Solutions" />
+            <End Role="Vehicle" EntitySet="Vehicles" />
+          </AssociationSet>
+          </EntityContainer>
+        <EntityType Name="VehiclesDestiny">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="VehicleId" Type="Int32" Nullable="false" />
+          <Property Name="DestinyId" Type="Int32" Nullable="false" />
+          <Property Name="Order" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Destiny" Relationship="TOPModel.FK_DestinyId" FromRole="VehiclesDestiny" ToRole="Destiny" />
+          <NavigationProperty Name="Vehicle" Relationship="TOPModel.FK_VehicleId" FromRole="VehiclesDestiny" ToRole="Vehicle" />
+        </EntityType>
         <EntityType Name="Destiny">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="InstanceId" Type="Int32" Nullable="false" />
-          <Property Name="X" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
-          <Property Name="Y" Type="Decimal" Precision="10" Scale="2" Nullable="false" />
+          <Property Name="X" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
+          <Property Name="Y" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <Property Name="Profit" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Instance" Relationship="TOPModel.FK__Destinies__Insta__15502E78" FromRole="Destiny" ToRole="Instance" />
+          <Property Name="Description" Type="String" Nullable="false" MaxLength="150" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="VehiclesDestinies" Relationship="TOPModel.FK_DestinyId" FromRole="Destiny" ToRole="VehiclesDestiny" />
+          <NavigationProperty Name="Instance" Relationship="TOPModel.FK__Destinies__Insta__15502E78" FromRole="Destiny" ToRole="Instance" />
         </EntityType>
-        <EntityContainer Name="TOPEntities" annotation:LazyLoadingEnabled="true">
-          <EntitySet Name="Destinies" EntityType="Self.Destiny" />
-          <EntitySet Name="Instances" EntityType="TOPModel.Instance" />
-          <AssociationSet Name="FK__Destinies__Insta__15502E78" Association="TOPModel.FK__Destinies__Insta__15502E78">
-            <End Role="Instance" EntitySet="Instances" />
-            <End Role="Destiny" EntitySet="Destinies" />
-          </AssociationSet>
-          <EntitySet Name="Solutions" EntityType="TOPModel.Solution" />
-          <EntitySet Name="VehiclesDestinies" EntityType="TOPModel.VehiclesDestiny" />
-          <AssociationSet Name="FK_DestinyId" Association="TOPModel.FK_DestinyId">
-            <End Role="Destiny" EntitySet="Destinies" />
-            <End Role="VehiclesDestiny" EntitySet="VehiclesDestinies" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Instance" Association="TOPModel.FK_Instance">
-            <End Role="Instance" EntitySet="Instances" />
-            <End Role="Solution" EntitySet="Solutions" />
-          </AssociationSet>
-          <EntitySet Name="Vehicles" EntityType="TOPModel.Vehicle" />
-          <AssociationSet Name="FK_Solution" Association="TOPModel.FK_Solution">
-            <End Role="Solution" EntitySet="Solutions" />
-            <End Role="Vehicle" EntitySet="Vehicles" />
-          </AssociationSet>
-          <AssociationSet Name="FK_VehicleId" Association="TOPModel.FK_VehicleId">
-            <End Role="Vehicle" EntitySet="Vehicles" />
-            <End Role="VehiclesDestiny" EntitySet="VehiclesDestinies" />
-          </AssociationSet>
-        </EntityContainer>
+        <Association Name="FK_DestinyId">
+          <End Type="TOPModel.Destiny" Role="Destiny" Multiplicity="1" />
+          <End Type="TOPModel.VehiclesDestiny" Role="VehiclesDestiny" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Destiny">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="VehiclesDestiny">
+              <PropertyRef Name="DestinyId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <EntityType Name="Instance">
           <Key>
             <PropertyRef Name="Id" />
@@ -213,51 +244,6 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <EntityType Name="Solution">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="InstanceId" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" Nullable="false" MaxLength="400" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="Instance" Relationship="TOPModel.FK_Instance" FromRole="Solution" ToRole="Instance" />
-          <NavigationProperty Name="Vehicles" Relationship="TOPModel.FK_Solution" FromRole="Solution" ToRole="Vehicle" />
-        </EntityType>
-        <EntityType Name="VehiclesDestiny">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="VehicleId" Type="Int32" Nullable="false" />
-          <Property Name="DestinyId" Type="Int32" Nullable="false" />
-          <Property Name="Order" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Destiny" Relationship="TOPModel.FK_DestinyId" FromRole="VehiclesDestiny" ToRole="Destiny" />
-          <NavigationProperty Name="Vehicle" Relationship="TOPModel.FK_VehicleId" FromRole="VehiclesDestiny" ToRole="Vehicle" />
-        </EntityType>
-        <Association Name="FK_DestinyId">
-          <End Type="TOPModel.Destiny" Role="Destiny" Multiplicity="1" />
-          <End Type="TOPModel.VehiclesDestiny" Role="VehiclesDestiny" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Destiny">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="VehiclesDestiny">
-              <PropertyRef Name="DestinyId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Instance">
-          <End Type="TOPModel.Instance" Role="Instance" Multiplicity="1" />
-          <End Type="TOPModel.Solution" Role="Solution" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Instance">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Solution">
-              <PropertyRef Name="InstanceId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityType Name="Vehicle">
           <Key>
             <PropertyRef Name="Id" />
@@ -268,23 +254,9 @@
           <Property Name="TMax" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <Property Name="Distance" Type="Decimal" Nullable="false" Precision="10" Scale="2" />
           <Property Name="SumProfit" Type="Int32" Nullable="false" />
-          <Property Name="SolutionStep" Type="Int32" Nullable="false" />
-          <Property Name="IsFinalSolution" Type="Boolean" Nullable="false" />
-          <NavigationProperty Name="Solution" Relationship="TOPModel.FK_Solution" FromRole="Vehicle" ToRole="Solution" />
           <NavigationProperty Name="VehiclesDestinies" Relationship="TOPModel.FK_VehicleId" FromRole="Vehicle" ToRole="VehiclesDestiny" />
+          <NavigationProperty Name="Solution" Relationship="TOPModel.FK_Solution" FromRole="Vehicle" ToRole="Solution" />
         </EntityType>
-        <Association Name="FK_Solution">
-          <End Type="TOPModel.Solution" Role="Solution" Multiplicity="1" />
-          <End Type="TOPModel.Vehicle" Role="Vehicle" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Solution">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Vehicle">
-              <PropertyRef Name="SolutionId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_VehicleId">
           <End Type="TOPModel.Vehicle" Role="Vehicle" Multiplicity="1" />
           <End Type="TOPModel.VehiclesDestiny" Role="VehiclesDestiny" Multiplicity="*" />
@@ -297,20 +269,73 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
+        <EntityType Name="Solution">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InstanceId" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="400" FixedLength="false" Unicode="false" />
+          <Property Name="Generation" Type="Int32" Nullable="false" />
+          <Property Name="FatherId" Type="Int32" />
+          <Property Name="MotherId" Type="Int32" />
+          <Property Name="Mutant" Type="Boolean" Nullable="false" />
+          <Property Name="BestInGeneration" Type="Boolean" Nullable="false" />
+          <Property Name="BestOfAll" Type="Boolean" Nullable="false" />
+          <Property Name="LastGeneration" Type="Boolean" Nullable="false" />
+          <Property Name="TimeElapsedInMilliseconds" Type="Int64" />
+          <NavigationProperty Name="Instance" Relationship="TOPModel.FK_Instance" FromRole="Solution" ToRole="Instance" />
+          <NavigationProperty Name="Vehicles" Relationship="TOPModel.FK_Solution" FromRole="Solution" ToRole="Vehicle" />
+        </EntityType>
+        <Association Name="FK_Instance">
+          <End Type="TOPModel.Instance" Role="Instance" Multiplicity="1" />
+          <End Type="TOPModel.Solution" Role="Solution" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Instance">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Solution">
+              <PropertyRef Name="InstanceId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Solution">
+          <End Type="TOPModel.Solution" Role="Solution" Multiplicity="1" />
+          <End Type="TOPModel.Vehicle" Role="Vehicle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Solution">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Vehicle">
+              <PropertyRef Name="SolutionId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
         <EntityContainerMapping StorageEntityContainer="TOPModelStoreContainer" CdmEntityContainer="TOPEntities">
+          <EntitySetMapping Name="VehiclesDestinies">
+            <EntityTypeMapping TypeName="TOPModel.VehiclesDestiny">
+              <MappingFragment StoreEntitySet="VehiclesDestinies">
+                <ScalarProperty Name="Order" ColumnName="Order" />
+                <ScalarProperty Name="DestinyId" ColumnName="DestinyId" />
+                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Destinies">
             <EntityTypeMapping TypeName="TOPModel.Destiny">
               <MappingFragment StoreEntitySet="Destinies">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
-                <ScalarProperty Name="X" ColumnName="X" />
-                <ScalarProperty Name="Y" ColumnName="Y" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
                 <ScalarProperty Name="Profit" ColumnName="Profit" />
+                <ScalarProperty Name="Y" ColumnName="Y" />
+                <ScalarProperty Name="X" ColumnName="X" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -327,35 +352,31 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Solutions">
-            <EntityTypeMapping TypeName="TOPModel.Solution">
-              <MappingFragment StoreEntitySet="Solutions">
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="VehiclesDestinies">
-            <EntityTypeMapping TypeName="TOPModel.VehiclesDestiny">
-              <MappingFragment StoreEntitySet="VehiclesDestinies">
-                <ScalarProperty Name="Order" ColumnName="Order" />
-                <ScalarProperty Name="DestinyId" ColumnName="DestinyId" />
-                <ScalarProperty Name="VehicleId" ColumnName="VehicleId" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="Vehicles">
             <EntityTypeMapping TypeName="TOPModel.Vehicle">
               <MappingFragment StoreEntitySet="Vehicles">
-                <ScalarProperty Name="IsFinalSolution" ColumnName="IsFinalSolution" />
-                <ScalarProperty Name="SolutionStep" ColumnName="SolutionStep" />
                 <ScalarProperty Name="SumProfit" ColumnName="SumProfit" />
                 <ScalarProperty Name="Distance" ColumnName="Distance" />
                 <ScalarProperty Name="TMax" ColumnName="TMax" />
                 <ScalarProperty Name="Number" ColumnName="Number" />
                 <ScalarProperty Name="SolutionId" ColumnName="SolutionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Solutions">
+            <EntityTypeMapping TypeName="TOPModel.Solution">
+              <MappingFragment StoreEntitySet="Solutions">
+                <ScalarProperty Name="TimeElapsedInMilliseconds" ColumnName="TimeElapsedInMilliseconds" />
+                <ScalarProperty Name="LastGeneration" ColumnName="LastGeneration" />
+                <ScalarProperty Name="BestOfAll" ColumnName="BestOfAll" />
+                <ScalarProperty Name="BestInGeneration" ColumnName="BestInGeneration" />
+                <ScalarProperty Name="Mutant" ColumnName="Mutant" />
+                <ScalarProperty Name="MotherId" ColumnName="MotherId" />
+                <ScalarProperty Name="FatherId" ColumnName="FatherId" />
+                <ScalarProperty Name="Generation" ColumnName="Generation" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

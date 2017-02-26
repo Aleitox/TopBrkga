@@ -50,7 +50,7 @@ namespace TesisUnitTests
                 Assert.AreEqual(0, vehicle.Route.StartingPoint.Coordinate.X);
                 Assert.AreEqual(0, vehicle.Route.StartingPoint.Coordinate.Y);
                 Assert.AreEqual(0, vehicle.Route.GetProfit());
-                Assert.AreEqual(0, vehicle.Route.Destinations.Count);
+                Assert.AreEqual(0, vehicle.Route.RouteLenght());
             }
         }
 
@@ -65,13 +65,13 @@ namespace TesisUnitTests
             Assert.AreEqual(7, problema.Map.Destinations.Count);
 
             Assert.IsTrue(problema.IsSolution);
-            Assert.AreEqual(0, problema.CurrentProfit);
-            Assert.AreEqual(2, problema.CurrentSolution.Count);
+            Assert.AreEqual(0, problema.GetCurrentProfit);
+            Assert.AreEqual(2, problema.GetCurrentRoutes.Count);
 
-            foreach (var route in problema.CurrentSolution)
+            foreach (var route in problema.GetCurrentRoutes)
             {
                 Assert.AreEqual(0, route.GetProfit());
-                Assert.AreEqual(0, route.Destinations.Count);
+                Assert.AreEqual(0, route.RouteLenght());
             }
         }
     }

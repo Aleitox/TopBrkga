@@ -22,6 +22,14 @@ namespace Main.Entities
         public int Id { get; set; }
         public int InstanceId { get; set; }
         public string Name { get; set; }
+        public int Generation { get; set; }
+        public Nullable<int> FatherId { get; set; }
+        public Nullable<int> MotherId { get; set; }
+        public bool Mutant { get; set; }
+        public bool BestInGeneration { get; set; }
+        public bool BestOfAll { get; set; }
+        public bool LastGeneration { get; set; }
+        public Nullable<long> TimeElapsedInMilliseconds { get; set; }
     
         public virtual Instance Instance { get; set; }
         public virtual ICollection<Vehicle> Vehicles { get; set; }

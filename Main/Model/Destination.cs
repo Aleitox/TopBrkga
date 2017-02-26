@@ -5,11 +5,12 @@ namespace Main.Model
 {
     public class Destination
     {
-        public Destination(int id, int profit, Coordinate coordinate)
+        public Destination(int id, int profit, Coordinate coordinate, string description)
         {
             Id = id;
             Profit = profit;
             Coordinate = coordinate;
+            Description = description;
         }
 
         public Destination(Destiny destiny)
@@ -24,5 +25,7 @@ namespace Main.Model
         public int Profit { get; set; }
 
         public Coordinate Coordinate { get; set; }
+
+        public string Description { get; set; }
     }
 }

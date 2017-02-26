@@ -26,6 +26,16 @@ namespace Main.Repositories
             return intances.First();
         }
 
+        //public Instance GetById(int id)
+        //{
+        //    var intance = GetAll().FirstOrDefault(i => i.Id == id);
+
+        //    if (intance == null)
+        //        throw new Exception(string.Format("No instance found. Id: {0}", id));
+
+        //    return intance;
+        //}
+
         public void SaveInstance(ProblemResourceProvider source, string fileName, string author = null, string set = null)
         {
             var instance = new Instance

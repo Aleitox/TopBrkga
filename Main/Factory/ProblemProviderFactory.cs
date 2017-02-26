@@ -1,4 +1,5 @@
-﻿using Main.Entities;
+﻿using System.Globalization;
+using Main.Entities;
 using Main.Model;
 using System;
 using System.Collections.Generic;
@@ -12,7 +13,8 @@ namespace Main.Factory
         public static ProblemResourceProvider CreateProblemProvider(List<List<string>> input)
         {
             var amountOfVehicles = Convert.ToInt32(input[1][1]);
-            var vehicleMaxDistance = Convert.ToDecimal(input[2][1]);
+            var culture = new CultureInfo("en-US");
+            var vehicleMaxDistance = Convert.ToDecimal(input[2][1], culture);
 
             var profits = new List<int>();
             var coordinates = new List<Coordinate>();
@@ -20,7 +22,7 @@ namespace Main.Factory
             for (var index = 3; index < input.Count; index++)
             {
                 profits.Add(Convert.ToInt32(input[index][2]));
-                coordinates.Add(new Coordinate(Convert.ToDecimal(input[index][0]), Convert.ToDecimal(input[index][1])));
+                coordinates.Add(new Coordinate(Convert.ToDecimal(input[index][0], culture), Convert.ToDecimal(input[index][1], culture)));
             }
 
             return CreateProblemProvider(profits, coordinates, amountOfVehicles, vehicleMaxDistance);
@@ -33,7 +35,13 @@ namespace Main.Factory
 
             var destinations = new List<Destination>();
             for (var index = 0; index < profits.Count(); index++)
-                destinations.Add(new Destination(index, profits[index], coordinates[index]));
+            {
+                var description = index == 0
+                    ? "StartingPoint"
+                    : index + 1 == profits.Count() ? "EndingPoint" : "Customer";
+
+                destinations.Add(new Destination(index, profits[index], coordinates[index], description));
+            }
 
             var map = new Map(destinations);
             var vehicleFleet = new VehicleFleet();
@@ -48,7 +56,7 @@ namespace Main.Factory
             return new ProblemResourceProvider(map, vehicleFleet);
         }
 
-        public static ProblemResourceProvider CreateProblemProvider(Instance instance)
+        public static ProblemResourceProvider CreateProblemProvider(Instance instance, string solutionName)
         {
             var destinations = instance.Destinies.Select(destiny => new Destination(destiny)).ToList();
             var map = new Map(destinations);
@@ -61,7 +69,7 @@ namespace Main.Factory
                 vehicleFleet.Vehicles.Add(vehicle);
             }
 
-            return new ProblemResourceProvider(map, vehicleFleet);
+            return new ProblemResourceProvider(map, vehicleFleet, instance.Id, solutionName);
         }
 
         private static bool ValidateArgs(List<int> profits, List<Coordinate> distances)

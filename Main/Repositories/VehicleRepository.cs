@@ -14,40 +14,57 @@ namespace Main.Repositories
             VehiclesDestiniesRepository = new VehiclesDestiniesRepository(dataContext);
         }
 
+        public override void Delete(Vehicle entity)
+        {
+            var vehicleDestinies = entity.VehiclesDestinies.ToList();
+            foreach (var t in vehicleDestinies)
+                VehiclesDestiniesRepository.Delete(t);
+
+            base.Delete(entity);
+        }
+
         public void SaveVehicle(Model.Vehicle modelVehicle, Model.Solution modelSolution)
         {
-            var vehicle = GetAll().FirstOrDefault(v => v.SolutionId == modelSolution.Id && v.SolutionStep == modelSolution.Step && v.Number == modelVehicle.Number) ??
-                          new Vehicle()
-                                {
-                                    Distance = modelVehicle.Route.GetDistance(modelSolution.Map),
-                                    SolutionId = modelSolution.Id,
-                                    IsFinalSolution = modelSolution.IsFinal,
-                                    SolutionStep = modelSolution.Step,
-                                    SumProfit = Convert.ToInt32(modelVehicle.Route.GetProfit()),
-                                    TMax = modelVehicle.MaxDistance,
-                                };
-
-            if (vehicle.Id == 0)
-                Insert(vehicle);
-            else
-            {
-                vehicle.Distance = modelVehicle.Route.GetDistance(modelSolution.Map);
-                vehicle.SolutionId = modelSolution.Id;
-                vehicle.IsFinalSolution = modelSolution.IsFinal;
-                vehicle.SolutionStep = modelSolution.Step;
-                vehicle.SumProfit = Convert.ToInt32(modelVehicle.Route.GetProfit());
-                vehicle.TMax = modelVehicle.MaxDistance;
-
-                foreach (var vehicleDestinies in vehicle.VehiclesDestinies)
-                {
-                    VehiclesDestiniesRepository.Delete(vehicleDestinies);
-                }
-            }
+            var vehicle = modelVehicle.Id != 0 ? UpdateVehicle(modelVehicle, modelSolution) : CreateNewVehicle(modelVehicle, modelSolution);
 
             SaveChanges();
 
-            for (var order = 0; order <  modelVehicle.Route.Destinations.Count; order++)
-                VehiclesDestiniesRepository.SaveDestiny(modelVehicle.Route.Destinations[order], modelVehicle, order);
+            if (modelVehicle.Id == 0)
+                modelVehicle.Id = vehicle.Id;
+            else
+            {
+                var vehicleDestinies = vehicle.VehiclesDestinies.ToList();
+                foreach (var t in vehicleDestinies)
+                    VehiclesDestiniesRepository.Delete(t);
+                
+                SaveChanges();
+            }
+            
+            for (var order = 0; order < modelVehicle.Route.RouteLenght() ; order++)
+                VehiclesDestiniesRepository.SaveDestiny(modelVehicle.Route.GetDestinationAt(order), modelVehicle, order);
+        }
+
+        private Vehicle CreateNewVehicle(Model.Vehicle modelVehicle, Model.Solution modelSolution)
+        {
+            var vehicle = new Vehicle();
+            vehicle.SolutionId = modelSolution.Id;
+            vehicle.Number = modelVehicle.Number;
+            vehicle.TMax = modelVehicle.MaxDistance;
+            vehicle.Distance = modelVehicle.Route.GetDistance(modelSolution.Map);
+            vehicle.SumProfit = modelVehicle.Route.GetProfit();
+            Insert(vehicle);
+            return vehicle;
+        }
+
+        private Vehicle UpdateVehicle(Model.Vehicle modelVehicle, Model.Solution modelSolution)
+        {
+            var vehicle = GetById(modelVehicle.Id);
+            vehicle.SolutionId = modelSolution.Id;
+            vehicle.Number = modelVehicle.Number;
+            vehicle.TMax = modelVehicle.MaxDistance;
+            vehicle.Distance = modelVehicle.Route.GetDistance(modelSolution.Map);
+            vehicle.SumProfit = modelVehicle.Route.GetProfit();
+            return vehicle;
         }
     }
 }

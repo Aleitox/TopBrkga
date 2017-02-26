@@ -24,8 +24,9 @@ namespace Main.Entities
         public decimal X { get; set; }
         public decimal Y { get; set; }
         public int Profit { get; set; }
+        public string Description { get; set; }
     
-        public virtual Instance Instance { get; set; }
         public virtual ICollection<VehiclesDestiny> VehiclesDestinies { get; set; }
+        public virtual Instance Instance { get; set; }
     }
 }

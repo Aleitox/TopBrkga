@@ -17,30 +17,45 @@ namespace Main.Model
 
         public bool IsFinal { get; set; }
 
-        public Solution(IMap map, IVehicleFleet vehicleFleet)
+        public Solution(IMap map, IVehicleFleet vehicleFleet, int instanceId, string name)
         {
             Map = map;
             VehicleFleet = vehicleFleet;
+            InstanceId = instanceId;
+            Name = name;
         }
 
         public IMap Map { get; set; }
 
         public IVehicleFleet VehicleFleet { get; set; }
 
-        public List<Route> CurrentSolution 
+        public List<Route> GetCurrentRoutes 
         {
             get {return VehicleFleet.Vehicles.Select(v => v.Route).ToList(); }
         }
 
-        public double CurrentProfit
+        public double GetCurrentProfit
         {
             get { return VehicleFleet.Vehicles.Select(v => v.Route).ToList().Sum(r => r.GetProfit()); }
+        }
+
+        public List<Destination> GetCurrentUnvistedDestination
+        {
+            get { return Map.GetUnvisitedDestinations(GetCurrentRoutes); }
         }
 
         public bool IsSolution
         {
             get { return VehicleFleet.Vehicles.All(v => v.MaxDistance >= v.Route.GetDistance(Map)); }
         }
+
+        public int Generation { get; set; }
+        public int? FatherId { get; set; }
+        public int? MotherId { get; set; }
+        public bool Mutant { get; set; }
+        public bool BestInGeneration { get; set; }
+        public bool BestOfAll { get; set; }
+        public long TimeElapsedInMilliseconds { get; set; }
 
         public override string ToString()
         {
@@ -49,7 +64,7 @@ namespace Main.Model
 
         public string PrintProfit()
         {
-            return string.Format("Profit: {0}{1}", CurrentProfit, Environment.NewLine);
+            return string.Format("Profit: {0}{1}", GetCurrentProfit, Environment.NewLine);
         }
 
         public string PrintVehicleFleetSate()

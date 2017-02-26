@@ -13,16 +13,17 @@ namespace Main.Brkga
             EncodedProblems = new List<EncodedSolution>();
         }
 
-        public Population(List<EncodedSolution> encodedProblems)
+        public Population(List<EncodedSolution> encodedProblems, List<EncodedSolution> mutants)
         {
             EncodedProblems = encodedProblems;
+            EncodedProblems.AddRange(mutants);
         }
 
         public List<EncodedSolution> EncodedProblems { get; set; }
 
         public List<EncodedSolution> GetOrderByMostProfitable()
         {
-            return EncodedProblems.OrderByDescending(ep => ep.GetSolution.CurrentProfit).ToList();
+            return EncodedProblems.OrderByDescending(ep => ep.GetSolution.GetCurrentProfit).ToList();
         }
 
         public EncodedSolution GetMostProfitableSolution()

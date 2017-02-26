@@ -53,10 +53,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BrkgaTop\Decoders\FirstSimpleDecoder.cs" />
+    <Compile Include="BrkgaTop\Decoders\GreedyVehicleDecoder.cs" />
     <Compile Include="BrkgaTop\EncodedSolution.cs" />
-    <Compile Include="BrkgaTop\IProblemDecoder.cs" />
+    <Compile Include="BrkgaTop\Decoders\IProblemDecoder.cs" />
     <Compile Include="Brkga\Brkga.cs" />
-    <Compile Include="Brkga\BrkgaFactory.cs" />
     <Compile Include="Brkga\IPopulationGenerator.cs" />
     <Compile Include="Brkga\IPopulation.cs" />
     <Compile Include="Brkga\IProblemManager.cs" />
@@ -91,9 +92,15 @@
     <Compile Include="Entities\VehiclesDestiny.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Factory\BrkgaFactory.cs" />
     <Compile Include="Factory\ProblemProviderFactory.cs" />
     <Compile Include="FileIO\FileManager.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\CenterOfGravity.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\LocalSearchHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\PreInsertAnalisis.cs" />
+    <Compile Include="Helpers\EuclidianCalculator.cs" />
     <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Model\BrkgaConfiguration.cs" />
     <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\Destination.cs" />
     <Compile Include="Model\Map.cs" />
@@ -101,6 +108,7 @@
     <Compile Include="Model\ProblemResourceProvider.cs" />
     <Compile Include="Model\RandomKeys.cs" />
     <Compile Include="Model\Route.cs" />
+    <Compile Include="Model\Tract.cs" />
     <Compile Include="Model\Vehicle.cs" />
     <Compile Include="Model\VehicleFleet.cs" />
     <Compile Include="Program.cs" />
@@ -114,7 +122,9 @@
     <Compile Include="Repositories\VehiclesDestiniesRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <None Include="App.config">
+      <SubType>Designer</SubType>
+    </None>
     <EntityDeploy Include="Entities\Model.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>Model.Designer.cs</LastGenOutput>

@@ -17,7 +17,8 @@ namespace Main.Repositories
                 Instance = instance,
                 Profit = destination.Profit,
                 X = destination.Coordinate.X,
-                Y = destination.Coordinate.Y
+                Y = destination.Coordinate.Y,
+                Description = destination.Description
             };
             Insert(destiny);
             SaveChanges();

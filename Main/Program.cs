@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Main.Brkga;
 using Main.BrkgaTop;
+using Main.BrkgaTop.Decoders;
 using Main.Factory;
 using Main.FileIO;
 
@@ -19,7 +20,7 @@ namespace Main
             var caso = fileManager.ReadFile();
 
             var problemProvider = ProblemProviderFactory.CreateProblemProvider(caso);
-            var problemDecoder = new ProblemDecoder(problemProvider);
+            var problemDecoder = new GreedyVehicleDecoder(problemProvider);
             var populationGenerator = new PopulationGenerator(problemDecoder, problemProvider.GetAmountOfNonProfitDestinations());
             var problemManager = new ProblemManager(populationGenerator, true);
             var brkga = new Brkga.Brkga(problemManager);
