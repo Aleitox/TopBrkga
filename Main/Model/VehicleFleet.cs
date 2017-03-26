@@ -10,7 +10,7 @@ namespace Main.Model
 
         List<Route> GetRoutes();
 
-        Route GetRoute(int idVehicle);
+        Vehicle GetRoute(int vehicleNumber);
 
         double GetProfit();
 
@@ -33,12 +33,12 @@ namespace Main.Model
             return Vehicles.Select(v => v.Route).ToList();
         }
 
-        public Route GetRoute(int idVehicle)
+        public Vehicle GetRoute(int vehicleNumber)
         {
-            var vehicle = Vehicles.SingleOrDefault(v => v.Id == idVehicle);
+            var vehicle = Vehicles.SingleOrDefault(v => v.Number == vehicleNumber);
             if (vehicle == null)
-                throw new Exception(string.Format("No existe el vehiculo: '{0}'", idVehicle));
-            return vehicle.Route;
+                throw new Exception(string.Format("No existe el vehiculo: '{0}'", vehicleNumber));
+            return vehicle;
         }
 
         public double GetProfit()

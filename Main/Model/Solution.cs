@@ -46,7 +46,7 @@ namespace Main.Model
 
         public bool IsSolution
         {
-            get { return VehicleFleet.Vehicles.All(v => v.MaxDistance >= v.Route.GetDistance(Map)); }
+            get { return VehicleFleet.Vehicles.All(v => v.MaxDistance >= v.Route.GetDistance()); }
         }
 
         public int Generation { get; set; }

@@ -8,14 +8,27 @@ namespace Main.Model
 {
     public class RandomKey
     {
-        public RandomKey(int key, int position)
+        public RandomKey(int key, int positionIndex)
         {
             Key = key;
-            Position = position;
+            PositionIndex = positionIndex;
+            ForceVehicleChangeAfterThis = false;
         }
 
+        public RandomKey(int key, int positionIndex, bool forceVehicleChangeAfterThis)
+        {
+            Key = key;
+            PositionIndex = positionIndex;
+            ForceVehicleChangeAfterThis = forceVehicleChangeAfterThis;
+        }
+
+        /// <summary>
+        /// Random Value use to order the Destinations
+        /// </summary>
         public int Key { get; set; }
 
-        public int Position { get; set; }
+        public int PositionIndex { get; set; }
+
+        public bool ForceVehicleChangeAfterThis { get; set; }
     }
 }

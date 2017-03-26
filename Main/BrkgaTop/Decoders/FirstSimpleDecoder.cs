@@ -34,14 +34,21 @@ namespace Main.BrkgaTop.Decoders
 
             var keyIndex = 0;
             var vehicle = problem.VehicleFleet.Vehicles[0];
+            var vehicleNumber = vehicle.Number;
             while (keyIndex < orderedRandomKeys.Count)
             {
-                var currentDestination = problem.Map.Destinations[orderedRandomKeys[keyIndex].Position];
-                vehicle = GetNextAvailableVehicleFor(problem, currentDestination, vehicle.Number);
+                var currentDestination = problem.Map.Destinations[orderedRandomKeys[keyIndex].PositionIndex];
+                vehicle = GetNextAvailableVehicleFor(problem, currentDestination, vehicleNumber);
                 if(vehicle == null)
                     break;
 
+                vehicleNumber = vehicle.Number;
+
                 vehicle.Route.AddDestination(currentDestination);
+
+                if (orderedRandomKeys[keyIndex].ForceVehicleChangeAfterThis)
+                    vehicleNumber++;
+
                 keyIndex++;
             }
 
@@ -59,7 +66,7 @@ namespace Main.BrkgaTop.Decoders
                 var distanceFromCurrentDestinationToNewDestination = solution.Map.GetDistance(currentVehicle.Route.CurrentLastDestination, destination);
                 var distanceFromNewDestinationToEnding = solution.Map.GetDistance(destination, currentVehicle.Route.EndingPoint);
 
-                if (currentVehicle.Route.GetDistanceWithoutFinalReturn(solution.Map) + distanceFromCurrentDestinationToNewDestination + distanceFromNewDestinationToEnding <= currentVehicle.MaxDistance)
+                if (currentVehicle.Route.GetDistanceWithoutFinalReturn() + distanceFromCurrentDestinationToNewDestination + distanceFromNewDestinationToEnding <= currentVehicle.MaxDistance)
                     return currentVehicle;
 
                 currentVehicleNumber++;

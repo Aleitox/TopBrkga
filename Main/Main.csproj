@@ -57,6 +57,7 @@
     <Compile Include="BrkgaTop\Decoders\GreedyVehicleDecoder.cs" />
     <Compile Include="BrkgaTop\EncodedSolution.cs" />
     <Compile Include="BrkgaTop\Decoders\IProblemDecoder.cs" />
+    <Compile Include="BrkgaTop\Encoders\Encoder.cs" />
     <Compile Include="Brkga\Brkga.cs" />
     <Compile Include="Brkga\IPopulationGenerator.cs" />
     <Compile Include="Brkga\IPopulation.cs" />
@@ -96,8 +97,12 @@
     <Compile Include="Factory\ProblemProviderFactory.cs" />
     <Compile Include="FileIO\FileManager.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\CenterOfGravity.cs" />
-    <Compile Include="GuidedLocalSearchHeuristics\LocalSearchHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\ILocalSearchHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\InsertHeuristic.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\PreInsertAnalisis.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\ReplaceHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\SwapHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\TwoZeroPtSwap.cs" />
     <Compile Include="Helpers\EuclidianCalculator.cs" />
     <Compile Include="Helpers\Logger.cs" />
     <Compile Include="Model\BrkgaConfiguration.cs" />

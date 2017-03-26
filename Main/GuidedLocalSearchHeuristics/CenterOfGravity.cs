@@ -1,11 +1,7 @@
-﻿using System;
+﻿using Main.Helpers;
+using Main.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
-using Main.Helpers;
-using Main.Model;
 
 namespace Main.GuidedLocalSearchHeuristics
 {

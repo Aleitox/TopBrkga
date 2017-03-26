@@ -50,7 +50,7 @@ namespace Main.Repositories
             vehicle.SolutionId = modelSolution.Id;
             vehicle.Number = modelVehicle.Number;
             vehicle.TMax = modelVehicle.MaxDistance;
-            vehicle.Distance = modelVehicle.Route.GetDistance(modelSolution.Map);
+            vehicle.Distance = modelVehicle.Route.GetDistance();
             vehicle.SumProfit = modelVehicle.Route.GetProfit();
             Insert(vehicle);
             return vehicle;
@@ -62,7 +62,7 @@ namespace Main.Repositories
             vehicle.SolutionId = modelSolution.Id;
             vehicle.Number = modelVehicle.Number;
             vehicle.TMax = modelVehicle.MaxDistance;
-            vehicle.Distance = modelVehicle.Route.GetDistance(modelSolution.Map);
+            vehicle.Distance = modelVehicle.Route.GetDistance();
             vehicle.SumProfit = modelVehicle.Route.GetProfit();
             return vehicle;
         }

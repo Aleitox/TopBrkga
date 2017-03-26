@@ -25,10 +25,21 @@ namespace Main.Factory
                 coordinates.Add(new Coordinate(Convert.ToDecimal(input[index][0], culture), Convert.ToDecimal(input[index][1], culture)));
             }
 
-            return CreateProblemProvider(profits, coordinates, amountOfVehicles, vehicleMaxDistance);
+            return CreateProblemProvider(profits, coordinates, GetGenericDescriptions(coordinates.Count), amountOfVehicles, vehicleMaxDistance);
         }
 
-        private static ProblemResourceProvider CreateProblemProvider(List<int> profits, List<Coordinate> coordinates, int amountOfVehicles, decimal vehicleMaxDistance)
+        public static List<string> GetGenericDescriptions(int size)
+        {
+            if(size < 2)
+                throw new Exception("Error 66");
+
+            var descriptions = Enumerable.Repeat("Customers", size).ToList();
+            descriptions[0] = "StartingPoint";
+            descriptions[size - 1] = "EndingPoint";
+            return descriptions;
+        } 
+
+        public static ProblemResourceProvider CreateProblemProvider(List<int> profits, List<Coordinate> coordinates, List<string> descriptions, int amountOfVehicles, decimal vehicleMaxDistance)
         {
             if (!ValidateArgs(profits, coordinates))
                 throw new Exception("Argumentos invalidos");
@@ -36,11 +47,7 @@ namespace Main.Factory
             var destinations = new List<Destination>();
             for (var index = 0; index < profits.Count(); index++)
             {
-                var description = index == 0
-                    ? "StartingPoint"
-                    : index + 1 == profits.Count() ? "EndingPoint" : "Customer";
-
-                destinations.Add(new Destination(index, profits[index], coordinates[index], description));
+                destinations.Add(new Destination(index, profits[index], coordinates[index], descriptions[index], index));
             }
 
             var map = new Map(destinations);
@@ -58,7 +65,14 @@ namespace Main.Factory
 
         public static ProblemResourceProvider CreateProblemProvider(Instance instance, string solutionName)
         {
-            var destinations = instance.Destinies.Select(destiny => new Destination(destiny)).ToList();
+            var destinations = new List<Destination>();
+            var dest = instance.Destinies.ToList();
+
+            for (var index = 0; index < dest.Count; index++)
+            {
+                destinations.Add(new Destination(dest[index], index));
+            }
+
             var map = new Map(destinations);
             var vehicleFleet = new VehicleFleet();
 

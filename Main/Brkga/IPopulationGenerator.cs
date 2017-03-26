@@ -103,18 +103,19 @@ namespace Main.Brkga
             EncodedSolution encodedSolution;
             do
             {
-                var randomVector = GenerateRandomVector(AmountOfDestinations, randomGenerator.Next());
+                var randomVector = GenerateRandomVector(AmountOfDestinations, randomGenerator.Next(), NonProfitDestinations);
                 encodedSolution = new EncodedSolution(ProblemDecoder, randomVector);
             } while (encodedSolutions.Any(ep => ep.IsEquivalenteTo(encodedSolution)));
 
             return encodedSolution;
         }
 
-        private List<RandomKey> GenerateRandomVector(int amountOfDestinations, int seed)
+        // TODO Refactor: Sacar a un helper?
+        public static List<RandomKey> GenerateRandomVector(int amountOfDestinations, int seed, int nonProfitDestinations)
         {
             var randomVector = new List<RandomKey>();
             var randomGenerator = new Random(seed);
-            for (var index = NonProfitDestinations - 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
+            for (var index = nonProfitDestinations - 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
             {
                 var nextRandom = randomGenerator.Next(0, 1000);
                 while (randomVector.Any(r => r.Key == nextRandom))

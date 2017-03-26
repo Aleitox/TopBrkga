@@ -16,7 +16,14 @@ namespace Main.BrkgaTop
 
         public IProblemDecoder ProblemDecoder { get; set; }
 
-        public List<RandomKey> RandomKeys { get; set; }
+        public List<RandomKey> RandomKeys { get; protected set; }
+
+        public void SetRandomKeys(List<RandomKey> randomKeys)
+        {
+            OrderedRandomKeys = null;
+            Solution = null;
+            RandomKeys = randomKeys;
+        }
 
         private List<RandomKey> OrderedRandomKeys { get; set; }
 
@@ -33,7 +40,7 @@ namespace Main.BrkgaTop
         private string GetPseudoHash()
         {
             if (string.IsNullOrEmpty(pseudoHash))
-                pseudoHash = string.Join("@", GetOrderedRandomKeys().Select(k => k.Position.ToString(CultureInfo.InvariantCulture)));
+                pseudoHash = string.Join("@", GetOrderedRandomKeys().Select(k => k.PositionIndex.ToString(CultureInfo.InvariantCulture)));
 
             return pseudoHash;
         }
@@ -46,7 +53,12 @@ namespace Main.BrkgaTop
         private Solution Solution { get; set; }
 
         public Solution GetSolution {
-            get { return Solution ?? (Solution = ProblemDecoder.Decode(this)); }
+            //get { return Solution != null ? Solution : (Solution = ProblemDecoder.Decode(this)); }
+            get
+            {
+                Solution = ProblemDecoder.Decode(this);
+                return Solution;
+            }
         }
 
     }

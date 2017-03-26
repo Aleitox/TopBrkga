@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Services;
 using System.Security.Cryptography;
 using Main.GuidedLocalSearchHeuristics;
 
@@ -53,26 +55,26 @@ namespace Main.Model
         {
             return Destinations.Sum(d => d.Profit);
         }
-
-        public decimal GetDistance(IMap map)
+        
+        public decimal GetDistance()
         {
             if (!Destinations.Any())
-                return map.GetDistance(StartingPoint, EndingPoint);
+                return StartingPoint.GetDistanceTo(EndingPoint);
 
-            var distance = GetDistanceWithoutFinalReturn(map);
-            distance += map.GetDistance(Destinations.Last(), EndingPoint);
+            var distance = GetDistanceWithoutFinalReturn();
+            distance += Destinations.Last().GetDistanceTo(EndingPoint);
             return distance;
         }
 
-        public decimal GetDistanceWithoutFinalReturn(IMap map)
+        public decimal GetDistanceWithoutFinalReturn()
         {
             if (Destinations.Count == 0)
                 return 0;
 
-            var distance = map.GetDistance(StartingPoint, Destinations.First());
+            var distance = StartingPoint.GetDistanceTo(Destinations.First());
 
             for (var index = 0; index < Destinations.Count - 1; index++)
-                distance += map.GetDistance(Destinations[index], Destinations[index + 1]);
+                distance += Destinations[index].GetDistanceTo(Destinations[index + 1]);
 
             return distance;
         }
@@ -123,7 +125,7 @@ namespace Main.Model
             if (!Destinations.Any())
                 return map.GetDistance(StartingPoint, destination) + map.GetDistance(destination, EndingPoint);
 
-            var distance = GetDistanceWithoutFinalReturn(map);
+            var distance = GetDistanceWithoutFinalReturn();
             distance += map.GetDistance(Destinations.Last(), destination);
             distance += map.GetDistance(destination, EndingPoint);
             return distance;
@@ -154,10 +156,24 @@ namespace Main.Model
             return tracks;
         }
 
-        // TODO: Test Method (Importante)
-        public void AddDestinationInPosition(Destination unvistedDestination, int bestInsertPosition)
+        // TODO: IMPORTANTE
+        // Funciona bien en SWAP Heuristic pero no se en el resto
+        public void AddDestinationAt(Destination unvistedDestination, int atPosition)
         {
-            Destinations.Insert(bestInsertPosition + 1, unvistedDestination);
+            Destinations.Insert(atPosition, unvistedDestination);
+        }
+
+        public void RemoveDestinationAt(int atPosition)
+        {
+            Destinations.RemoveAt(atPosition);
+        }
+
+        public Tuple<Tract, Tract> GetTracksForDestinationAt(int i)
+        {
+            var firstFrom = i == 0 ? StartingPoint : Destinations[i - 1];
+            var secondTo = i == Destinations.Count - 1 ? EndingPoint : Destinations[i + 1];
+
+            return new Tuple<Tract, Tract>(new Tract(){ From = firstFrom, To = Destinations[i]}, new Tract() {From = Destinations[i], To = secondTo});
         }
     }
 }

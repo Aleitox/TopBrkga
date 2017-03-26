@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Main.BrkgaTop;
+using Main.GuidedLocalSearchHeuristics;
 using Main.Helpers;
 using Main.Model;
 
@@ -26,6 +27,8 @@ namespace Main.Brkga
         int MinHistoricalChanges { get; set; }
 
         List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
+
+        List<ILocalSearchHeuristic> Heuristics { get; set; }
     }
 
     public class ProblemManager : IProblemManager
@@ -37,6 +40,7 @@ namespace Main.Brkga
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinHistoricalChanges = minHistoricalChanges;
+            Heuristics = new List<ILocalSearchHeuristic>();
         }
 
         public bool StoppingRuleFulfilled 
@@ -69,6 +73,8 @@ namespace Main.Brkga
 
         public List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
 
+        public List<ILocalSearchHeuristic> Heuristics { get; set; }
+
         public void InitializePopulation()
         {
             Population = PopulationGenerator.Generate(PopulationGenerator.PopulationSize);
@@ -86,9 +92,23 @@ namespace Main.Brkga
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());
         }
 
+        public void ApplyLocalHeuristics()
+        {
+            var bestSolutions = Population.GetOrderByMostProfitable().Take(1).ToList();
+            for (int index = 0; index < bestSolutions.Count; index++)
+            {
+                var topSolution = bestSolutions[index];
+                foreach (var heuristic in Heuristics)
+                    heuristic.ApplyHeuristic(ref topSolution);
+            }
+        }
+
         public void EvolvePopulation()
         {
             Population = PopulationGenerator.Evolve(Population);
+
+            ApplyLocalHeuristics();
+
             if (LogPopulation)
                 Logger.WriteOnFile(string.Format("Generation: {0}{1}{2}", PopulationGenerator.Generation, Environment.NewLine, Population));
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());

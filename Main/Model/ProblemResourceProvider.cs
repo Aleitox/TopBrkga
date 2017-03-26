@@ -47,6 +47,21 @@ namespace Main.Model
             return vehicleFleet;
         }
 
+        public Destination GetDestinationByDescription(string description)
+        {
+            return Map.Destinations.First(d => d.Description == description);
+        }
+
+        public Destination GetStartDestination()
+        {
+            return Map.GetStartingDestination();
+        }
+
+        public Destination GetEndingDestination()
+        {
+            return Map.GetEndingDestination();
+        }
+
         public List<Destination> GetDestinations()
         {
             return Map.Destinations;

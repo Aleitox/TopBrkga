@@ -1,9 +1,6 @@
-﻿using System;
+﻿using Main.Model;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Main.Model;
 
 namespace Main.BrkgaTop.Decoders
 {
@@ -40,11 +37,15 @@ namespace Main.BrkgaTop.Decoders
             var route = new Route(map.Destinations.First(), map.Destinations.Last());
             foreach (var randomKey in orderedRandomKeys)
             {
-                var destination = map.Destinations[randomKey.Position];
+                //var destination = map.Destinations.First(d => d.Id == randomKey.DestinationId); // TODO Refactor Aca hay un abuso que se rompe con las instancias. Asume que la posicion en la lista es igual a su Id. Traer por ID pero en O(1)
+                var destination = map.Destinations[randomKey.PositionIndex];
                 if (!usedDestinationsIds.Contains(destination.Id) && CanAddDestination(map, route, destination, maxDistance))
                 {
                     route.AddDestination(destination);
                     usedDestinationsIds.Add(destination.Id);
+                    // Es usado para garantizar que la solucion obtenida de una busqueda local se obtenga del decode
+                    if (randomKey.ForceVehicleChangeAfterThis)
+                        break;
                 }
             }
             return route;
