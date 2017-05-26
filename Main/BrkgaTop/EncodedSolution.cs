@@ -12,16 +12,20 @@ namespace Main.BrkgaTop
         {
             ProblemDecoder = problemDecoder;
             RandomKeys = randomKeys;
+            EnhancedByLocalHeuristics = false;
         }
 
         public IProblemDecoder ProblemDecoder { get; set; }
 
         public List<RandomKey> RandomKeys { get; protected set; }
 
+        public bool EnhancedByLocalHeuristics { get; set; }
+
         public void SetRandomKeys(List<RandomKey> randomKeys)
         {
             OrderedRandomKeys = null;
             Solution = null;
+            pseudoHash = null;
             RandomKeys = randomKeys;
         }
 
@@ -29,10 +33,7 @@ namespace Main.BrkgaTop
 
         public List<RandomKey> GetOrderedRandomKeys()
         {
-            if (OrderedRandomKeys == null)
-                OrderedRandomKeys = RandomKeys.OrderBy(rk => rk.Key).ToList();
-
-            return OrderedRandomKeys;
+            return OrderedRandomKeys ?? (OrderedRandomKeys = RandomKeys.OrderBy(rk => rk.Key).ToList());
         }
 
         private string pseudoHash;
@@ -53,13 +54,12 @@ namespace Main.BrkgaTop
         private Solution Solution { get; set; }
 
         public Solution GetSolution {
-            //get { return Solution != null ? Solution : (Solution = ProblemDecoder.Decode(this)); }
-            get
-            {
-                Solution = ProblemDecoder.Decode(this);
-                return Solution;
-            }
+            get { return Solution ?? (Solution = ProblemDecoder.Decode(this)); }
         }
 
+        public override string ToString()
+        {
+            return string.Format("{2} Profit:{0} Distance:{3} Hash:{1}", GetSolution.GetCurrentProfit, GetPseudoHash(), EnhancedByLocalHeuristics, GetSolution.PrintRouteDistances());
+        }
     }
 }

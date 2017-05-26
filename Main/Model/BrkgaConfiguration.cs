@@ -1,8 +1,5 @@
-﻿using System;
+﻿using Main.GuidedLocalSearchHeuristics;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Main.Model
 {
@@ -21,5 +18,9 @@ namespace Main.Model
         public decimal MutantPercentage { get; set; }
 
         public int EliteGenChance { get; set; }
+
+        public List<ILocalSearchHeuristic> Heuristics { get; set; }
+
+        public int ApplyHeuristicsToTop { get; set; }
     }
 }

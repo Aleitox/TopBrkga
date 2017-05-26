@@ -100,10 +100,10 @@ namespace TesisUnitTests.Heuristic
         {
             var heuristic = new SwapHeuristic();
 
-            var combinations = heuristic.GetCombinationsFor(3);
+            var combinations = LocalSearchHeuristicHelper.GetCombinationsFor(3);
             Assert.AreEqual(combinations.Count, 3);
 
-            combinations = heuristic.GetCombinationsFor(5);
+            combinations = LocalSearchHeuristicHelper.GetCombinationsFor(5);
             Assert.AreEqual(combinations.Count, 10);
         }
 

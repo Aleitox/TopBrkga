@@ -9,6 +9,7 @@ using Main.BrkgaTop;
 using Main.BrkgaTop.Decoders;
 using Main.Factory;
 using Main.FileIO;
+using Main.GuidedLocalSearchHeuristics;
 
 namespace Main
 {

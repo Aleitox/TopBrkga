@@ -25,9 +25,9 @@ namespace Main.Model
         /// <summary>
         /// Random Value use to order the Destinations
         /// </summary>
-        public int Key { get; set; }
+        public int Key { get; private set; }
 
-        public int PositionIndex { get; set; }
+        public int PositionIndex { get; private set; }
 
         public bool ForceVehicleChangeAfterThis { get; set; }
     }

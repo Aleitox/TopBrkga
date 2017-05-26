@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Main.Brkga;
+﻿using Main.Brkga;
 using Main.BrkgaTop;
 using Main.BrkgaTop.Decoders;
 using Main.Entities;
 using Main.Factory;
-using Main.Model;
 using Main.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 namespace TesisUnitTests
 {
@@ -58,10 +55,9 @@ namespace TesisUnitTests
             var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
             var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations());
 
-            var randomGenerator = new Random();
             var encodedSolutions = new List<EncodedSolution>();
 
-            var encodedSolution = populationGenerator.GenerateEncodedSolution(randomGenerator, encodedSolutions);
+            var encodedSolution = populationGenerator.GenerateEncodedSolution(encodedSolutions);
             var solution = problemDecoder.Decode(encodedSolution);
             solution.InstanceId = instance.Id;
             AssertSolution(solution);

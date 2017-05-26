@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.Remoting.Services;
 using System.Security.Cryptography;
 using Main.GuidedLocalSearchHeuristics;
+using Main.Helpers;
 
 namespace Main.Model
 {
@@ -85,6 +86,13 @@ namespace Main.Model
             get { return Destinations; }
         }
 
+        public void AddDestinationAt(Destination unvistedDestination, int atPosition)
+        {
+            if (IsCogActivated)
+                CenterOfGravity.AddDestination(unvistedDestination);
+            Destinations.Insert(atPosition, unvistedDestination);
+        }
+
         public void AddDestination(Destination destination)
         {
             if(IsCogActivated)
@@ -96,7 +104,17 @@ namespace Main.Model
         {
             if (IsCogActivated)
                 CenterOfGravity.RemoveDestination(destination);
-            Destinations.Add(destination);
+            Destinations = Destinations.Where(x => x.Id != destination.Id).ToList();
+        }
+
+        public void RemoveDestinationAt(int atPosition)
+        {
+            if (IsCogActivated)
+            {
+                var destination = Destinations[atPosition];
+                CenterOfGravity.RemoveDestination(destination);
+            }
+            Destinations.RemoveAt(atPosition);
         }
         
         public override string ToString()
@@ -155,25 +173,101 @@ namespace Main.Model
             }
             return tracks;
         }
-
-        // TODO: IMPORTANTE
-        // Funciona bien en SWAP Heuristic pero no se en el resto
-        public void AddDestinationAt(Destination unvistedDestination, int atPosition)
-        {
-            Destinations.Insert(atPosition, unvistedDestination);
-        }
-
-        public void RemoveDestinationAt(int atPosition)
-        {
-            Destinations.RemoveAt(atPosition);
-        }
-
+        
         public Tuple<Tract, Tract> GetTracksForDestinationAt(int i)
         {
             var firstFrom = i == 0 ? StartingPoint : Destinations[i - 1];
             var secondTo = i == Destinations.Count - 1 ? EndingPoint : Destinations[i + 1];
 
             return new Tuple<Tract, Tract>(new Tract(){ From = firstFrom, To = Destinations[i]}, new Tract() {From = Destinations[i], To = secondTo});
+        }
+
+        public List<DestinationNeighbors> GetAllDestinationNeighbors()
+        {
+            var res = new List<DestinationNeighbors>();
+            
+            for (var index = 0; index < Destinations.Count; index++)
+            {
+                var from = index == 0 ? StartingPoint : Destinations[index - 1];
+                var to = index == Destinations.Count - 1 ? EndingPoint : Destinations[index + 1];
+                res.Add(new DestinationNeighbors(from, Destinations[index], to));
+            }
+            return res;
+        }
+
+        public bool SwapIfImprovesDistance(int a, int b)
+        {
+            var oldRouteDistance = GetDistance();
+
+            var alreadyAdded = new List<int>();
+            var currentDistance = GetTracksDistanceFor(a, ref alreadyAdded);
+            currentDistance += GetTracksDistanceFor(b, ref alreadyAdded);
+
+            Swap(a, b);
+
+            alreadyAdded = new List<int>();
+            var swapedDistance = GetTracksDistanceFor(a, ref alreadyAdded);
+            swapedDistance += GetTracksDistanceFor(b, ref alreadyAdded);
+
+            if (currentDistance <= swapedDistance)
+                Swap(a, b);
+            else
+            {
+                var newRouteDistance = GetDistance();
+                if (newRouteDistance >= oldRouteDistance)
+                    throw new Exception("What's up doc?");
+            }
+
+
+            return currentDistance > swapedDistance;
+        }
+
+        public decimal GetTracksDistanceFor(int a, ref List<int> alreadyAdded)
+        {
+            decimal distance = 0;
+            if (a == 0)
+            {
+                if (!alreadyAdded.Contains(-1))
+                {
+                    distance += EuclidianCalculator.GetDistanceBetween(StartingPoint, Destinations[a]);
+                    alreadyAdded.Add(-1);
+                }
+            }
+            else
+            {
+                if (!alreadyAdded.Contains(a - 1))
+                {
+                    distance += EuclidianCalculator.GetDistanceBetween(Destinations[a - 1], Destinations[a]);
+                    alreadyAdded.Add(a - 1);
+                }
+            }
+
+            if (a == Destinations.Count - 1)
+            {
+                if (!alreadyAdded.Contains(a))
+                {
+                    distance += EuclidianCalculator.GetDistanceBetween(Destinations[a], EndingPoint);
+                    alreadyAdded.Add(a);
+                }
+            }
+            else
+            {
+                if (!alreadyAdded.Contains(a))
+                {
+                    distance += EuclidianCalculator.GetDistanceBetween(Destinations[a], Destinations[a + 1]);
+                    alreadyAdded.Add(a);
+                }
+            }
+
+            return distance;
+        }
+
+        // TODO TEST
+        public void Swap(int a, int b)
+        {
+            var tmp = Destinations[a];
+            Destinations[a] = Destinations[b];
+            Destinations[b] = tmp;
         }
     }
 }

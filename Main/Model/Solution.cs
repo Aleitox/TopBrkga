@@ -16,7 +16,7 @@ namespace Main.Model
         public int Step { get; set; }
 
         public bool IsFinal { get; set; }
-
+        
         public Solution(IMap map, IVehicleFleet vehicleFleet, int instanceId, string name)
         {
             Map = map;
@@ -59,12 +59,26 @@ namespace Main.Model
 
         public override string ToString()
         {
-            return string.Format("{0}{1}", PrintProfit(), PrintVehicleFleetSate());
+            return string.Format("{0} {1} Routes Distances: {2}", PrintProfit(), PrintRouteDistances(), PrintVehicleFleetSate());
         }
 
         public string PrintProfit()
         {
-            return string.Format("Profit: {0}{1}", GetCurrentProfit, Environment.NewLine);
+            return string.Format("Profit: {0}{1} ", GetCurrentProfit, Environment.NewLine);
+        }
+
+        public string PrintRouteDistances()
+        {
+            var problemString = string.Empty;
+            decimal distanceAcum = 0;
+            
+            foreach (var vehicle in VehicleFleet.Vehicles)
+            {
+                distanceAcum += vehicle.Route.GetDistance();
+            }
+            problemString += String.Format("{0:0.00}", distanceAcum);
+
+            return problemString;
         }
 
         public string PrintVehicleFleetSate()
@@ -72,7 +86,7 @@ namespace Main.Model
             var problemString = string.Empty;
             foreach (var vehicle in VehicleFleet.Vehicles)
             {
-                problemString += string.Format("VehicleId: {0} - {1}{2}", vehicle.Id, vehicle.Route.ToString(), Environment.NewLine);
+                problemString += string.Format("VehicleId: {0} - Distance: {3} - {1}{2}", vehicle.Id, vehicle.Route.ToString(), Environment.NewLine, vehicle.Route.GetDistance());
             }
 
             return problemString;

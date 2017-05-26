@@ -21,6 +21,7 @@ namespace TesisUnitTests
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
 
             var configs = Provider.GetSelectedConfigurationsForTesting();
+
             var intancesIds = Provider.GetSelectedInstancesForTesting();
 
             foreach (var config in configs)
@@ -31,6 +32,23 @@ namespace TesisUnitTests
                     var brkga = BrkgaFactory.Get(instance, config);
                     brkga.Start();
                 }
+            }
+        }
+
+
+        // Corre
+        [TestMethod]
+        public void Test_Basic_Configuration_On_One_Instance_2()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+
+            var configs = Provider.GetHeuristicsConfigurationsForTesting();
+            
+            foreach (var config in configs)
+            {
+                var instance = instanceRepository.GetById(776);
+                var brkga = BrkgaFactory.Get(instance, config);
+                brkga.Start();
             }
         }
     }

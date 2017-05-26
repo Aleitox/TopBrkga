@@ -24,6 +24,7 @@ namespace Main.Model
             PositionIndex = positionIndex;
         }
 
+        // Valor de 1 a TotalDestinations.Count, se asigna automatico incremental
         public int Id { get; set; }
 
         public int Profit { get; set; }
@@ -32,7 +33,10 @@ namespace Main.Model
 
         public string Description { get; set; }
 
-        public int PositionIndex { get; set; }
+        // Position va de 1 a TotalDestinations.Count
+        // Si el id NO viene de la base de datos, seguramente tenga el mismo valor del Id
+        // Se usa para el matching con RandomKey.PositionIndex
+        public int PositionIndex { get; private set; }
 
         public decimal GetDistanceTo(Destination anotherDestination)
         {

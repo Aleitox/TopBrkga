@@ -11,7 +11,7 @@ namespace Main.GuidedLocalSearchHeuristics
         public void ApplyHeuristic(ref EncodedSolution encodedSolution)
         {
             var solution = encodedSolution.GetSolution;
-            var combinations = GetCombinationsFor(solution.VehicleFleet.Vehicles.Count);
+            var combinations = LocalSearchHeuristicHelper.GetCombinationsFor(solution.VehicleFleet.Vehicles.Count);
             foreach (var combination in combinations)
             {
                 // TODO: Test que se modifican en la solucion final
@@ -83,20 +83,6 @@ namespace Main.GuidedLocalSearchHeuristics
             rightVehicle.Route.AddDestinationAt(leftCurrentTracks.Item1.To, j);
 
             return true;
-        }
-
-        public List<Tuple<int, int>> GetCombinationsFor(int count)
-        {
-            var combinations = new List<Tuple<int, int>>();
-
-            for (var i = 1; i <= count; i++)
-            {
-                for (var j = i + 1; j <= count; j++)
-                {
-                    combinations.Add(new Tuple<int, int>(i, j));
-                }
-            }
-            return combinations;
         }
     }
 }

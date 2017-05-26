@@ -99,6 +99,7 @@
     <Compile Include="GuidedLocalSearchHeuristics\CenterOfGravity.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\ILocalSearchHeuristic.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\InsertHeuristic.cs" />
+    <Compile Include="GuidedLocalSearchHeuristics\LocalSearchHeuristicHelper.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\PreInsertAnalisis.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\ReplaceHeuristic.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\SwapHeuristic.cs" />

@@ -12,8 +12,8 @@ namespace Main.BrkgaTop.Encoders
             var keys = encodedSolution.GetOrderedRandomKeys().Select(k => k.Key).ToList();
             var positionIndexes = new List<int>();
             foreach (var route in newRoutes)
-                positionIndexes.AddRange(route.GetDestinations.Select(d => d.PositionIndex));
-            var unvistedPositionIndexes = GetUnvisited(encodedSolution.GetOrderedRandomKeys(), newRoutes); // TODO REVISAR parecen estar todas, no solo los univisted
+                positionIndexes.AddRange(route.GetDestinations.Select(d => d.PositionIndex)); // Position Index, me quedo con sus posiciones. Quiza no necesito tener sus posiciones
+            var unvistedPositionIndexes = GetUnvisitedPositionIndexes(encodedSolution.GetOrderedRandomKeys(), newRoutes); // TODO REVISAR parecen estar todas, no solo los univisted
             positionIndexes.AddRange(unvistedPositionIndexes);
 
             var breaks = new Queue(newRoutes.Select(r => r.GetDestinations.Count).ToList());
@@ -37,7 +37,7 @@ namespace Main.BrkgaTop.Encoders
             return encodedSolution;
         }
 
-        private static List<int> GetUnvisited(List<RandomKey> randomKeys, List<Route> newRoutes)
+        private static List<int> GetUnvisitedPositionIndexes(List<RandomKey> randomKeys, List<Route> newRoutes)
         {
             var unvisited = new List<int>();
 

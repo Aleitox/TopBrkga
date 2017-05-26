@@ -2,6 +2,7 @@
 using Main.Brkga;
 using Main.BrkgaTop.Decoders;
 using Main.Entities;
+using Main.GuidedLocalSearchHeuristics;
 using Main.Model;
 
 namespace Main.Factory
@@ -13,7 +14,7 @@ namespace Main.Factory
             var problemResourceProvider = ProblemProviderFactory.CreateProblemProvider(instance, config.Description);
             var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
             var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations(), config.PopulationSize, config.ElitePercentage, config.MutantPercentage, config.EliteGenChance);
-            var problemManager = new ProblemManager(populationGenerator, true, config.MinIerations, config.MinHistoricalChanges);
+            var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.ApplyHeuristicsToTop, false, config.MinIerations, config.MinHistoricalChanges);
             var brkga = new Brkga.Brkga(problemManager);
             return brkga;
         }
@@ -28,7 +29,9 @@ namespace Main.Factory
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
-                EliteGenChance = 70
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 1
             };
             return config;
         }
@@ -43,7 +46,9 @@ namespace Main.Factory
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.3m,
-                EliteGenChance = 70
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 1
             };
             return config;
         }
@@ -58,7 +63,9 @@ namespace Main.Factory
                 PopulationSize = 100,
                 ElitePercentage = 0.4m,
                 MutantPercentage = 0.2m,
-                EliteGenChance = 50
+                EliteGenChance = 50,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 1
             };
             return config;
         }
@@ -73,7 +80,77 @@ namespace Main.Factory
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
-                EliteGenChance = 70
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 1
+            };
+            return config;
+        }
+
+
+        public static BrkgaConfiguration GetBasicConfigWithEuristics()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                Description = "Basic:MI.200;MHC.50;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.STSIR;TOP.2",
+                MinIerations = 200,
+                MinHistoricalChanges = 50,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new SwapHeuristic(), new InsertHeuristic(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2
+            };
+            return config;
+        }
+
+        public static BrkgaConfiguration GetBasicConfigWithEuristics1()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                Description = "Basic:MI.200;MHC.50;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2",
+                MinIerations = 200,
+                MinHistoricalChanges = 50,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new InsertHeuristic(), new SwapHeuristic(), new InsertHeuristic(), new ReplaceHeuristic(), new TwoZeroPtSwap() },
+                ApplyHeuristicsToTop = 2
+            };
+            return config;
+        }
+        public static BrkgaConfiguration GetBasicConfigWithEuristics2()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                Description = "Basic:MI.200;MHC.50;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ITSIR;TOP.2",
+                MinIerations = 200,
+                MinHistoricalChanges = 50,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new InsertHeuristic(), new TwoZeroPtSwap(), new SwapHeuristic(), new InsertHeuristic(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2
+            };
+            return config;
+        }
+
+        public static BrkgaConfiguration GetBasicConfigWithEuristics3()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                Description = "Basic:MI.200;MHC.50;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.STIR;TOP.2",
+                MinIerations = 200,
+                MinHistoricalChanges = 50,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2
             };
             return config;
         }

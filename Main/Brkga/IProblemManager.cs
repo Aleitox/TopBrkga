@@ -36,27 +36,43 @@ namespace Main.Brkga
         public ProblemManager(IPopulationGenerator populationGenerator, bool logPopulation = false, int minIterations = 100, int minHistoricalChanges = 50)
         {
             PopulationGenerator = populationGenerator;
+            Heuristics = new List<ILocalSearchHeuristic>();
+            ApplyHeuristicsToTop = 0;
             LogPopulation = logPopulation;
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinHistoricalChanges = minHistoricalChanges;
-            Heuristics = new List<ILocalSearchHeuristic>();
+            LastProfits =new Queue<double>();
+        }
+
+        public ProblemManager(IPopulationGenerator populationGenerator, List<ILocalSearchHeuristic> heuristics, int applyHeuristicsToTop, bool logPopulation = false, int minIterations = 100, int minHistoricalChanges = 50)
+        {
+            PopulationGenerator = populationGenerator;
+            Heuristics = heuristics;
+            ApplyHeuristicsToTop = applyHeuristicsToTop;
+            LogPopulation = logPopulation;
+            MinIterations = minIterations;
+            HistoricalEncodedSolutions = new List<EncodedSolution>();
+            MinHistoricalChanges = minHistoricalChanges;
+            LastProfits = new Queue<double>();
         }
 
         public bool StoppingRuleFulfilled 
-        {
+        {  
             get
             {
-                return PopulationGenerator.Generation >= MinIterations || NoChanges();
+                return PopulationGenerator.Generation >= MinIterations && NoChanges();
             } 
         }
 
+        // TODO: Ver
         private bool NoChanges()
         {
-            if (HistoricalEncodedSolutions.Count <= MinIterations)
-                return false;
-
             var currentProfit = HistoricalEncodedSolutions.Last().GetSolution.GetCurrentProfit;
+
+            return LastProfits.All(p => p == currentProfit);
+
+            // TODO: WTF quice hacer aca?
             for (int index = HistoricalEncodedSolutions.Count - 2; index > HistoricalEncodedSolutions.Count - (2 + MinHistoricalChanges); index--)
             {
                 if (currentProfit != HistoricalEncodedSolutions[index].GetSolution.GetCurrentProfit)
@@ -71,9 +87,14 @@ namespace Main.Brkga
 
         public int MinHistoricalChanges { get; set; }
 
+        // TODO: Borrar si ya no se usa
         public List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
 
+        public Queue<double> LastProfits { get; set; }
+
         public List<ILocalSearchHeuristic> Heuristics { get; set; }
+
+        public int ApplyHeuristicsToTop { get; set; }
 
         public void InitializePopulation()
         {
@@ -89,17 +110,20 @@ namespace Main.Brkga
                 Logger.WriteOnFile(string.Format("Generation: {0}{1}{2}", PopulationGenerator.Generation, Environment.NewLine, Population));
             }
             Population.GetOrderByMostProfitable().First().GetSolution.BestInGeneration = true;
+
+            LastProfits.Enqueue(Population.GetOrderByMostProfitable().First().GetSolution.GetCurrentProfit);
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());
         }
 
         public void ApplyLocalHeuristics()
         {
-            var bestSolutions = Population.GetOrderByMostProfitable().Take(1).ToList();
+            var bestSolutions = Population.GetOrderByMostProfitable().Where(es => !es.EnhancedByLocalHeuristics).Take(ApplyHeuristicsToTop).ToList();
             for (int index = 0; index < bestSolutions.Count; index++)
             {
                 var topSolution = bestSolutions[index];
                 foreach (var heuristic in Heuristics)
                     heuristic.ApplyHeuristic(ref topSolution);
+                topSolution.EnhancedByLocalHeuristics = true;
             }
         }
 
@@ -111,6 +135,11 @@ namespace Main.Brkga
 
             if (LogPopulation)
                 Logger.WriteOnFile(string.Format("Generation: {0}{1}{2}", PopulationGenerator.Generation, Environment.NewLine, Population));
+
+            LastProfits.Enqueue(Population.GetOrderByMostProfitable().First().GetSolution.GetCurrentProfit);
+            if (LastProfits.Count > 10)
+                LastProfits.Dequeue();
+
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());
         }
 

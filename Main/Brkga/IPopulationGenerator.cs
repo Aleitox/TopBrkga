@@ -32,6 +32,7 @@ namespace Main.Brkga
             ElitePercentage = elitePercentage == 0 ? 3/10 : elitePercentage;
             MutantPercentage = mutantPercentage == 0 ? 1/10 : mutantPercentage;
             EliteGenChance = eliteGenChance;
+            Random = new Random();
         }
 
         private int NonProfitDestinations;
@@ -45,6 +46,8 @@ namespace Main.Brkga
         public int Generation { get; set; }
 
         private int eliteSize { get; set; }
+
+        private Random Random { get; set; }
 
         public decimal ElitePercentage { get; set; }
         public decimal MutantPercentage { get; set; }
@@ -91,19 +94,19 @@ namespace Main.Brkga
             var randomGenerator = new Random();
             for (var index = 0; index < amountToGenerate; index++)
             {
-                var encodedSolution = GenerateEncodedSolution(randomGenerator, population.EncodedProblems);
+                var encodedSolution = GenerateEncodedSolution(population.EncodedProblems);
                 population.EncodedProblems.Add(encodedSolution);
             }
 
             return population;
         }
 
-        public EncodedSolution GenerateEncodedSolution(Random randomGenerator, List<EncodedSolution> encodedSolutions)
+        public EncodedSolution GenerateEncodedSolution(List<EncodedSolution> encodedSolutions)
         {
             EncodedSolution encodedSolution;
             do
             {
-                var randomVector = GenerateRandomVector(AmountOfDestinations, randomGenerator.Next(), NonProfitDestinations);
+                var randomVector = GenerateRandomVector(AmountOfDestinations, Random.Next(), NonProfitDestinations);
                 encodedSolution = new EncodedSolution(ProblemDecoder, randomVector);
             } while (encodedSolutions.Any(ep => ep.IsEquivalenteTo(encodedSolution)));
 
@@ -136,8 +139,23 @@ namespace Main.Brkga
 
             var evolvedPopulation = new Population(elitePopulation, mutatants);
 
+            var childs = 0;
+            var randoms = 0;
+
             while (evolvedPopulation.CurrentPopulationSize() < PopulationSize)
-                evolvedPopulation.EncodedProblems.Add(Mate(GetRandomItem(elitePopulation), GetRandomItem(nonElitePopulation)));
+            {
+                var childSolution = Mate(GetRandomItem(elitePopulation), GetRandomItem(nonElitePopulation));
+                if (evolvedPopulation.EncodedProblems.Any(x => x.IsEquivalenteTo(childSolution)))
+                {
+                    evolvedPopulation.EncodedProblems.Add(GenerateEncodedSolution(evolvedPopulation.EncodedProblems));
+                    randoms++;
+                }
+                else
+                {
+                    evolvedPopulation.EncodedProblems.Add(childSolution);
+                    childs++;
+                }
+            }
 
             evolvedPopulation.GetMostProfitableSolution().GetSolution.BestInGeneration = true;
             Generation++;
@@ -167,8 +185,7 @@ namespace Main.Brkga
 
         private EncodedSolution GetRandomItem(List<EncodedSolution> elitePopulation)
         {
-            var randomGenerator = new Random();
-            return elitePopulation[randomGenerator.Next(elitePopulation.Count())];
+            return elitePopulation[Random.Next(elitePopulation.Count())];
         }
     }
 }
