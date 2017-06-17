@@ -1,6 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Main.BrkgaTop;
 using Main.Entities;
+using Main.GuidedLocalSearchHeuristics;
 using Main.Repositories;
 
 namespace Main.Brkga
@@ -36,7 +38,7 @@ namespace Main.Brkga
             timer.Stop();
             var timeElapsed = timer.ElapsedMilliseconds;
 
-            EncodedSolution = ProblemManager.Population.GetMostProfitableSolution();
+            var encodedSolution = ProblemManager.Population.GetMostProfitableSolution();
 
             //var juan = ProblemManager.HistoricalEncodedSolutions;
 
@@ -45,8 +47,33 @@ namespace Main.Brkga
             //{
             //    SolutionRepository.SaveSolution(encodedSolution.GetSolution);
             //}
-            EncodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
+
+            LastImprovementTry(ref encodedSolution);
+            encodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
+
+            EncodedSolution = encodedSolution;
+
             SolutionRepository.SaveSolution(EncodedSolution.GetSolution);
+        }
+
+        private void LastImprovementTry(ref EncodedSolution encodedSolution)
+        {
+            var heuristics = new List<ILocalSearchHeuristic>()
+            {
+                new SwapHeuristic(),
+                new InsertHeuristic(),
+                new SwapHeuristic(),
+                new ReplaceHeuristic(),
+                new SwapHeuristic(),
+                new TwoZeroPtSwap(),
+                new InsertHeuristic(),
+                new ReplaceHeuristic()
+            };
+
+            foreach (var heuristic in heuristics)
+            {
+                heuristic.ApplyHeuristic(ref encodedSolution);
+            }
         }
     }
 }

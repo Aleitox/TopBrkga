@@ -23,13 +23,14 @@ namespace TesisUnitTests.Helper
 
         public static List<BrkgaConfiguration> GetSelectedConfigurationsForTesting()
         {
-            return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfigWithEuristics() };
-            //return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfig(), BrkgaFactory.GetFewIterationsConfig(), BrkgaFactory.GetMoreIterationsConfig(), BrkgaFactory.GetUnBiasConfig() };
+            //return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfigWithEuristics() };
+            return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfig(), BrkgaFactory.GetFewIterationsConfig(), BrkgaFactory.GetMoreIterationsConfig(), BrkgaFactory.GetUnBiasConfig() };
         }
 
         public static List<BrkgaConfiguration> GetHeuristicsConfigurationsForTesting()
         {
             return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfigWithEuristics() };
+            //return new List<BrkgaConfiguration>() { BrkgaFactory.GetBasicConfig(), BrkgaFactory.GetFewIterationsConfig(), BrkgaFactory.GetMoreIterationsConfig(), BrkgaFactory.GetUnBiasConfig() };
         }
     }
 }
