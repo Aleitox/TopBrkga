@@ -1,0 +1,33 @@
+
+\chapter{Revisión Bibliográfica}
+
+Hay varios trabajos previos que encaran TOP. Basandome en la encuesta de C. Archetti, M.G. Speranza, D. Vigo \cite{ArchettiSperanzaVigo} y búsquedas realizadas.
+
+\bigskip
+
+La primera heurística propuesta para el TOP es un algoritmo de construcción simple introducido en Butt y Cavalier \cite{ButtCavalier} y probado en pequeñas instancias de tamaño con hasta 15 vértices.
+
+\bigskip
+
+Una heurística de construcción más sofisticada se da en Chao, Golden y Wasil (CGW) \cite{ChaoGoldenWasil} en la que la solución inicial se refina a través de movimientos de los clientes, los intercambios y varias estrategias de reinicio. En este trabajo mencionan que TOP puede ser modelado como un problema de optimización multinivel. En el primer nivel, se debe seleccionar un subconjunto de puntos para que el equipo visite. En el segundo nivel, se asignan puntos a cada miembro del equipo. En el tercer nivel, se construye un camino a través de los puntos asignados a cada miembro del equipo. El algoritmo resultante se prueba en un conjunto de 353 instancias de prueba con hasta 102 clientes y hasta 4 vehículos.
+
+\bigskip
+
+Luego, se aplicaron varias metaheurísticas al TOP, partiendo del algorítmo de búsqueda tabú introducido en Tang y Miller-Hooks (TMH) \cite{TangMillerHooks}, que está incorporado en un procedimiento de memoria adaptativa que alterna entre vecindarios pequeños y grandes durante la búsqueda. Sus resultados de experimentos computacionales realizados sobre el mismo conjunto de problemas de Chao et al. muestran que la técnica propuesta produce consistentemente soluciones de alta calidad y supera a otras heurísticas publicadas hasta tal momento para el TOP.
+
+\bigskip
+
+Archetti et al. \cite{ArchettiHertzSperanza} proponen dos variantes de un algorítmo de búsqueda tabú generalizada y un algorítmo de búsqueda de vecindario variable. Ke et al. \cite{KeArchettiFeng} utilizan un enfoque de optimización de colonia de hormigas que utiliza cuatro métodos diferentes para construir soluciones candidatas. Otros paradigmas metaheurísticos se aplican con éxito al TOP, como la búsqueda local guiada (Vansteenwegen et al. \cite{Vansteenwegen} ), el reencaminamiento de caminos (Souffriau et al. \cite{Souffriau}) y el enjambre de partículas Basado en la optimización algorítmo memético (Dang et al. \cite{Dang}), este último siendo el mejor actual en la clase.
+
+\bigskip
+
+En la investigación sobre los trabajos realizados, no se encontraron trabajos que implementen algorítmos geneticos. En este trabajo se propone resolver TOP utilizando biased random key generation algorithim (BRKGA)
+
+
+
+
+
+
+
+
+

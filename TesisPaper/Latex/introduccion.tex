@@ -2,7 +2,7 @@
 
 \section{Historia}
 
-\cite{einstein} Orientacion (Orienteering) es un deporte al aire libre usualmente jugado en una zona montañosa o fuertemente boscosa. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de cotrol especifico e intenta visitar tantos otros puntos de control como sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de la orientación es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Un competidor tiene que seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total sujeto a la restricción de tiempo. Esto se conoce como problema de orientación de un solo competidor (Single-Competitor Orienteering Problem) y se denota por OP.
+Orientación (Orienteering) es un deporte al aire libre usualmente jugado en una zona montañosa o fuertemente boscosa. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de cotrol específico e intenta visitar tantos otros puntos de control como sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de la orientación es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Un competidor tiene que seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total sujeto a la restricción de tiempo. Esto se conoce como problema de orientación de un solo competidor (Single-Competitor Orienteering Problem) y se denota por OP.
 
 \bigskip
 
@@ -10,7 +10,7 @@ El equipo de orientación extiende la versión de un solo competidor del deporte
 
 \bigskip
 
-Notar que la versión de un solo competidor (OP) de este problema ha demostrado ser NP-dura por Golden, Levy, y Vohra [43], por lo que el TOP es al menos tan difícil. Por lo tanto, la mayoría de la investigación sobre estos problemas se han centrado en proporcionar enfoques heurísticos.
+Notar que la versión de un solo competidor (OP) de este problema ha demostrado ser NP-dura por Golden, Levy, y Vohra \cite{goldenlevyvohra}, por lo que el TOP es al menos tan difícil. Por lo tanto, la mayoría de la investigación sobre estos problemas se han centrado en proporcionar enfoques heurísticos.
 
 \section{Ejemplos de TOP}
 
@@ -18,7 +18,7 @@ El TOP surge en muchas aplicaciones. Considerar, por ejemplo, los técnicos de e
 
 \section{Como se modelo TOP en nuestra solucion}
 
-Para la generacion y comparacion de resultados se utilizaron instancias de test de Tsiligirides y de Chao. Las intancias de Tsiligirides y de Chao comparten el mismo formato. 
+Para la generación y comparación de resultados se utilizaron instancias de test de Tsiligirides y de Chao. Las intancias de Tsiligirides y de Chao comparten el mismo formato. 
 
 \bigskip
 
@@ -26,26 +26,26 @@ Para la generacion y comparacion de resultados se utilizaron instancias de test 
 Una instancea de TOP contiene:
 
 \begin{itemize}
-  \item N vehiculos de carga, cada vehiculo tiene una distancia maxima que puede recorrer. En esta implementacion cada vehiculo puede tener una distancia maxima diferente. De todos modos en las intancias de test utilizadas todos los vehiculos tienen el mismo valor de distancia maxiama.
-  \item M clientes. Cada cliente tiene un beneficio mayor a cero. Ademas tienen un set de coordenadas X e Y que representan su ubicacion en un plano cartesiano.
-  \item Un punto de inicio y fin de ruta para cada vehiculo. Ambos puntos tienen un beneficio de cero y tienen un set de coordenadas X e Y.
+  \item N vehículos de carga, cada vehículo tiene una distancia máxima que puede recorrer. En esta implementación cada vehículo puede tener una distancia máxima diferente. De todos modos en las intancias de test utilizadas todos los vehículos tienen el mismo valor de distancia máxima.
+  \item M clientes. Cada cliente tiene un beneficio mayor a cero. Además tienen un set de coordenadas X e Y que representan su ubicación en un plano cartesiano.
+  \item Un punto de inicio y fin de ruta para cada vehículo. Ambos puntos tienen un beneficio de cero y tienen un set de coordenadas X e Y.
 \end{itemize}
 \end{minipage}
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-Luego:
+También es importante mencionar que:
 
 \begin{itemize}
-	\item Se utliza la distancia euclidiana para medir distancias.
-	\item Una solucion es valida si:
+	\item Se utiliza la distancia euclidiana para medir distancias.
+	\item Una solución es valida si:
 	\begin{itemize}
-		\item Para todo vehiculo, la distancia de su ruta es menor o igual a la distancia maxima del vehiculo que realiza tal ruta.
+		\item Para todo vehículo, la distancia de su ruta es menor o igual a la distancia máxima del vehiculo que realiza tal ruta.
 		\item Ningun cliente pertenece a dos rutas distintas.
 		\item Toda ruta parte del punto de inicio y finaliza en el punto de fin.
 	\end{itemize}
-	\item La funcion objetivo retorna la sumatoria de los beneficios de los clientes visitados.
+	\item La función objetivo retorna la sumatoria de los beneficios de los clientes visitados.
 \end{itemize}
 \end{minipage}
 
