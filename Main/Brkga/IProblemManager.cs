@@ -24,7 +24,7 @@ namespace Main.Brkga
 
         int MinIterations { get; set; }
 
-        int MinHistoricalChanges { get; set; }
+        int MinNoChanges { get; set; }
 
         List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
 
@@ -33,7 +33,7 @@ namespace Main.Brkga
 
     public class ProblemManager : IProblemManager
     {
-        public ProblemManager(IPopulationGenerator populationGenerator, bool logPopulation = false, int minIterations = 100, int minHistoricalChanges = 50)
+        public ProblemManager(IPopulationGenerator populationGenerator, bool logPopulation = false, int minIterations = 100, int minNoChanges = 10)
         {
             PopulationGenerator = populationGenerator;
             Heuristics = new List<ILocalSearchHeuristic>();
@@ -41,11 +41,11 @@ namespace Main.Brkga
             LogPopulation = logPopulation;
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
-            MinHistoricalChanges = minHistoricalChanges;
+            MinNoChanges = minNoChanges;
             LastProfits =new Queue<double>();
         }
 
-        public ProblemManager(IPopulationGenerator populationGenerator, List<ILocalSearchHeuristic> heuristics, int applyHeuristicsToTop, bool logPopulation = false, int minIterations = 100, int minHistoricalChanges = 50)
+        public ProblemManager(IPopulationGenerator populationGenerator, List<ILocalSearchHeuristic> heuristics, int applyHeuristicsToTop, bool logPopulation = false, int minIterations = 100, int minNoChanges = 10)
         {
             PopulationGenerator = populationGenerator;
             Heuristics = heuristics;
@@ -53,7 +53,7 @@ namespace Main.Brkga
             LogPopulation = logPopulation;
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
-            MinHistoricalChanges = minHistoricalChanges;
+            MinNoChanges = minNoChanges;
             LastProfits = new Queue<double>();
         }
 
@@ -71,21 +71,13 @@ namespace Main.Brkga
             var currentProfit = HistoricalEncodedSolutions.Last().GetSolution.GetCurrentProfit;
 
             return LastProfits.All(p => p == currentProfit);
-
-            // TODO: WTF quice hacer aca?
-            for (int index = HistoricalEncodedSolutions.Count - 2; index > HistoricalEncodedSolutions.Count - (2 + MinHistoricalChanges); index--)
-            {
-                if (currentProfit != HistoricalEncodedSolutions[index].GetSolution.GetCurrentProfit)
-                    return false;
-            }
-            return true;
         }
 
         public Population Population { get; set; }
 
         public IPopulationGenerator PopulationGenerator { get; set; }
 
-        public int MinHistoricalChanges { get; set; }
+        public int MinNoChanges { get; set; }
 
         // TODO: Borrar si ya no se usa
         public List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
@@ -137,7 +129,7 @@ namespace Main.Brkga
                 Logger.WriteOnFile(string.Format("Generation: {0}{1}{2}", PopulationGenerator.Generation, Environment.NewLine, Population));
 
             LastProfits.Enqueue(Population.GetOrderByMostProfitable().First().GetSolution.GetCurrentProfit);
-            if (LastProfits.Count > 10)
+            if (LastProfits.Count > MinNoChanges)
                 LastProfits.Dequeue();
 
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());

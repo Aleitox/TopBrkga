@@ -9,7 +9,7 @@ namespace Main.Model
 
         public int MinIerations { get; set; }
 
-        public int MinHistoricalChanges { get; set; }
+        public int MinNoChanges { get; set; }
 
         public int PopulationSize { get; set; }
 
