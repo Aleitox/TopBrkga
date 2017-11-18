@@ -12,9 +12,21 @@ El equipo de orientación extiende la versión de un solo competidor del deporte
 
 Notar que la versión de un solo competidor (OP) de este problema ha demostrado ser NP-dura por Golden, Levy, y Vohra \cite{goldenlevyvohra}, por lo que el TOP es al menos tan difícil. Por lo tanto, la mayoría de la investigación sobre estos problemas se han centrado en proporcionar enfoques heurísticos.
 
-\section{Ejemplos de TOP}
+\section{Aplicaciones de TOP}
 
-El TOP surge en muchas aplicaciones. Considerar, por ejemplo, los técnicos de enrutamiento para atender a los clientes en ubicaciones geográficamente distribuidas. En este contexto, cada vehículo en el modelo TOP representa un solo técnico y hay a menudo una limitación en el número de horas que cada técnico puede programar para trabajar en un día dado. Por lo tanto, puede no ser posible incluir a todos los clientes que requieren servicio en los horarios de los técnicos para un día determinado. En su lugar, se seleccionará un subconjunto de los clientes. Las decisiones sobre qué clientes elegir para su inclusión en cada uno de los horarios de los técnicos de servicio pueden tener en cuenta la importancia del cliente o la urgencia de la tarea. Notar que este requisito de selección de clientes también surge en muchas aplicaciones de enrutamiento en tiempo real.
+El TOP ha sido reconocido como un modelo de muchas aplicaciones reales diferentes. El juego deportivo de orientación de equipo por Chao et al \cite{ChaoGoldenWasil}. Algunas aplicaciones de servicios de recogida o entrega que implican el uso de transportistas comunes y flotas privadas por Ballou y Chowdhury \cite{BallouChowdhury}. Aplicaciones en varios campos, como la planificación de viajes turísticos, enrutamiento técnico y reclutamiento de atletas.
+
+\bigskip
+
+El problema de entrega de combustible con vehículos múltiples de Golden, Levy y Vohra \cite{goldenlevyvohra}. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. Una característica clave de este problema es que el suministro de combustible del cliente (nivel de inventario) debe mantenerse en un nivel adecuado en todo momento. Es decir, cada cliente tiene una capacidad de tanque conocida y se espera que su nivel de combustible permanezca por encima de un valor crítico preespecificado que puede denominarse punto de reabastecimiento. Las entregas siguen un \textit{sistema de empuje} en el sentido de que están programados por la empresa en base a un pronóstico de los niveles de los tanques de los clientes. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
+
+\bigskip
+
+El reclutamiento de jugadores de fútbol americano universitario de Butt y Cavalier \cite{ButtCavalier}. Un método exitoso de reclutamiento utilizado en muchas pequeñas divisiones del \textit{National Collegiate Athletic Association} es visitar los campus de las escuelas secundarias y reunirse con los miembros superiores de los equipos de fútbol americano. A modo maximizar su potencial para reclutar futuros jugadores, deben visitar tantas escuelas secundarias como sea posible dentro de un radio de 100 km del campus. Pero, sabían por experiencia previa que visitar todas las escuelas en esta área no era posible. Por lo tanto, querían visitar el mejor subconjunto de escuelas en esta área.
+
+\bigskip
+
+El enrutamiento de técnicos para atender a los clientes en ubicaciones geográficamente distribuidas. En este contexto, cada vehículo en el modelo TOP representa un solo técnico y hay a menudo una limitación en el número de horas que cada técnico puede programar para trabajar en un día dado. Por lo tanto, puede no ser posible incluir a todos los clientes que requieren servicio en los horarios de los técnicos para un día determinado. En su lugar, se seleccionará un subconjunto de los clientes. Las decisiones sobre qué clientes elegir para su inclusión en cada uno de los horarios de los técnicos de servicio pueden tener en cuenta la importancia del cliente o la urgencia de la tarea. Notar que este requisito de selección de clientes también surge en muchas aplicaciones de enrutamiento en tiempo real.
 
 \section{Como se modelo TOP en nuestra solucion}
 

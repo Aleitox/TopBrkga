@@ -1,7 +1,23 @@
 
 \chapter*{\tituloAbstractEs}
 
-\noindent El problema de orientación de equipo (TOP) es la generalización al caso de múltiples recorridos del problema de orientación, también conocido como Problema del vendedor ambulante selectivo (TSP). TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final, de modo que la recompensa total obtenida al visitar un subconjunto de ubicaciones se maximice y la longitud de cada ruta esté restringida por un límite preestablecido. En esta tesis, se propone un enfoque de algoritmo genético de clave aleatoria sesgada (BRKGA) para el problema de orientación de equipo. Además, en cada generación de población, la mejor solución no mejorada se mejora con una secuencia de heurística de búsqueda local. Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Aunque mis resultados fueron muy buenos y competitivos en la mayoría de los casos, en otros no fueron tan buenos como los trabajos mencionados anteriormente.
+\noindent En el problema de orientación (OP), se da un conjunto de vértices, cada uno con un puntaje determinado. El objetivo es determinar un camino, limitado en su longitud, que visita a algunos clientes a modo de maximizar la suma de los puntajes obtenidos. La orientación se puede formular de la siguiente manera. Dado $n$ nodos en el plano euclidiano, cada uno con un puntaje, donde $puntaje(vertice_i) \geq 0$ y $puntaje(vertice_1) = puntaje(vertice_n) = 0$, encuentre una ruta de puntaje máximo a través de estos nodos, inciando en $vertice_1$ y termina en $vertice_n$ de longitud no mayor que $tMax$.
+
+\bigskip
+
+El problema de orientación de equipo (TOP) es la generalización al caso de múltiples recorridos del problema de orientación, también conocido como Problema de vendedor ambulante selectivo (TSP). TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final, de modo que la recompensa total obtenida al visitar un subconjunto de ubicaciones se maximice y la longitud de cada ruta esté restringida por un límite preestablecido. TOP es conocido como un problema NP-completo.
+
+\bigskip
+
+En esta tesis, se propone un enfoque de algoritmo genético de clave aleatoria sesgada (BRKGA) para el problema de orientación de equipo. Los algoritmos genéticos de clave aleatoria inicializaron su población con un conjunto de vectores de clave aleatoria y un decodificador. El decodificador convierte un vector de clave aleatoria en una solución válida del problema. Los algoritmos genéticos de clave aleatoria sesgada son una variante de los algoritmos genéticos de clave aleatoria, donde uno de los padres utilizado para el apareamiento está predispuesto a tener una mejor forma física que el otro progenitor.
+
+\bigskip
+
+Además, en cada nueva generación, la mejor solución no mejorada se mejora con una secuencia de heurística de búsqueda local. Las heurísticas de búsqueda local como Insertar, Cambiar, Reemplazar y 2-opt se utilizan para encontrar mejores soluciones locales para una solución dada.
+
+\bigskip
+
+Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Aunque mis resultados fueron muy buenos y competitivos en la mayoría de las intancias, en algunos no fueron tan buenos como mencioné trabajos anteriores.
 
 \bigskip
 
