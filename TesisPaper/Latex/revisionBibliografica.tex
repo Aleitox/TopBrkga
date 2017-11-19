@@ -2,23 +2,64 @@
 
 \chapter{Revisión Bibliográfica}
 
-Hay varios trabajos previos que encaran TOP. Basandome en la encuesta de C. Archetti, M.G. Speranza, D. Vigo \cite{ArchettiSperanzaVigo} y búsquedas realizadas.
+Existen una gran cantidad de aplicaciones que pueden ser modelas por TOP. Es por esto que la clase de problemas de enrutamiento de vehículos con ganancias es amplia. En el 2013, C. Archetti, M.G. Speranza, D. Vigo \cite{ArchettiSperanzaVigo} publicaron una encuesta sobre esta clase de problemas. En este capitulo voy a referenciar varias de la publicaciones que referenciaron, y otras trabajos que encontre relacionados con TOP.
 
 \bigskip
 
-La primera heurística propuesta para el TOP es un algoritmo de construcción simple introducido en Butt y Cavalier \cite{ButtCavalier} y probado en pequeñas instancias de tamaño con hasta 15 vértices.
+La primera heurística propuesta para el TOP es un algoritmo de construcción simple introducido en Butt y Cavalier \cite{ButtCavalier} y probado en pequeñas instancias de tamaño con hasta 15 vértices. En su heuristica \textit{MaxImp}, se asignan pesos a cada par de nodos de modo que cuanto mayor es el peso, más beneficioso es no solo visitar esos dos nodos, sino visitarlos en el mismo recorrido. Su peso depende de cuan beneficio son los nodos y las sumas de las distancias de ir y volver por esos vertices. Fue introducido con el nombre \textit{Multiple Tour Maximum Collection Problem}.
 
 \bigskip
 
-Una heurística de construcción más sofisticada se da en Chao, Golden y Wasil (CGW) \cite{ChaoGoldenWasil} en la que la solución inicial se refina a través de movimientos de los clientes, los intercambios y varias estrategias de reinicio. En este trabajo mencionan que TOP puede ser modelado como un problema de optimización multinivel. En el primer nivel, se debe seleccionar un subconjunto de puntos para que el equipo visite. En el segundo nivel, se asignan puntos a cada miembro del equipo. En el tercer nivel, se construye un camino a través de los puntos asignados a cada miembro del equipo. El algoritmo resultante se prueba en un conjunto de 353 instancias de prueba con hasta 102 clientes y hasta 4 vehículos.
+Una heurística de construcción más sofisticada se da en Chao, Golden y Wasil (CGW) \cite{ChaoGoldenWasil}. Este es la primer publicacion donde aparece e nombre TOP. Este nombre fue acuñado por Chao et al. para resaltar la conexión con el más ampliamente estudió caso de un solo vehículo (OP). La solución inicial se refina a través de movimientos de los clientes, los intercambios y varias estrategias de reinicio. En este trabajo mencionan que TOP puede ser modelado como un problema de optimización multinivel. En el primer nivel, se debe seleccionar un subconjunto de puntos para que el equipo visite. En el segundo nivel, se asignan puntos a cada miembro del equipo. En el tercer nivel, se construye un camino a través de los puntos asignados a cada miembro del equipo. El algoritmo resultante se prueba en un conjunto de 353 instancias de prueba con hasta 102 clientes y hasta 4 vehículos.
 
 \bigskip
 
-Luego, se aplicaron varias metaheurísticas al TOP, partiendo del algoritmo de búsqueda tabú introducido en Tang y Miller-Hooks (TMH) \cite{TangMillerHooks}, que está incorporado en un procedimiento de memoria adaptativa que alterna entre vecindarios pequeños y grandes durante la búsqueda. Sus resultados de experimentos computacionales realizados sobre el mismo conjunto de problemas de Chao et al. muestran que la técnica propuesta produce consistentemente soluciones de alta calidad y supera a otras heurísticas publicadas hasta tal momento para el TOP.
+El primer procedimiento de solución óptima para TOP es propuesto por Butt y Ryan \cite{ButtRyan}. Comienzan a partir de una formulación de partición configurada y su algoritmo hace un uso eficiente tanto de la generación de columnas como de la bifurcación de restricciones. El algoritmo es capaz de resolver instancias con hasta 100 clientes potenciales cuando las rutas incluyen solo unos pocos clientes cada uno. Más recientemente, Boussier et al. \cite{BoussierFeilletGendreau} presentaron un algoritmo de ramificación y precio. Gracias a diversos procedimientos de aceleración en el paso de generación de columnas, puede resolver instancias con hasta 100 clientes potenciales del gran conjunto de instancias de referencia propuestas en Chao et al. \cite{ChaoGoldenWasil}.
 
 \bigskip
 
-Archetti et al. \cite{ArchettiHertzSperanza} proponen dos variantes de un algoritmo de búsqueda tabú generalizada y un algoritmo de búsqueda de vecindario variable. Ke et al. \cite{KeArchettiFeng} utilizan un enfoque de optimización de colonia de hormigas que utiliza cuatro métodos diferentes para construir soluciones candidatas. Otros paradigmas metaheurísticos se aplican con éxito al TOP, como la búsqueda local guiada (Vansteenwegen et al. \cite{Vansteenwegen} ), el reencaminamiento de caminos (Souffriau et al. \cite{Souffriau}) y el enjambre de partículas Basado en la optimización algoritmo memético (Dang et al. \cite{Dang}), este último siendo el mejor actual en la clase.
+Luego, se aplicaron varias metaheurísticas al TOP, partiendo del algoritmo de búsqueda tabú introducido en Tang y Miller-Hooks (TMH) \cite{TangMillerHooks}, que está incorporado en un procedimiento de memoria adaptativa (AMP) que alterna entre vecindarios pequeños y grandes durante la búsqueda. La heurística de búsqueda tabú propuesta TMH para el TOP se puede caracterizar en términos generales en tres pasos: inicialización, mejora de la solución y evaluación. Paso A, iniciación desde el AMP: dada la solución actual S determinada en el AMP, establece los parámetros tabu a una pequeña etapa del vecindario en la que solo se explorará una pequeña cantidad de soluciones de vecindario. Paso B, mejora: genera mediante procedimientos aleatorios y golosos una cantidad de soluciones de vecindario (validas e invalidas) a la solución actual en función de los parámetros tabu actuales. Note que en iteraciones selectas, la secuencia de cada una de estas soluciones de vecindario se mejora mediante procedimientos heurísticos. Paso C, evaluación: Se selecciona la mejor solución que no sea tabú entre los candidatos generados en el paso B (el estado tabu puede anularse si la mejor solución tabu es mejor que la mejor solución factible actual). Dependiendo del tamaño actual del vecindario y la calidad de la solución, se establece el parámetro del tamaño del vecindario en etapas grandes o pequeñas y regrese al Paso A o al B. Notese que como señala Golden et al. \cite{GoldenLaporteTaillard}, el AMP funciona de forma similar a los algoritmos genéticos, con la excepción de que la descendencia (en AMP, las nuevas soluciones iniciales) se puede generar a partir de más de dos padres. Sus resultados de experimentos computacionales realizados sobre el mismo conjunto de problemas de Chao et al. muestran que la técnica propuesta produce consistentemente soluciones de alta calidad y supera a otras heurísticas publicadas hasta tal momento para el TOP.
+
+\bigskip
+
+Archetti et al. \cite{ArchettiHertzSperanza} proponen dos variantes de un algoritmo de búsqueda tabú generalizada y un algoritmo de búsqueda de vecindario variable (VNS). Dada una solucion titular $s$, dan un salto a una solución $s'$. Se llama salto porque se hace dentro de un vecindario más grande que el vecindario utilizado para la búsqueda tabú. Luego aplican una búsqueda tabu en $s'$ para tratar de mejorarla. La solución resultante $s''$ se compara luego con $s$. Si se sigue una estrategia VNS, entonces $s''$ se convierte en el nuevo titular solo si $s''$ es mejor que $s$. En la estrategia de búsqueda tabu generalizada, establece $s = s''$ incluso si $s''$ es peor que $s$. Este proceso se repite hasta que se cumplan algunos criterios de detención.
+
+\bigskip
+
+Ke et al. \cite{KeArchettiFeng} utilizan un enfoque de optimización de colonia de hormigas (ACO) que utiliza cuatro métodos diferentes para construir soluciones candidatas. ACO es una clase de metaheurísticas basadas en población. Utiliza una colonia de hormigas, que están guiadas por rastros de feromonas e información heurística, para construir soluciones de forma iterativa para un problema. Para resolver un problema de optimización combinatoria estática con ACO, el procedimiento principal se puede describir de la siguiente manera: una vez que se inicializan todos los rastros y parámetros de feromonas, las hormigas construyen soluciones iterativamente hasta que se alcanza un criterio de detención. El procedimiento iterativo principal consta de dos pasos. En el primer paso, cada hormiga construye una solución de acuerdo con la regla de transición. Entonces se puede adoptar un procedimiento de búsqueda local para mejorar una o más soluciones. En el segundo paso, los valores de las feromonas se actualizan de acuerdo con una regla de actualización de feromonas. Un punto clave en ACO es construir soluciones candidatas. Proponen cuatro métodos, los métodos secuencial, determinista-concurrente, aleatorio-concurrente y simultáneo.
+
+\bigskip
+
+TODO: Hablar un poco de cada uno de los siguientes:
+
+1. 
+A guided local search metaheuristic for the team orienteering problem. Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}.
+%2009_VSVO_A_Guided.Local.Search.Mtaheuristic.For.The.Team.Orienteering.Problem
+
+2. 
+A path relinking approach for the team orienteering problem. Souffriau et al. \cite{SouffriauVansteenwegenBergheOudheusden}.
+%2009_SVBO_A.Path.Relinking.Approach.For.The.Team.Orienteering.Problem
+
+3. 
+A memetic algorithm for the team orienteering problem Bouly et al. \cite{BoulyDangMoukrim}.
+%2009_BDM__A.Memetic.Algorithm.For.The.Team.Orienteering.Problem
+
+4. 
+A PSO-based memetic algorithm for the team orienteering problem. Dang et al. \cite{DangGuibadjMoukrim}, este último siendo el mejor actual en la clase. 
+%2011_DGM__A.PSO-Based.Memetic.Algorithm.for.the.Team.Orienteering.Problem
+
+5.  
+Solving the team orienteering problem Souffriau et al. \cite{SouffriauVansteenwegenBergheOudheusden}.
+%2012_FQOPD_Solving.the.team.orienteering.problem
+
+6.
+A greedy randomized adaptive search procedure for the team orienteering problem Ferreira et al. \cite{FerreiraQuintasOliveiraPereiraDias}.
+%2015_SVBO_A.Greedy.Randomised.Adaptive.Search.Procedure.for.the.Team.Orienteering.Problem
+
+7.
+A novel Randomized Heuristic for the Team Orienteering Problem Zettam y Elbenani \cite{ZettamElbenani}.
+%2016_ZE___A.Novel.Randomized.Heuristic.For.The.Team.Orienteering.Problem
+
 
 \bigskip
 
