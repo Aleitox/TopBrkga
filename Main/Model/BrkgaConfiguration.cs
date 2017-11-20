@@ -1,4 +1,5 @@
-﻿using Main.GuidedLocalSearchHeuristics;
+﻿using Main.BrkgaTop.Decoders;
+using Main.GuidedLocalSearchHeuristics;
 using System.Collections.Generic;
 
 namespace Main.Model
@@ -7,7 +8,7 @@ namespace Main.Model
     {
         public string Description { get; set; }
 
-        public int MinIerations { get; set; }
+        public int MinIterations { get; set; }
 
         public int MinNoChanges { get; set; }
 
@@ -22,5 +23,7 @@ namespace Main.Model
         public List<ILocalSearchHeuristic> Heuristics { get; set; }
 
         public int ApplyHeuristicsToTop { get; set; }
+
+        public DecoderEnum DecoderType { get; set; }
     }
 }

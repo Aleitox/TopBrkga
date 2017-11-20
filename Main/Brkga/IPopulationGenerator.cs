@@ -50,6 +50,7 @@ namespace Main.Brkga
         private Random Random { get; set; }
 
         public decimal ElitePercentage { get; set; }
+
         public decimal MutantPercentage { get; set; }
 
         public int EliteSize {

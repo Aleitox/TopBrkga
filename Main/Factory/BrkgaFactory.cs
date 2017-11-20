@@ -14,7 +14,7 @@ namespace Main.Factory
             var problemResourceProvider = ProblemProviderFactory.CreateProblemProvider(instance, config.Description);
             var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
             var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations(), config.PopulationSize, config.ElitePercentage, config.MutantPercentage, config.EliteGenChance);
-            var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.ApplyHeuristicsToTop, false, config.MinIerations, config.MinNoChanges);
+            var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.ApplyHeuristicsToTop, false, config.MinIterations, config.MinNoChanges);
             var brkga = new Brkga.Brkga(problemManager);
             return brkga;
         }
@@ -24,7 +24,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.400;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70",
-                MinIerations = 400,
+                MinIterations = 400,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -41,7 +41,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "MoreIterations:MI.1200;MNC.10;PZ.100;EP.0,3;MP.0,3;EGC.70",
-                MinIerations = 1200,
+                MinIterations = 1200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -58,7 +58,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "UnBias:MI.400;MNC.10;PZ.100;EP.0,4;MP.0,2;EGC.50",
-                MinIerations = 400,
+                MinIterations = 400,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.4m,
@@ -75,7 +75,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "FewIterations:MI.100;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70",
-                MinIerations = 100,
+                MinIterations = 100,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -93,7 +93,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.STSIR;TOP.2",
-                MinIerations = 200,
+                MinIterations = 200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -110,7 +110,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2",
-                MinIerations = 200,
+                MinIterations = 200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -126,7 +126,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ITSIR;TOP.2",
-                MinIerations = 200,
+                MinIterations = 200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -143,7 +143,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.STIR;TOP.2",
-                MinIerations = 200,
+                MinIterations = 200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,
@@ -160,7 +160,7 @@ namespace Main.Factory
             var config = new BrkgaConfiguration()
             {
                 Description = "Basic:MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.STSIR;TOP.2;Version.2",
-                MinIerations = 200,
+                MinIterations = 200,
                 MinNoChanges = 10,
                 PopulationSize = 100,
                 ElitePercentage = 0.3m,

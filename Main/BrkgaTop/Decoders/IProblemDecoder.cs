@@ -8,4 +8,10 @@ namespace Main.BrkgaTop.Decoders
 
         ProblemResourceProvider Provider { get; set; }
     }
+
+    public enum DecoderEnum
+    {
+        Simple = 0,
+        Greedy = 1
+    }
 }

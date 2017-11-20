@@ -197,15 +197,100 @@ El objeto ProblemManager es el orquestrador del mi BRKGA, se setea con un objeto
 
 \subsection{Configuración}
 
-A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto $Configuration$ que setea todas las configuraciones que impactan en el resultado final del BRKGA. Tales como variables utilizadas en la condición de parada, tamaño de la población, porcentaje de la población elite, heuristicas de búsqueda local, etc. En la configuración también se puede setear que tipo de decoder se va a utilizar, modificando la construccion del objeto ProblemManager.
+A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto $Configuration$ que setea todas las configuraciones que impactan en el resultado final del BRKGA. Este objeto es esencial para tunear el implementacion de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, ganaba mucho tiempo en al testear variaciones de mi implementación. Además, al estar centralizada toda la información variable se obtiene una lectura veloz del BRKGA que se esta usando. En otras palabras incrementamos nuestra capacidad de monitoreo y control de mi implementación.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+public class BrkgaConfiguration
+{
+	public string Description { get; }
+	public int MinIterations { get; set; }
+	public int MinNoChanges { get; set; }
+	public int PopulationSize { get; set; }
+	public decimal ElitePercentage { get; set; }
+	public decimal MutantPercentage { get; set; }
+	public int EliteGenChance { get; set; }
+	public List<ILocalSearchHeuristic> Heuristics { get; set; }
+	public int ApplyHeuristicsToTop { get; set; }
+	public DecoderEnum DecoderType { get; set; }
+	
+	private void SetDescription();
+}
+\end{lstlisting}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+Descripción de las propiedades del objeto Configuración:
+
+\begin{itemize}
+  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto. Su funcionalidad es poder identificar rápidamente la configuración global del BRKGA. Solo puede ser seteado con el metodo SetDescription() que utilza la clave y el valor de el resto de las propiedades.
+  \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que debe genererar el BRKGA para finalizar. 
+  \item \textbf{MinNoChanges}: Clave \textbf{MNC}. Valor entero utilizado en la función de corte. Cantidad de generaciones sin modificaciones del mejor beneficio necesario para cortar el algoritmo BRKGA.
+  \item \textbf{PopulationSize}: Clave \textbf{PS}. Valor entero denota el tamaño de la población.
+  \item \textbf{ElitePercentage}: Clave \textbf{EP}. Valor decimal en el itervalo $(0, 1)$ que determina el tamaño de la poblacion elite. 
+  \item \textbf{MutantPercentage}: Clave \textbf{MP}. Valor decimal en el itervalo $(0, 1)$ que determina el tamaño mínimo de la poblacion mutante. 
+  \item \textbf{EliteGenChance}: Clave \textbf{EGC}. Valor entero en el intervalo $(0, 100)$ que determina la probabilidad que tiene un key del padre elite, en transmitirse a su descendiente. 
+  \item \textbf{Heuristics}: Clave \textbf{HEU}. Secuencia de heuristicas de busqueda local que se le aplicaran a la mejor solución de cada generación, a la cual no se le hayan aplicado las heuristicas locales aún. Se implementaron cuatro heuristicas locales:
+	\begin{itemize}
+		\item \textbf{Swap}: Valor \textbf{S}.
+		\item \textbf{Insert}: Valor \textbf{I}.
+		\item \textbf{2-Opt}: Valor \textbf{O}.
+		\item \textbf{Replace}: Valor \textbf{R}.
+	\end{itemize}  
+  \item \textbf{ApplyHeuristicsToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las heuristicas de busqueda local.
+  \item \textbf{DecoderType}: Clave \textbf{DT}. Es una enumeracion que determina el decoder que se va a utilizar.
+	\begin{itemize}
+		\item \textbf{Simple}: Valor \textbf{S}.
+		\item \textbf{Goloso}: Valor \textbf{G}.
+	\end{itemize}  
+\end{itemize}
+\end{minipage}
+
+\bigskip
+
+El método SetDescription() toma las tuplas de clave y valor de todas las propiedades del objeto configuration excepto Description y genera un string intercalando con un separador.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} 
+public void SetDescription()
+{ 
+	var prop = Properties.Where(x => x.Name != "Description");
+	var claveValores = prop.Select(p => p.Clave + "." + p.Valor);
+	Description = string.Join(";", claveValores);
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{minipage}{\textwidth}
+Luego dado un description podemos ver como esta configurado el BRKGA.
+
+Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;DT.G"
+
+\begin{itemize}
+  \item MinIterations: 200
+  \item MinNoChanges: 10
+  \item PopulationSize: 100
+  \item ElitePercentage: 0,3
+  \item MutantPercentage: 0,1
+  \item EliteGenChance: 70
+  \item Heuristics: ISIRT. Que es la Secuencia Insert, Swap, Insert, Replace, 2-Opt.
+  \item ApplyHeuristicsToTop: 2
+  \item DecoderType: Decodificador Goloso
+\end{itemize}
+\end{minipage}
 
 \subsection{Inicialización de la Población}
 
-Existe una propiedad en el objeto $Configuration$ llamado $PopulationSize$, es un entero que se utiliza para setear el tamaña de la población. Luego para generar la población inicial se genereran $PopulationSize$ vectores de enteros aleatorios de tamaño $\#clientes$ de la instancia del problema. Este conjunto de vectores se lo pasa como argumento al decodificador, quien genere un individuo por cada vector de enteros aleatorios.
+Utilizando $PopulationSize$ del objeto $Configuration$ seteo el tamaña de la población. Luego para generar la población inicial se genereran $PopulationSize$ vectores de enteros aleatorios de tamaño $\#clientes$ de la instancia del problema. Este conjunto de vectores se lo pasa como argumento al decodificador, quien genere un individuo por cada vector de enteros aleatorios.
 
 \subsection{Condición de parada}
 
-En un principio la condición de parada era simple, el bucle terminaba cuando iteraba una $x$ cantidad de veces representado en el objeto $Configurations$ como $MinIerations$. Es decir que el bucle principal cortaba luego de evolucionar la poblacion $MinIerations$ veces. Posteriormente se agrego una condición de corte adicional, para cortar, la función objetivo de la mejor solución durante las últimas $n$ generaciones no debía cambiar. Es decir durante las últimas $n$ genereciones no debe haber aparecido una nueva mejor solución. Este valor es ajustable desde la propiedad $MinNoChanges$ del objeto $Configurations$.
+En un principio la condición de parada era simple, el bucle terminaba cuando iteraba una $x$ cantidad de veces seteado en el objeto $Configurations$ por $MinIerations$. Es decir que el bucle principal cortaba luego de evolucionar la poblacion $MinIerations$ veces. Luego de analizar las últimas generaciones de la solución y ver que era frecuente que la mejor solución se habia generado recientemente, agregue una condicion de corte adicional. Ahora, para cortar ademas de la condición anterior, el beneficio de la mejor solución no debería haberse modificado durante las últimas $n$ generaciones . Es decir durante las últimas $n$ genereciones no debe haber aparecido una nueva mejor solución. Este valor es ajustable desde la propiedad $MinNoChanges$ del objeto $Configurations$.
 
 \bigskip
 
@@ -225,7 +310,7 @@ private bool NoChanges()
 
 \subsection{Evolución de la población}
 
-Se toma la población y se los ordena descendientemente segun su profit calcula por la función objetivo. Se setea la población de elite y la non-elite. La población de elite son los mejores $x$ individuos de la población. Siendo $x$ un porcentaje de la población total seteado con la propiedad $ElitePercentage$ del objeto $Configuration$. La población non-elite son todos aquellos individuos no incluídos en la población de elite. Luego se generan $y$ individuos mutantes, $y$ es un porcentaje de la población total seteado por la propiedad $MutantPercentage$ del objeto $Configuration$. Pasan a la nueva genereción todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población non-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA ~(ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solucion identica a otra ya existente en la poblacion. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución identica en la nueva generación.
+Se toma la población y se los ordena descendientemente segun su beneficio calculado por la función objetivo. Se setea la población de elite y la non-elite. La población de elite son los mejores $x$ individuos de la población. Siendo $x$ un porcentaje de la población total seteado con la propiedad $ElitePercentage$ del objeto $Configuration$. La población non-elite son todos aquellos individuos no incluídos en la población de elite. Luego se generan $y$ individuos mutantes, $y$ es un porcentaje de la población total seteado por la propiedad $MutantPercentage$. Pasan a la nueva genereción todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población non-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA ~(ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución identica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación.
 
 \bigskip
 
@@ -275,7 +360,7 @@ private Solution Mate(Solution eliteP, Solution nonEliteP)
 
 \bigskip
 
-Como menciones anteriormente, los individuos mutantes son individuos generedos a partir de un vector de RandomKeys del mismo modo que la población inicial. Con el fín de mostrar los simple que se genera un nuevo vector de random keys, presento el pseudocodigo del GenerateSolution que al final termina llamando al método decode del decoder descripto anteriormente.
+Como mencioné anteriormente, los individuos mutantes son individuos generedos a partir de un vector de RandomKeys, del mismo modo que la población inicial. Con el fín de mostrar lo simple que es la generación de un nuevo vector de RandomKeys, presento el pseudocodigo del GenerateSolution que al final termina llamando al método decode del decoder descripto anteriormente.
 
 \bigskip
 
@@ -318,23 +403,25 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar que la solución no existiese en la población. Dado una población de soluciones no repetidas, la probabilidad de de generar una solucion existente al evolucionar la poblcion, es baja. Aún así, una vez que sucede, la probabilidad de generar otra más que aumenta considerablemente ya que hay aun mas probabilidades de utilizar el padres identicos. Si ademas la solucion repetida se ecuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto generaba un efecto bola de nieve donde cada nueva generación tenía cada vez más individuos repetidos. Incluso se llego al caso donde toda una población constituia de una unica solución excepto por las soluciones mutantes. Esto reducía ampliamente la cantidad de soluciones diferentes exploradas, luego reducía fuertemente la frecuencia con la que una nueva mejor solución aparecía. Además si uno tiene varios individuos iguales en una solución, el algoritmo se vuelve menos eficiente ya que repite trabajo en donde obtiene los mismos resultados. Entonces el costo total de validar unicidad en la inserción que conlleva un orden de complejidad $O(PopulationSize * NonElitePopulationSize)$ resulta muy bajo comparado con el costo de trabajar con multiples soluciones repetidas.
+En una primera instancia se insertaban los individuos sin verificar que la solución no existiese en la población. Dado una población de soluciones no repetidas, la probabilidad de de generar una solucion existente al evolucionar la población, es baja. Aún así, una vez que sucede, la probabilidad de generar otra más aumenta considerablemente ya que ahora hay mas probabilidades de utilizar padres ídenticos. Si además la solución repetida se ecuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto generaba un efecto bola de nieve donde cada nueva generación tenía cada vez más individuos repetidos. Incluso se llego al caso donde toda una población constituía de una unica solución excepto por las soluciones mutantes. Esto reducía ampliamente la cantidad de soluciones diferentes exploradas, luego reducía fuertemente la frecuencia con la que una nueva mejor solución aparecía. Además si uno tiene varios individuos iguales en una solución, el algoritmo se vuelve menos eficiente ya que repite trabajo en donde obtiene los mismos resultados. Entonces el costo total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(PopulationSize * NonElitePopulationSize)$, resulta muy bajo comparado con el costo de trabajar con multiples soluciones repetidas.
 
 \subsection{Resultados de la primer versión}
 
-La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. No incluir el objeto configuración sinificaba que por mas que se podía configurar, tomaba mas tiempo modificarlo y no estaba toda la confiuracion centralizada en un objeto. Para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Desarfotunadamente no sucedía lo mismo cuando aumentaban la cantidad de clientes y vehículos.
+La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los indices de efectividad que mostrare a continuación corresponden con una primera versión que no admitía repetidos y el objeto configuracion.
 
 \bigskip
 
-Con el fin de mejorar los resultados cree el objeto Configuracion y fui variando los valores de $MinIerations$, $MinNoChanges$, $PopulationSize$, $ElitePercentage$, $MutantPercentage$ y $EliteGenChance$. Tomé una instancia de testeo grande como referencia para comparar resultados y fui modificando estas variables observando cuando mejoraba. Logre mejorar un poco los resultados, aun así todavía estaban lejos del objetivo.
+TODO Indice Efectividad para cada configuracion. (5-7 config).
 
 \bigskip
 
-TODO Indice Efectividad para cada configuracion. (5-7 config)
+TODO hablar sobre estos resultados parciales.
+
+Para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Desafotunadamente no sucedía lo mismo cuando aumentaban la cantidad de clientes y vehículos.
 
 \section{Heuristicas de busqueda local}
 
-En pos de optimizar los resultados mencionados anteriormente se implementaron heuristicas de busqueda local. La idea fue aplicar estas heurísticas a la mejor solución de cada nueva generación. En caso de que a la mejor solución ya se le hubiese aplicado las heuristicas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los indiviuos del conjunto de elite pasan a la siguiente generación.
+En pos de optimizar los resultados mencionados anteriormente se implementaron heuristicas de busqueda local. La idea fue aplicar estas heurísticas a la mejores $x$ soluciónes de cada nueva generación. Donde $x$ toma el valor de la propiedad $ApplyHeuristicsToTop$. En caso de a la solución ya se le hubiese aplicado las heuristicas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los indiviuos del conjunto de elite pasan a la siguiente generación.
 
 \subsection{Swap (Entre rutas distintas)}
 
