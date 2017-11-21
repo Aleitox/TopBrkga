@@ -36,16 +36,27 @@ namespace Main.GuidedLocalSearchHeuristics
 
         private bool Do2OptSwap(Vehicle vehicle)
         {
+            var changed = false;
             var combinations = LocalSearchHeuristicHelper.GetCombinationsFor(vehicle.Route.RouteLenght());
-            foreach (var combination in combinations)
+            // TODO ojo que aca cambi recientemente
+            //foreach (var combination in combinations)
+            //{
+            //    var swaped = vehicle.Route.SwapIfImprovesDistance(combination.Item1 - 1, combination.Item2 - 1);
+            //    if (!swaped)
+            //        continue;
+
+            //    return true;
+            //}
+            var index = 0;
+            while ( index < combinations.Count)
             {
-                var swaped = vehicle.Route.SwapIfImprovesDistance(combination.Item1 - 1, combination.Item2 - 1);
+                var swaped = vehicle.Route.SwapIfImprovesDistance(combinations[index].Item1 - 1, combinations[index].Item2 - 1);
                 if (!swaped)
-                    continue;
-                
-                return true;
+                    index++;
+                index = 0;
+                changed = true;
             }
-            return false;
+            return changed;
         }
     }
 }

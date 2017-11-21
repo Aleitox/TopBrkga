@@ -31,7 +31,7 @@ namespace Main.Brkga
             ProblemManager.InitializePopulation();
 
             while (!ProblemManager.StoppingRuleFulfilled)
-                ProblemManager.EvolvePopulation();
+                ProblemManager.EvolvePopulation();0
 
             ProblemManager.Population.MarkSolutionsAsFinals();
 

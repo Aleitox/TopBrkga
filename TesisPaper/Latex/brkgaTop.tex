@@ -167,8 +167,6 @@ TODO Indice de efectividad
 
 \section{BRKGA}
 
-\subsection{Macro}
-
 En una primera intancia se implementa un BRKGA estandar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la poblacion. Es decir generamos una nueva generacion de soluciones a partir de la generación anterior como se explico en la sección BRKGA ~(ver sección~\ref{sec:brkga}).
 
 \bigskip
@@ -421,11 +419,60 @@ Para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao,
 
 \section{Heuristicas de busqueda local}
 
-En pos de optimizar los resultados mencionados anteriormente se implementaron heuristicas de busqueda local. La idea fue aplicar estas heurísticas a la mejores $x$ soluciónes de cada nueva generación. Donde $x$ toma el valor de la propiedad $ApplyHeuristicsToTop$. En caso de a la solución ya se le hubiese aplicado las heuristicas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los indiviuos del conjunto de elite pasan a la siguiente generación.
+En pos de optimizar los resultados mencionados anteriormente se implementaron heuristicas de busqueda local. La idea fue aplicar estas heurísticas a la mejores $x$ soluciónes de cada nueva generación. Donde $x$ toma el valor de la propiedad $ApplyHeuristicsToTop$. En caso de que a la solución ya se le hubiese aplicado las heuristicas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los indiviuos del conjunto de elite pasan a la siguiente generación. La idea de implementar heuristicas de busqueda local la obtuve de la publicación \textit{A guided local search metaheuristic for the team orienteering problem.} de Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. Todas las heuristicas de busqueda local al modificar una solucion, la misma sigue siendo una solucion valida. Es decir se siguen respetando las restricciones de distancia y la cantidad de vehiculos. 
 
-\subsection{Swap (Entre rutas distintas)}
+\subsection{Center of Gravity}
 
-El objetivo de esta heuristica es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas mientras sigan respetando la restricción de distancia máxima por vehículo. Es decir dados $v_a$, $v_b$ vehiculos y sus respectivas rutas $r_a$, $r_b$, se puede realizar un swap entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$ cumpliendo:
+Para las heuriticas de busqueda local Insert y Replace se deben tomar una lista de clientes a considerar con algun orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza es por su distancia al centro de gravedad (COG) de una ruta. A menor distancia, mayor prioridad tendra el cliente. Implementé el calculo de COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordena COG de una ruta se calcula con las siguietes formulas:
+
+\begin{equation}
+x_{cog} = (\sum_{\forall i \in ruta} x_i * B_i) / \sum_{\forall i \in ruta} B_i
+\end{equation}
+
+\begin{equation}
+y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i
+\end{equation}
+
+\bigskip
+
+Donde $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio.
+El calculo de COG tiene una complejidad de $O(ruta.Length)$. No es tan costoso, de todos modos como no quiero realizar calculos innecesarios, el COG de una ruta solo se calcula cuando se necesita, es decir cuando se es. Ademas se calcula una vez y se mantiene en memoria. Cuando se modifica la ruta, actualizo el COG.
+
+\bigskip
+
+Sea $r$ una ruta:
+
+\begin{equation}
+r.x_{cog} =  \frac{\sum_{\forall i \in ruta} x_i * B_i}{\sum_{\forall i \in ruta} B_i}  = \frac{r.x_{cog.num}}{r.x_{cog.den}}
+\end{equation}
+
+\bigskip
+
+Sea $r' = r.Remove(c_j)$ con $c_j$ cliente y $c_j \in r$:
+
+\begin{equation}
+r'.x_{cog} =  \frac{\sum_{\forall i \in ruta \wedge i \neq j} x_i * B_i}{\sum_{\forall i \in ruta \wedge i \neq j} B_i}  = \frac{r.x_{cog.num}-x_j*B_j}{r.x_{cog.den}-B_j}
+\end{equation}
+
+\bigskip
+
+Sea $r'' = r.Add(c_k)$ con $c_k$ cliente y $c_k \notin r$:
+
+\begin{equation}
+r'.x_{cog} =  \frac{(\sum_{\forall i \in ruta} x_i * B_i) + x_k * B_k}{(\sum_{\forall i \in ruta} B_i) + B_k}  = \frac{r.x_{cog.num}+x_k*B_k}{r.x_{cog.den}+B_k}
+\end{equation}
+
+\bigskip
+
+Luego actualizar el COG de una ruta al agregar ó remover un cliente tiene una complejidad de $O(1)$ si guardamos en memoria y actualizamos los valores de $x_{cog.num}$ y $x_{cog.den}$ para cada ruta (Lo mismo aplica para la coordenada $y$).
+
+\bigskip
+
+
+
+\subsection{Swap}
+
+El objetivo de esta heuristica es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas mientras sigan respetando la restricción de distancia máxima por vehículo. Es decir dados $v_a$, $v_b$ vehiculos y sus respectivas rutas $r_a$, $r_b$, se puede realizar un swap entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$, valen:
 
 \begin{equation*}
 r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist \nonumber
@@ -439,35 +486,143 @@ r_a'.Dist \leq v'_a.dMax
 r_b'.Dist \leq v'_b.dMax
 \end{equation*}
 
-Al aplicar esta heuristica a una solución, para todos par de rutas se ejecuta el $SwapDestinationsBetween$. Si hay $n$ rutas, la cantidad de pares de rutas es $n * (n-1) / 2$. $SwapDestinationsBetween$ prueba cada cliente de la ruta $a$ con cada cliente de la ruta $B$, si efectivamente conviene hacer un swap, lo realiza y continua probando pares de clientes. De modo de no estar cambiando multiples veces un mismo cliente entre dos rutas en una misma ejecución de $SwapDestinationsBetween$, cuando se cambia de ruta a un cliente, se lo banea de cambios hasta que no termine la actual ejecución de $SwapDestinationsBetween$. La metaheuristica Swap no mejora el beneficio total de una solución. Lo que hace es disminuir la distancia recorrida de alguna ruta, lo que aumente la posibilidad de encontrar algun cliente que agregar a las rutas respetando la restricción de la distancia máxima.
+Al aplicar esta heuristica a una solución, para todos par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Si hay $n$ rutas, la cantidad de pares de rutas es $n * (n-1) / 2$. \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, si efectivamente conviene hacer un swap, lo realiza y continua probando pares de clientes. De modo de no estar cambiando multiples veces un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente, se lo banea de cambios hasta que no termine la actual ejecución de \textit{SwapDestinationsBetween}. La metaheuristica Swap no mejora el beneficio total de una solución. Lo que hace es disminuir la distancia recorrida de alguna ruta, lo que aumente la probabilidad de encontrar algun cliente no visitado que se pueda insertar en alguna de las rutas modificadas.
 
 \bigskip
 
-Su orden de complejidad es $0((n * (n-1) / 2 ) * clientes/n * clientes/n) ~ O(clientes^2/2)$
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+// Dentro de clase SwapHeuristic
+public void ApplyHeuristic(Solution solution)
+{
+	var combinations = GetCombinationsFor(solution.Vehicles.Count);
+	foreach (var combination in combinations)
+	{
+		var v1 = solution.Vehicles[combination.Left];
+		var v2 = solution.Vehicles[combination.Right];
+		SwapDestinationsBetween(v1, v2);
+	}
+	solution = Encoder.UpdateRandomKeys(solution);
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+public void SwapDestinationsBetween(Vehicle v1, Vehicle v2)
+{
+	var v1Bans = new Dictionary<int, bool>();
+	var v2Bans = new Dictionary<int, bool>();
+	for (var i = 0; i < v1.Route.RouteLenght(); i++)
+	{
+		if(v1Bans.ContainsKey(i)) 
+			continue;
+		for (var j = 0; j < v2.Route.RouteLenght(); j++)
+		{
+			if (v2Bans.ContainsKey(j)) 
+				continue;
+			if (!Swaps(i, j, ref leftRoute, ref rightRoute)) 
+				continue;
+			v1Bans.Add(i, true);
+			v2Bans.Add(j, true);
+			break; // Para que cambie i
+		}
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+\bigskip
+
+El orden de complejidad del método ApplyHeuristic de la clase SwapHeuristic es:
+
+\begin{equation*}
+O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
+\end{equation*}
 
 \subsection{Insert}
 
-El objetivo de esta heuristica es encontrar una posición en alguna ruta para un cliente no visitado, respetando la restricción de distancia máxima. Básicamente para cada vehiculo y cada cliente no visitado se busca en que posición se puede insertar minimizando el incremento de distancia. Luego si la distancia resultante es menor a la distancia máxima del vehiculo, se inserta el cliente en tal posicion.
+El objetivo de esta heuristica es encontrar una posición en alguna ruta para un cliente no visitado. Básicamente para cada vehiculo y cada cliente no visitado se busca en que posición se puede insertar minimizando el incremento de distancia. Si la distancia resultante es menor a la distancia máxima del vehiculo, se inserta el cliente en tal posicion. El orden en que se toman los clientes no visitados es segun su distancia al COG de la ruta a optimizar, de forma ascendente.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+// Dentro de clase InsertHeuristic
+public void ApplyHeuristic(Solution solution)
+{
+	// Lista de los clientes no visitados
+	var uClients = solution.GetUnvistedClients;	
+	var vehicles = solution.Vehicles;
+	foreach (var vehicle in vehicles)
+	{
+		vehicle.Route.ActivateCog();
+		uClients = uClients.OrderBy(x => vehicle.DistanceToCog(x));	
+		for (var index = 0; index < uClients.Count; index++)
+		{
+			var res = AnalizeInsert(solution, vehicle, uClients[index]);
+			if (res.CanBeInserted)
+			{
+				vehicle.AddDestinationAt(uClients[index], res.BestPosition);
+				uClients.Remove(uClients[index]);
+			}
+		}
+	}
+	solution = Encoder.UpdateRandomKeys(solution);
+}
+\end{lstlisting}
+\end{minipage}
 
 \bigskip
 
-Este algoritmo tiene un $0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)$
+Como menciones en sobre la implementacion de COG, solo se utiliza cuando es necesario. Luego para cada vehiculo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el insert. El metodo \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo bool que denota que el cliente puede ser insertado o no en el vehiculo consultado. Y otro campo que tiene la posicion donde se debe insertar, en caso de poder insertarlo. En caso de poder insertar el cliente, este se lo agrega al vehiculo que actualiza su COG, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método ApplyHeuristic de la clase InsertHeuristic es: 
+
+\begin{equation*}
+0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
+\end{equation*}
+
+\subsection{2-opt}
+
+El algoritmo 2-opt es un simple algoritmo de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un swap de posiciones de dos clientes dentro de una misma ruta.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+// Dentro de clase 2-opt
+public void ApplyHeuristic(Solution solution)
+{
+	var index = 0;
+	var vehicles = solution.Vehicles;	
+	while (index < vehicles.Count)
+	{
+		var currentDistance = vehicles[index].Route.GetDistance();
+		Do2OptSwap(vehicles[index]);
+		index++;
+	}
+	solution = Encoder.UpdateRandomKeys(solution);
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+private void Do2OptSwap(Vehicle vehicle)
+{
+	var combinations = GetCombinationsFor(vehicle.Route.GetDistance());
+	var index = 0;
+	while (index < combinations.Count)
+	{
+		var position1 = combinations[index].Item1 - 1;
+		var position2 = combinations[index].Item2 - 1;
+		var swaped = vehicle.Route.SwapIfImprovesDistance(position1, position2);
+		if (!swaped)
+			index++;
+		index = 0;
+	}
+}
+\end{lstlisting}
+\end{minipage}
 
 \bigskip
 
-Claramente el mejor momento de ejecutar el insert es luego de a heuristica de swap ya que el swap disminuye la distancia de la sumatoria de los recorridos.
-
-\subsection{2-opt (Swap dentro de una misma ruta)}
-
-La idea de la heuristica 2-opt es buscar una orden alternativo de los clientes visitados en una misma ruta, de modo que disminuya la distancia recorrida de la ruta. Es decir un swap de posiciones de dos clientes dentro de una misma ruta.
-
-\bigskip
-
-Este algoritmo tiene un order de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
-
-\bigskip
-
-Del mismo modo que el swap, el 2-opt no incrementa el beneficio total de la solucion. En post de encontrar mejores resultados, es mejor ejecutar el 2-opt previo al insert.
+Basicamente a cada vehículo le aplica el 2-opt. El metodo Do2OptSwap primero obtiene una lista de las permutaciones posibles. Luego por cada combinacion intenta hacer un swap dentro de la ruta. Si el swap sucede, luego vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el swap solo sucede cuando la nueva distancia es estrictamente menor, el loop siempre termina. Una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un order de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
 
 \subsection{Replace}
 
@@ -486,3 +641,5 @@ AplicarHeuristicasLocales(solucion) \neq Decoder(solucion.VectorAleatorioDeEnter
 \end{equation*}
 
 Para solucionar esto se debe modificar el vector aleatorio de enteros de la solucion mejorada de modo que al decodificar su vector aleatorio de enteros, genere la solucion mejorada.
+
+\subsection{Secuencia de Aplicación de las Heuristicas}

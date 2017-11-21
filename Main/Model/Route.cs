@@ -209,6 +209,7 @@ namespace Main.Model
             var swapedDistance = GetTracksDistanceFor(a, ref alreadyAdded);
             swapedDistance += GetTracksDistanceFor(b, ref alreadyAdded);
 
+            // Si no mejoro nada, volver a atraz
             if (currentDistance <= swapedDistance)
                 Swap(a, b);
             else
@@ -224,6 +225,7 @@ namespace Main.Model
 
         public decimal GetTracksDistanceFor(int a, ref List<int> alreadyAdded)
         {
+            // TODO revisar que pueden haber bugs
             decimal distance = 0;
             if (a == 0)
             {
