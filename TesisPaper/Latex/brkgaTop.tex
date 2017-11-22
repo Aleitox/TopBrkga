@@ -1,5 +1,5 @@
 
-\chapter{BRKGA algorithm for the TOP}
+\chapter{Algoritmo BRKGA con búsqueda local para TOP}
 
 En el presente capítulo ahondaremos en detalle la solución implementada para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencionamos en el capítulo BRKGA tiene la tarea de convertir un arreglo de enteros aleatorios en una solución válida del problema. Luego el algoritmo BRKGA, cuya implementación puede hacerce con total independencia del problema a resolver. Por último las heurísticas locales aplicadas en cada nueva generación a el mejor individuo de la población, al cual no se le hayan aplicado previamente. 
 
@@ -30,7 +30,7 @@ Para cada uno de los siguientes modulos y submodulos, se mostraran su pseudocodi
 
 El decodificador debe generar una solución valida del problema dado un vector aleatorio de enteros y conociendo la instancia del problema (vehículos disponibles, clientes, tmax, etc). A modo El decodificador construye una solución valida asignando clientes a las rutas de los vehículos disponibles respetando tmax, su distancia maáxima de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Es ahí donde utilizaremos el vector aleatorio de enteros, el vector aleatorio de enteros marcara el orden en el cual se tomaran los clientes para asignarlos a una ruta. Por lo tánto el vector aleatorio de enteros tendrá una longitud equivalente a la cantidad de clientes del problema (vertices con beneficio mayor a cero).
 
-\subsection{Orden de los clientes a considerar}
+\subsection{Orden de los clientes a considerar}\label{sec:ordenDeco}
 
 Dado una instacia de un problema con $n$ clientes y un vector de enteros aleatorio de tamaño $n$, un decoder genera una solución valida de un problema. El vector, en mi implementacion, es un vector de RandomKeys. Un $RandomKey$ tiene dos propiedades, el entero aleatorio llamado $Key$ y otro entero llamado $PositionIndex$. 
 
@@ -495,22 +495,25 @@ Al aplicar esta heuristica a una solución, para todos par de rutas se ejecuta e
 // Dentro de clase SwapHeuristic
 public void ApplyHeuristic(Solution solution)
 {
+	var changed = false;
 	var combinations = GetCombinationsFor(solution.Vehicles.Count);
 	foreach (var combination in combinations)
 	{
 		var v1 = solution.Vehicles[combination.Left];
 		var v2 = solution.Vehicles[combination.Right];
-		SwapDestinationsBetween(v1, v2);
+		changed = changed || SwapDestinationsBetween(v1, v2);
 	}
-	solution = Encoder.UpdateRandomKeys(solution);
+	if(changed)
+		solution = Encoder.UpdateRandomKeys(solution);
 }
 \end{lstlisting}
 \end{minipage}
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
-public void SwapDestinationsBetween(Vehicle v1, Vehicle v2)
+public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 {
+	var changed = false;
 	var v1Bans = new Dictionary<int, bool>();
 	var v2Bans = new Dictionary<int, bool>();
 	for (var i = 0; i < v1.Route.RouteLenght(); i++)
@@ -523,11 +526,13 @@ public void SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 				continue;
 			if (!Swaps(i, j, ref leftRoute, ref rightRoute)) 
 				continue;
+			changed = true;
 			v1Bans.Add(i, true);
 			v2Bans.Add(j, true);
 			break; // Para que cambie i
 		}
 	}
+	return changed;
 }
 \end{lstlisting}
 \end{minipage}
@@ -550,6 +555,7 @@ El objetivo de esta heuristica es encontrar una posición en alguna ruta para un
 public void ApplyHeuristic(Solution solution)
 {
 	// Lista de los clientes no visitados
+	var changed = false;	
 	var uClients = solution.GetUnvistedClients;	
 	var vehicles = solution.Vehicles;
 	foreach (var vehicle in vehicles)
@@ -563,10 +569,12 @@ public void ApplyHeuristic(Solution solution)
 			{
 				vehicle.AddDestinationAt(uClients[index], res.BestPosition);
 				uClients.Remove(uClients[index]);
+				changed = true;
 			}
 		}
 	}
-	solution = Encoder.UpdateRandomKeys(solution);
+	if(changed)
+		solution = Encoder.UpdateRandomKeys(solution);
 }
 \end{lstlisting}
 \end{minipage}
@@ -589,22 +597,25 @@ El algoritmo 2-opt es un simple algoritmo de búsqueda local propuesto por Croes
 public void ApplyHeuristic(Solution solution)
 {
 	var index = 0;
+	var changed = false;	
 	var vehicles = solution.Vehicles;	
 	while (index < vehicles.Count)
 	{
 		var currentDistance = vehicles[index].Route.GetDistance();
-		Do2OptSwap(vehicles[index]);
+		changed = changed || Do2OptSwap(vehicles[index]);
 		index++;
 	}
-	solution = Encoder.UpdateRandomKeys(solution);
+	if(changed)
+		solution = Encoder.UpdateRandomKeys(solution);
 }
 \end{lstlisting}
 \end{minipage}
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
-private void Do2OptSwap(Vehicle vehicle)
+private bool Do2OptSwap(Vehicle vehicle)
 {
+	var changed = false;	
 	var combinations = GetCombinationsFor(vehicle.Route.GetDistance());
 	var index = 0;
 	while (index < combinations.Count)
@@ -614,8 +625,10 @@ private void Do2OptSwap(Vehicle vehicle)
 		var swaped = vehicle.Route.SwapIfImprovesDistance(position1, position2);
 		if (!swaped)
 			index++;
+		changed = true;
 		index = 0;
 	}
+	return changed;
 }
 \end{lstlisting}
 \end{minipage}
@@ -626,20 +639,62 @@ Basicamente a cada vehículo le aplica el 2-opt. El metodo Do2OptSwap primero ob
 
 \subsection{Replace}
 
-Esta heuristica busca intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta y, como siempre, respetando la restricción de distancia máxima.
+Esta heuristica busca intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta. Del mismo modo que la heuristica insert, los clientes no visitados se toman en orden segun su distancia al COG de la ruta, empezndo por los mas cercanos.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+// Dentro de la clase ReplaceHeuristicas
+public void ApplyHeuristic(Solution solution)
+{	
+	var vehicles = solution.Vehicles;
+	var changed = false;	
+	foreach (var vehicle in vehicles)
+		changed = changed || Replace(solution, vehicle);
+	if(changed)
+		solution = Encoder.UpdateRandomKeys(solution);
+}
+\end{lstlisting}
+\end{minipage}
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting}
+private bool Replace(Solution solution, Vehicle vehicle)
+{
+	var unvisited = solution.GetCurrentUnvistedDestination;
+	var changed = false;
+	vehicle.Route.ActivateCog();
+	uClients = uClients.OrderBy(x => vehicle.DistanceToCog(x));	
+
+	foreach (var client in uClients)
+	{
+		var res = AnalizeInsert(solution, vehicle, client);
+		vehicle.AddDestinationAt(destination, res.BestInsertPosition);
+		if (!res.CanBeInserted)
+		{
+			var removedClient = RemoveWorstOrDefault(vehicle, client);
+			changed = changed || removedClient.Id != client.Id;
+		}
+		else
+			changed = true;
+	}
+	return changed;
+}
+\end{lstlisting}
+\end{minipage}
 
 \bigskip
 
-Replace tiene una complejidad de $0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)$. Ya que esta heuristica es como un Insert pero con la penalidad de tener que remover un cliente, luego mejor ejecutarlo luego del insert.
+La heurística de replace es muy parecida al insert y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Por lo tanto ahora se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario remueve de la ruta el peor destino, que en el peor de los casos es el mismo cliente que se acaba de insertar. Cualquier otro cliente que se remueva de la ruta significará que se efectuo un replace y aumento el beneficio total de la ruta. Replace tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. 
 
-\subsection{Reversibilidad del Decoder}
+\subsection{Encoder}
 
-Agregar heuristicas de busqueda local entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se modifica su genetica, sus descendientes heredaran los genes que generan una solucion no optimizada por las busquedas locales. Del mismo modo que un hijo no hereda las cirujias esteticas de sus padres. 
+Agregar heuristicas de busqueda local entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se modifica su genética, es decir su \textit{RandomKeys}, sus descendientes heredarán los genes que generan una solucion no optimizada por las búsquedas locales. Del mismo modo que una persona no hereda las cirujias esteticas de sus padres. 
 
 \begin{equation*}
-AplicarHeuristicasLocales(solucion) \neq Decoder(solucion.VectorAleatorioDeEnteros)
+ApplyHeuristic(solucion) \neq Decoder.Decode(solucion.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros de la solucion mejorada de modo que al decodificar su vector aleatorio de enteros, genere la solucion mejorada.
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución mejorada. Mencionamos en el seccion del Decodificador (~(ver sección~\ref{sec:ordenDeco})), los clientes se ordenan de forma ascendente por el key del randomKey asociado por su positionIndex. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor key de su randomKey asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor Id ya que los ordena por su id de forma ascendente. Los vehiculos son indistinguibles al tener el mismo tMax en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehiculo con menor id y a ese cliente le voy a asociar el randomKey que tenga el menor key. Asi, cuando el decoder inicie lo primero que hara es tomar este cliente e intentara adjudicarselo al primer vehiculo que sera el de menor id. Luego tomare el segundo cliente del mismo vehiculo y le asignare el segundo RandomKey de menor Key. Así sucesivamente hasta tener mapeados todos los clientes del primer vehiculo con su nuevo RandomKey. Luego repito el procedimiento con los clientes del siguiente vehiculo ordenados por id ascendentemnte. Finalmente, no tendre mas vehiculos y quedara un resto de clientes no visitados a los cuales le tengo que asociar algun RandomKey. A estos clientes podria asignarle cualquier RandomKey. Aún asi, en pos de disminuir los cambios geneticos sobre el individuo, les asigne un RandomKey tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimizacion. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el RandomKey con menor key, le asigne el RandomKey de menor key que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehiculo, esten en el primer vehiculo al decodificar el random keys. Pero no hay certeza de que no hayan mas clientes de los que habian antes.
+
 
 \subsection{Secuencia de Aplicación de las Heuristicas}

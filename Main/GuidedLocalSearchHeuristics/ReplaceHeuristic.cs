@@ -3,6 +3,7 @@ using System.Linq;
 using Main.BrkgaTop;
 using Main.Model;
 using System;
+using Main.BrkgaTop.Encoders;
 
 namespace Main.GuidedLocalSearchHeuristics
 {
@@ -27,6 +28,7 @@ namespace Main.GuidedLocalSearchHeuristics
                     unvisited = solution.GetCurrentUnvistedDestination;
             }
 
+            encodedSolution = Encoder.UpdateEncodedSolution(encodedSolution, solution.GetCurrentRoutes);
         }
 
         private bool ReplaceIfEnabled(Solution solution, Vehicle vehicle, List<Destination> unvisited)
