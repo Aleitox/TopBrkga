@@ -11,6 +11,7 @@ namespace Main.GuidedLocalSearchHeuristics
         public void ApplyHeuristic(ref EncodedSolution encodedSolution)
         {
             var solution = encodedSolution.GetSolution;
+            // TODO necesita permutaciones 1,1 y 2,1 que GetCombinationsFor no genera
             var combinations = LocalSearchHeuristicHelper.GetCombinationsFor(solution.VehicleFleet.Vehicles.Count);
             foreach (var combination in combinations)
             {
