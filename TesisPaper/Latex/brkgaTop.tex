@@ -691,10 +691,73 @@ La heurística de replace es muy parecida al insert y esto se refleja en el pseu
 Agregar heuristicas de busqueda local entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se modifica su genética, es decir su \textit{RandomKeys}, sus descendientes heredarán los genes que generan una solucion no optimizada por las búsquedas locales. Del mismo modo que una persona no hereda las cirujias esteticas de sus padres. 
 
 \begin{equation*}
-ApplyHeuristic(solucion) \neq Decoder.Decode(solucion.RandomKeys, ProblemInfo)
+ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución mejorada. Mencionamos en el seccion del Decodificador (~(ver sección~\ref{sec:ordenDeco})), los clientes se ordenan de forma ascendente por el key del randomKey asociado por su positionIndex. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor key de su randomKey asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor Id ya que los ordena por su id de forma ascendente. Los vehiculos son indistinguibles al tener el mismo tMax en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehiculo con menor id y a ese cliente le voy a asociar el randomKey que tenga el menor key. Asi, cuando el decoder inicie lo primero que hara es tomar este cliente e intentara adjudicarselo al primer vehiculo que sera el de menor id. Luego tomare el segundo cliente del mismo vehiculo y le asignare el segundo RandomKey de menor Key. Así sucesivamente hasta tener mapeados todos los clientes del primer vehiculo con su nuevo RandomKey. Luego repito el procedimiento con los clientes del siguiente vehiculo ordenados por id ascendentemnte. Finalmente, no tendre mas vehiculos y quedara un resto de clientes no visitados a los cuales le tengo que asociar algun RandomKey. A estos clientes podria asignarle cualquier RandomKey. Aún asi, en pos de disminuir los cambios geneticos sobre el individuo, les asigne un RandomKey tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimizacion. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el RandomKey con menor key, le asigne el RandomKey de menor key que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehiculo, esten en el primer vehiculo al decodificar el random keys. Pero no hay certeza de que no hayan mas clientes de los que habian antes.
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. 
 
+\bigskip
+
+TODO Dibujo didactico?
+
+\bigskip
+
+Ahora bien, digamos que existe un escenario donde el decoder se encuentra trabajando con un RandomKeys que fue generado por el encoder y sucede lo siguiente. Al agregar al último cliente de la primer ruta, como es un decoder goloso, intentará agregar a la primer ruta al resto de los clientes y supongamos que efectivamente encuentra uno. Cuando vi la posibilidad de este escenario, decidi agregar unos delimitadores de modo que si el decoder se encuentra con uno, siempre cambie de vehículo. Estos delimitadores son modelas por la propiedad, \textit{ForceVehicleChangeAfterThis}, con la que extendia al objeto \textit{RandomKey}. De este modo el Decoder, luego de utilizar el \textit{RandomKey}, se fija si \textit{ForceVehicleChangeAfterThis} es \textit{true} y si lo es, deja de intentar agregar clientes a la ruta del vehículo actual, pasando al siguiente. Los delimitadores no son heredados a los descendientes. Estos delimitadores me aseguran que valga: 
+
+\begin{equation} \label{eq:1}
+ApplyHeuristic(s) = Decoder.Decode(s.RandomKeys, ProblemInfo)
+\end{equation}
+
+\bigskip
+
+En caso de no tener los delimitadores, como dije antes, una ruta podría tener un cliente extra, que para fines del algoritmo, no es malo. Al agregar un cliente, hay dos opciones. La primera es que el cliente perteneciera al subconjunto de clientes que no estaba visitado. En este caso aumentaria el beneficio total. Pero para que esto suceda, la heuristica de insert no debería haber funcionado correctamente ó no fue la última en aplicarse. En caso de que el cliente perteneciece a otro vehículo, el beneficio total no se modifica. El peor escenario es que este segundo vehiculo se quede con el cliente de un tercer vehiculo, sucediendo un especie de cambios en cadenados de clientes entre una secuencia de vehículos sin decrementar el beneficio total. Luego por mas que tomé la desicion de agregar los delimitadores, considero que ambas opciones eran igual de buenas considerando solamente la función objetivo. Como agregar los delimitadores asegura la valides de la ecuación \ref{eq:1}.
+
+%\begin{minipage}{\textwidth}
+\begin{lstlisting}
+public static Solution UpdateRandomKeys(Solution s);
+{
+	var randomKeys = s.GetOrderedRandomKeys();
+	// Todas las keys ordenadas ascendente
+	var keys = randomKeys.Select(k => k.Key).ToList();
+	var positionIndexes = new List<int>();
+	// Get Position Indexes from Visited Clients
+	foreach (var r in s.Routes)
+	{
+		var d = r.GetDestinations();
+		var rpi = d.Select(d => d.PositionIndex);
+		positionIndexes.AddRange(rpi);
+	}
+	// Get Position Indexes from Unvisited Clients
+	var uPositionIndexes = GetUnvisitedPositionIndexes(randomKeys, newRoutes);
+	positionIndexes.AddRange(unvistedPositionIndexes);
+
+	// Hay un break por cada cantidad de clientes en ruta 
+	var breaks = new Queue(newRoutes.Select(r => r.GetDestinations.Count));
+
+	var newRandomKeys = new List<RandomKey>();
+	var endRoute = false;
+	var acumBreak = 0;
+	for (var index = 0; index < keys.Count; index++)
+	{
+		if (breaks.Count > 0)
+		{		
+			endRoute = index + 1 == (int)breaks.Peek() + acumBreak;
+			if (endRoute)
+				acumBreak += (int)breaks.Dequeue();
+		}		
+		var randomKey = new RandomKey()
+		{
+			Key = keys[index],
+			PositionIndex = positionIndexes[index],
+			ForceVehicleChangeAfterThis = endRoute
+		};
+		newRandomKeys.Add(randomKey);
+	}
+	s.SetRandomKeys(newRandomKeys);
+	return s;
+}
+\end{lstlisting}
+%\end{minipage}
 
 \subsection{Secuencia de Aplicación de las Heuristicas}
+
