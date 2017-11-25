@@ -30,6 +30,8 @@ namespace Main.Entities
         public bool BestOfAll { get; set; }
         public bool LastGeneration { get; set; }
         public Nullable<long> TimeElapsedInMilliseconds { get; set; }
+        public System.DateTime CreationDate { get; set; }
+        public int Fase { get; set; }
     
         public virtual Instance Instance { get; set; }
         public virtual ICollection<Vehicle> Vehicles { get; set; }

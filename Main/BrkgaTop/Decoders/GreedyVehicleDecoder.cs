@@ -1,6 +1,7 @@
 ﻿using Main.Model;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 namespace Main.BrkgaTop.Decoders
 {
@@ -17,9 +18,9 @@ namespace Main.BrkgaTop.Decoders
             Provider = provider;
         }
 
-        public Solution Decode(EncodedSolution encodedSolution)
+        public Solution Decode(List<RandomKey> randomKeys)
         {
-            var orderedRandomKeys = encodedSolution.GetOrderedRandomKeys();
+            var orderedRandomKeys = randomKeys.OrderBy(rk => rk.Key).ToList();
 
             var solution = Provider.GetFreshProblem();
             var usedDestinationsIds = new HashSet<int>();
@@ -30,6 +31,11 @@ namespace Main.BrkgaTop.Decoders
             }
 
             return solution;
+        }
+
+        public Solution Decode(EncodedSolution encodedSolution)
+        {
+            return Decode(encodedSolution.RandomKeys);
         }
 
         private Route GetRoute(List<RandomKey> orderedRandomKeys, IMap map, decimal maxDistance, ref HashSet<int> usedDestinationsIds)
@@ -55,6 +61,8 @@ namespace Main.BrkgaTop.Decoders
         {
             return maxDistance >= route.GetDistanceAdding(map, destination);
         }
+
+        
 
         public ProblemResourceProvider Provider { get; set; }
     }

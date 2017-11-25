@@ -7,6 +7,20 @@ namespace Main.Model
 {
     public class Solution
     {
+        public Solution()
+        {
+            CreationDate = DateTime.Now;
+        }
+
+        public Solution(IMap map, IVehicleFleet vehicleFleet, int instanceId, string name)
+        {
+            Map = map;
+            VehicleFleet = vehicleFleet;
+            InstanceId = instanceId;
+            Name = name;
+            CreationDate = DateTime.Now;
+        }
+
         public int Id { get; set; }
 
         public string Name { get; set; }
@@ -16,14 +30,8 @@ namespace Main.Model
         public int Step { get; set; }
 
         public bool IsFinal { get; set; }
-        
-        public Solution(IMap map, IVehicleFleet vehicleFleet, int instanceId, string name)
-        {
-            Map = map;
-            VehicleFleet = vehicleFleet;
-            InstanceId = instanceId;
-            Name = name;
-        }
+
+        public DateTime CreationDate { get; set; }
 
         public IMap Map { get; set; }
 
@@ -56,6 +64,7 @@ namespace Main.Model
         public bool BestInGeneration { get; set; }
         public bool BestOfAll { get; set; }
         public long TimeElapsedInMilliseconds { get; set; }
+        public int Fase { get; set; }
 
         public override string ToString()
         {

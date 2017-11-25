@@ -1,4 +1,5 @@
 ﻿using Main.Entities;
+using System;
 using System.Data.Entity;
 using System.Linq;
 
@@ -63,6 +64,8 @@ namespace Main.Repositories
             solution.BestOfAll = modelSolution.BestOfAll;
             solution.LastGeneration = modelSolution.IsFinal;
             solution.TimeElapsedInMilliseconds = modelSolution.TimeElapsedInMilliseconds;
+            solution.Fase = modelSolution.Fase;
+            solution.CreationDate = modelSolution.CreationDate;
             return solution;
         }
 
@@ -78,6 +81,8 @@ namespace Main.Repositories
             solution.BestInGeneration = modelSolution.BestInGeneration;
             solution.BestOfAll = modelSolution.BestOfAll;
             solution.TimeElapsedInMilliseconds = modelSolution.TimeElapsedInMilliseconds;
+            solution.Fase = modelSolution.Fase;
+            solution.CreationDate = DateTime.Now;
             Insert(solution);
             return solution;
         }

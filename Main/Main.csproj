@@ -94,6 +94,7 @@
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
     <Compile Include="Factory\BrkgaFactory.cs" />
+    <Compile Include="Factory\PaperConfigsFactory.cs" />
     <Compile Include="Factory\ProblemProviderFactory.cs" />
     <Compile Include="FileIO\FileManager.cs" />
     <Compile Include="GuidedLocalSearchHeuristics\CenterOfGravity.cs" />

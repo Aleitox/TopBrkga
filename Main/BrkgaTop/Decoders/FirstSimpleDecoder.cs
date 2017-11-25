@@ -28,18 +28,23 @@ namespace Main.BrkgaTop.Decoders
 
         public Solution Decode(EncodedSolution encodedSolution)
         {
-            var orderedRandomKeys = encodedSolution.GetOrderedRandomKeys();
+            return Decode(encodedSolution.RandomKeys);
+        }
 
-            var problem = Provider.GetFreshProblem();
+        public Solution Decode(List<RandomKey> randomKeys)
+        {
+            var orderedRandomKeys = randomKeys.OrderBy(rk => rk.Key).ToList();
+
+            var solution = Provider.GetFreshProblem();
 
             var keyIndex = 0;
-            var vehicle = problem.VehicleFleet.Vehicles[0];
+            var vehicle = solution.VehicleFleet.Vehicles[0];
             var vehicleNumber = vehicle.Number;
             while (keyIndex < orderedRandomKeys.Count)
             {
-                var currentDestination = problem.Map.Destinations[orderedRandomKeys[keyIndex].PositionIndex];
-                vehicle = GetNextAvailableVehicleFor(problem, currentDestination, vehicleNumber);
-                if(vehicle == null)
+                var currentDestination = solution.Map.Destinations[orderedRandomKeys[keyIndex].PositionIndex];
+                vehicle = GetNextAvailableVehicleFor(solution, currentDestination, vehicleNumber);
+                if (vehicle == null)
                     break;
 
                 vehicleNumber = vehicle.Number;
@@ -52,7 +57,7 @@ namespace Main.BrkgaTop.Decoders
                 keyIndex++;
             }
 
-            return problem;
+            return solution;
         }
 
         public ProblemResourceProvider Provider { get; set; }

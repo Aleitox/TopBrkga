@@ -17,7 +17,7 @@ namespace TesisUnitTests
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
             //var instance = instanceRepository.GetBy("Tsiligirides", "Set_21_234", "p2.2.a.txt");
-            var instance = instanceRepository.GetById(431);
+            var instance = instanceRepository.GetById(522);
 
             var problemResourceProvider = ProblemProviderFactory.CreateProblemProvider(instance, null);
             var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);

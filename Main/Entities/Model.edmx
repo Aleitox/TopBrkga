@@ -43,6 +43,8 @@
           <Property Name="BestOfAll" Type="bit" Nullable="false" />
           <Property Name="LastGeneration" Type="bit" Nullable="false" />
           <Property Name="TimeElapsedInMilliseconds" Type="bigint" />
+          <Property Name="CreationDate" Type="datetime" Nullable="false" />
+          <Property Name="Fase" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="Vehicles">
           <Key>
@@ -286,6 +288,8 @@
           <Property Name="TimeElapsedInMilliseconds" Type="Int64" />
           <NavigationProperty Name="Instance" Relationship="TOPModel.FK_Instance" FromRole="Solution" ToRole="Instance" />
           <NavigationProperty Name="Vehicles" Relationship="TOPModel.FK_Solution" FromRole="Solution" ToRole="Vehicle" />
+          <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Fase" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Instance">
           <End Type="TOPModel.Instance" Role="Instance" Multiplicity="1" />
@@ -367,6 +371,8 @@
           <EntitySetMapping Name="Solutions">
             <EntityTypeMapping TypeName="TOPModel.Solution">
               <MappingFragment StoreEntitySet="Solutions">
+                <ScalarProperty Name="Fase" ColumnName="Fase" />
+                <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="TimeElapsedInMilliseconds" ColumnName="TimeElapsedInMilliseconds" />
                 <ScalarProperty Name="LastGeneration" ColumnName="LastGeneration" />
                 <ScalarProperty Name="BestOfAll" ColumnName="BestOfAll" />
