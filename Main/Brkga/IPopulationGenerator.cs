@@ -29,8 +29,8 @@ namespace Main.Brkga
             PopulationSize = populationSize;
             Generation = 0;
             NonProfitDestinations = nonProfitDestinations;
-            ElitePercentage = elitePercentage == 0 ? 3/10 : elitePercentage;
-            MutantPercentage = mutantPercentage == 0 ? 1/10 : mutantPercentage;
+            ElitePercentage = elitePercentage == 0 ? 0.3m : elitePercentage;
+            MutantPercentage = mutantPercentage == 0 ? 0.1m : mutantPercentage;
             EliteGenChance = eliteGenChance;
             Random = new Random();
         }
@@ -119,7 +119,7 @@ namespace Main.Brkga
         {
             var randomVector = new List<RandomKey>();
             var randomGenerator = new Random(seed);
-            for (var index = nonProfitDestinations - 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
+            for (var index = 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
             {
                 var nextRandom = randomGenerator.Next(0, 1000);
                 while (randomVector.Any(r => r.Key == nextRandom))

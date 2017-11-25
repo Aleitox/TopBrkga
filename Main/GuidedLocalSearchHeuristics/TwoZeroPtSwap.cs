@@ -51,10 +51,13 @@ namespace Main.GuidedLocalSearchHeuristics
             while ( index < combinations.Count)
             {
                 var swaped = vehicle.Route.SwapIfImprovesDistance(combinations[index].Item1 - 1, combinations[index].Item2 - 1);
-                if (!swaped)
+                if (swaped)
+                {
+                    index = 0;
+                    changed = true;
+                }
+                else
                     index++;
-                index = 0;
-                changed = true;
             }
             return changed;
         }

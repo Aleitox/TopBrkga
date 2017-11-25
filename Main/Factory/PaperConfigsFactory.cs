@@ -26,7 +26,7 @@ namespace Main.Factory
                 decoders.Add(new FirstSimpleDecoder(problemProvider));
             foreach (var decoder in decoders)
             {
-                var randomKeysList = CreateRandomKeyVector(decoder, 200);
+                var randomKeysList = CreateRandomKeyVector(decoder, 5);
                 Model.Solution s;
                 foreach (var randomKeys in randomKeysList)
                 {

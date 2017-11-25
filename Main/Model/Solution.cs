@@ -65,6 +65,7 @@ namespace Main.Model
         public bool BestOfAll { get; set; }
         public long TimeElapsedInMilliseconds { get; set; }
         public int Fase { get; set; }
+        public int Run { get; internal set; }
 
         public override string ToString()
         {

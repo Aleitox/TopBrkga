@@ -32,6 +32,7 @@ namespace Main.Entities
         public Nullable<long> TimeElapsedInMilliseconds { get; set; }
         public System.DateTime CreationDate { get; set; }
         public int Fase { get; set; }
+        public int Run { get; set; }
     
         public virtual Instance Instance { get; set; }
         public virtual ICollection<Vehicle> Vehicles { get; set; }

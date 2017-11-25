@@ -45,8 +45,12 @@ namespace Main.Repositories
 
         private Solution TryGetPreviousSolution(Model.Solution modelSolution)
         {
-            if (modelSolution.Id != 0 || GetAll().Any(s => s.InstanceId == modelSolution.InstanceId && s.Name == modelSolution.Name))
+            if (modelSolution.Id != 0)
                 return UpdateSolution(modelSolution);
+
+            var previousRuns = GetAll().Where(s => s.InstanceId == modelSolution.InstanceId && s.Name == modelSolution.Name);
+            if (previousRuns.Any())
+                modelSolution.Run = previousRuns.Max(s => s.Run) + 1;
 
             return CreateNewSolution(modelSolution);
         }
@@ -66,6 +70,7 @@ namespace Main.Repositories
             solution.TimeElapsedInMilliseconds = modelSolution.TimeElapsedInMilliseconds;
             solution.Fase = modelSolution.Fase;
             solution.CreationDate = modelSolution.CreationDate;
+            solution.Run = modelSolution.Run;
             return solution;
         }
 
@@ -83,6 +88,7 @@ namespace Main.Repositories
             solution.TimeElapsedInMilliseconds = modelSolution.TimeElapsedInMilliseconds;
             solution.Fase = modelSolution.Fase;
             solution.CreationDate = DateTime.Now;
+            solution.Run = modelSolution.Run;
             Insert(solution);
             return solution;
         }

@@ -20,9 +20,8 @@ namespace TesisUnitTests
             var instance = instanceRepository.GetById(522);
 
             var problemResourceProvider = ProblemProviderFactory.CreateProblemProvider(instance, null);
-            var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
-            var populationGenerator = new PopulationGenerator(problemDecoder,
-                problemResourceProvider.GetAmountOfNonProfitDestinations());
+            var problemDecoder = new FirstSimpleDecoder(problemResourceProvider);
+            var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations());
             var problemManager = new ProblemManager(populationGenerator, true);
             var brkga = new Brkga(problemManager);
 

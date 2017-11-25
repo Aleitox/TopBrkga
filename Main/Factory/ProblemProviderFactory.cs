@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Vehicle = Main.Model.Vehicle;
+using Main.Helpers;
 
 namespace Main.Factory
 {
@@ -68,22 +69,37 @@ namespace Main.Factory
             var destinations = new List<Destination>();
             var dest = instance.Destinies.ToList();
 
-            for (var index = 0; index < dest.Count; index++)
+            var startPoint = dest.First();
+            var endPoint = dest.Last();
+
+            var index = 0;
+            var positionIndex = 0;
+            while(index < dest.Count)
             {
-                destinations.Add(new Destination(dest[index], index));
+                if (CanBeReached(dest[index], startPoint, endPoint, instance.TMax))
+                {
+                    destinations.Add(new Destination(dest[index], positionIndex));
+                    positionIndex++;
+                }
+                index++;
             }
 
             var map = new Map(destinations);
             var vehicleFleet = new VehicleFleet();
 
-            for (var index = 0; index < instance.Vehicles; index++)
+            for (var i = 0; i < instance.Vehicles; i++)
             {
                 var route = new Route(destinations.First(), destinations.Last());
-                var vehicle = new Vehicle(Convert.ToInt16(index + 1), instance.TMax, route);
+                var vehicle = new Vehicle(Convert.ToInt16(i + 1), instance.TMax, route);
                 vehicleFleet.Vehicles.Add(vehicle);
             }
 
             return new ProblemResourceProvider(map, vehicleFleet, instance.Id, solutionName);
+        }
+
+        private static bool CanBeReached(Destiny destiny, Destiny startPoint, Destiny endPoint, decimal tMax)
+        {
+            return EuclidianCalculator.GetDistanceBetween(startPoint, destiny) + EuclidianCalculator.GetDistanceBetween(startPoint, destiny) <= tMax;
         }
 
         private static bool ValidateArgs(List<int> profits, List<Coordinate> distances)

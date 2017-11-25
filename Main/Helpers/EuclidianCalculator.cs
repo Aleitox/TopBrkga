@@ -1,5 +1,6 @@
 ﻿using System;
 using Main.Model;
+using Main.Entities;
 
 namespace Main.Helpers
 {
@@ -15,6 +16,11 @@ namespace Main.Helpers
         public static decimal GetDistanceBetween(Destination from, Destination to)
         {
             return GetDistanceBetween(from.Coordinate.X, from.Coordinate.Y, to.Coordinate.X, to.Coordinate.Y);
+        }
+
+        public static decimal GetDistanceBetween(Destiny from, Destiny to)
+        {
+            return GetDistanceBetween(from.X, from.Y, to.X, to.Y);
         }
     }
 }

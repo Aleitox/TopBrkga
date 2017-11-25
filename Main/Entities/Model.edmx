@@ -35,6 +35,7 @@
           <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="InstanceId" Type="int" Nullable="false" />
           <Property Name="Name" Type="varchar" MaxLength="400" />
+          <Property Name="Run" Type="int" Nullable="false" />
           <Property Name="Generation" Type="int" Nullable="false" />
           <Property Name="FatherId" Type="int" />
           <Property Name="MotherId" Type="int" />
@@ -290,6 +291,7 @@
           <NavigationProperty Name="Vehicles" Relationship="TOPModel.FK_Solution" FromRole="Solution" ToRole="Vehicle" />
           <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Fase" Type="Int32" Nullable="false" />
+          <Property Name="Run" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Instance">
           <End Type="TOPModel.Instance" Role="Instance" Multiplicity="1" />
@@ -371,6 +373,7 @@
           <EntitySetMapping Name="Solutions">
             <EntityTypeMapping TypeName="TOPModel.Solution">
               <MappingFragment StoreEntitySet="Solutions">
+                <ScalarProperty Name="Run" ColumnName="Run" />
                 <ScalarProperty Name="Fase" ColumnName="Fase" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
                 <ScalarProperty Name="TimeElapsedInMilliseconds" ColumnName="TimeElapsedInMilliseconds" />
