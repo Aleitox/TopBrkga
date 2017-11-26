@@ -17,7 +17,7 @@ namespace TesisUnitTests.Helper
 
         public static List<int> GetProblematicInstances()
         {
-            return new List<int>() { 776 };//628
+            return new List<int>() { 776, 628 };
         }
 
         public static List<int> GetSelectedInstancesForTesting()

@@ -75,6 +75,11 @@ namespace Main.Factory
             }
         }
 
+        public static List<BrkgaConfiguration> Get6Configs()
+        {
+            return new List<BrkgaConfiguration>() { GetConfigAOne(), GetConfigATwo(), GetConfigAThree(), GetConfigAFour(), GetConfigAFive(), GetConfigASix() };
+        }
+
         public static BrkgaConfiguration GetConfigOne()
         {
             var config = new BrkgaConfiguration()
@@ -89,6 +94,258 @@ namespace Main.Factory
                 ApplyHeuristicsToTop = 1,
                 DecoderType = DecoderEnum.Greedy,
                 Fase = 4
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigTwo()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 250,
+                MinNoChanges = 10,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 1,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 5
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigAOne()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 150,
+                MinNoChanges = 70,
+                PopulationSize = 200,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigATwo()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 150,
+                MinNoChanges = 70,
+                PopulationSize = 200,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Simple,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigAThree()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 150,
+                MinNoChanges = 30,
+                PopulationSize = 200,
+                ElitePercentage = 0.25m,
+                MutantPercentage = 0.05m,
+                EliteGenChance = 60,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigAFour()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 250,
+                MinNoChanges = 50,
+                PopulationSize = 250,
+                ElitePercentage = 0.15m,
+                MutantPercentage = 0.05m,
+                EliteGenChance = 50,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigAFive()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 250,
+                MinNoChanges = 50,
+                PopulationSize = 250,
+                ElitePercentage = 0.15m,
+                MutantPercentage = 0.05m,
+                EliteGenChance = 50,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigASix()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 100,
+                MinNoChanges = 100,
+                PopulationSize = 500,
+                ElitePercentage = 0.30m,
+                MutantPercentage = 0.05m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 6
+            };
+            config.SetDescription();
+            return config;
+        }
+        
+        public static List<BrkgaConfiguration> Get5Configs()
+        {
+            return new List<BrkgaConfiguration>() { GetConfigBThreeBis(), GetConfigBZero(), GetConfigBOne(), GetConfigBTwo(), GetConfigBThree(), GetConfigBFour() };
+        }
+
+        public static BrkgaConfiguration GetConfigBZero()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Simple,
+                Fase = 7
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigBOne()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic()},
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 7
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigBTwo()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 7
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigBThree()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 7
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigBThreeBis()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Simple,
+                Fase = 7
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetConfigBFour()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new InsertHeuristic(), new ReplaceHeuristic(), new TwoZeroPtSwap(), new SwapHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Greedy,
+                Fase = 7
             };
             config.SetDescription();
             return config;

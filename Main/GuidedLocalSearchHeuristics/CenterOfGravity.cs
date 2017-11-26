@@ -66,8 +66,9 @@ namespace Main.GuidedLocalSearchHeuristics
 
         private void UpdateValues()
         {
-            Xcog = XcogUpperSum / RouteProfitSum;
-            Ycog = YcogUpperSum / RouteProfitSum;
+            // TODO por que habia un vehiculo con ruta vacia?
+            Xcog = RouteProfitSum != 0 ? XcogUpperSum / RouteProfitSum : 0;
+            Ycog = RouteProfitSum != 0 ? YcogUpperSum / RouteProfitSum : 0;
             LocationsOrderedByA = LocationsOrderedByA.OrderBy(GetDistanceToCog).ToList();
         }
 

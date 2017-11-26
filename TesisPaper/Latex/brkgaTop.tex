@@ -49,12 +49,12 @@ Chao & p7.4.t & 102 & 4 & 100.00 \\
 
 \bigskip
 
-Las tablas donde mostraré el índice de efectividad de los resultados parciales tendrá el siguiente encabezado:
+Las tablas donde mostraré el índice de efectividad de los resultados parciales tendrá un subconjunto de los siguientes encabezados:
 
 \begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
  \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
 \hline
 \end{tabular}
 \end{center}
@@ -68,7 +68,9 @@ $Profit(CGW(i))$, $Profit(AHS(i)$, $Profit(TMH(i))$
 	\item \textbf{$\#N$}: Cantidad de nodos de la instancia. Ej: 21
 	\item \textbf{$\#V$}: Cantidad de vehículos de la instancia. Ej: 3
 	\item \textbf{$tMax$}: Distancia máxima de la ruta de los vehículos de la instancia. Ej: 10.70
+	\item \textbf{$C$}: Configuración general del BRKGA. Es un código que sintetisa la configuración basica global, explicado en detalla más adelante (ver sección \label{sec:descrCongif}).
 	\item \textbf{$\#S$}: Cantidad de soluciones de las cuales se sacaron los datos. Ej: 200
+	\item \textbf{$T_{avg}$}: Tiempo promedio en milisegundos de la ejecución total de la implementación. Ej: 21578
 	\item \textbf{$B_{max}$}: Beneficio máximo de las \#S soluciones generadas. Ej: 140
 	\item \textbf{$B_{min}$}: Beneficio mínimo de las \#S soluciones generadas. Ej: 45
 	\item \textbf{$B_{avg}$}: Beneficio promedio de las \#S soluciones generadas. Ej: 45
@@ -304,7 +306,7 @@ public class BrkgaConfiguration
 
 \bigskip
 
-\begin{minipage}{\textwidth}
+\subsection{Descripción y codificación de las propiedades del objeto configuración}\label{sec:descrCongif}
 Descripción de las propiedades del objeto Configuración:
 
 \begin{itemize}
@@ -323,13 +325,12 @@ Descripción de las propiedades del objeto Configuración:
 		\item \textbf{Replace}: Valor \textbf{R}.
 	\end{itemize}  
   \item \textbf{ApplyHeuristicsToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las heuristicas de busqueda local.
-  \item \textbf{DecoderType}: Clave \textbf{DT}. Es una enumeracion que determina el decoder que se va a utilizar.
+  \item \textbf{DecoderType}: Clave \textbf{D}. Es una enumeracion que determina el decoder que se va a utilizar.
 	\begin{itemize}
 		\item \textbf{Simple}: Valor \textbf{S}.
 		\item \textbf{Goloso}: Valor \textbf{G}.
 	\end{itemize}  
 \end{itemize}
-\end{minipage}
 
 \bigskip
 
@@ -350,7 +351,7 @@ public void SetDescription()
 \begin{minipage}{\textwidth}
 Luego dado un description podemos ver como esta configurado el BRKGA.
 
-Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;DT.G"
+Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;D.G"
 
 \begin{itemize}
   \item MinIterations: 200
@@ -488,17 +489,72 @@ En una primera instancia se insertaban los individuos sin verificar que la soluc
 
 \subsection{Resultados de la primer versión}
 
-La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los indices de efectividad que mostrare a continuación corresponden con una primera versión que no admitía repetidos y el objeto configuracion.
+La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los indices de efectividad que mostrare a continuación corresponden con una primera versión que no admitía repetidos y el objeto configuracion. Para estos primeros resultados genere resultados por intancia y utilice una configuración estandar sin heurisitcas locales aún:\\ 'MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;HEU.;TOP.0;MI.G' (ver sección~\ref{sec:descrCongif}).
 
 \bigskip
 
-TODO Indice Efectividad para cada configuracion. (5-7 config).
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+ \hline
+$I$ & $\#N$ & $\#V$ & $tMax$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+\hline
+p2.2.k & 21 & 2 & 22.50 & 2977 & 260 & 240 & 249 & 0.91 & 275  \\
+p2.3.g & 21 & 3 & 10.70 & 1990 & 145 & 145 & 145 & 1.00 & 145  \\
+p3.4.p & 33 & 4 & 22.50 & 6482 & 450 & 430 & 438 & 0.78 & 560  \\
+p5.3.x & 66 & 3 & 40.00 & 17908 & 660 & 610 & 635 & 0.41 & 1555  \\
+p7.2.e & 102 & 2 & 50.00 & 8753 & 246 & 204 & 217 & 0.75 & 290  \\
+p7.4.t & 102 & 4 & 100.00 & 31532 & 513 & 458 & 481 & 0.45 & 1077  \\
+\hline
+\end{tabular}
+\end{center}
 
 \bigskip
 
-TODO hablar sobre estos resultados parciales.
+De estos primeros resultados podemos ver que el BRKGA puro sin otras heuristicas funciona muy bien para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Esto se refleja en la instancia \textit{p2.3.k} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_f$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_f$. Una observació que quiero destacar de estos resultados es sobre el $i_f$ de la instancia 'p7.2.e'. Notar que tiene tantos nodos como 'p7.4.t' y sin embargo su $i_f$ ampliamente mayor. Esto se puede estar dando por que solo son 2 vehículos, en vez de 4, adicionalmente la distancia máxima, $tMax$, es 50 en vés de 100 reduciendo la combinatoria de soluciones posibles.
 
-Para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Desafotunadamente no sucedía lo mismo cuando aumentaban la cantidad de clientes y vehículos.
+
+\bigskip
+
+Como estos resultados no eran satisfactorios, tomé las dos intancias de este subconjunto con menor $i_{f}$ y las utilice para testear distintas configuracions. Probé multipes variaciones del objeto configuración. A continuación el resultado de algunas de tales variaciones:
+
+\bigskip
+
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
+ \hline
+$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+\hline
+p5.3.x & 66 & 3 & 40.00 & 1 & 10 & 60782 & 700 & 635 & 656 & 0.42 & 1555  \\
+p5.3.x & 66 & 3 & 40.00 & 2 & 10 & 23363 & 660 & 620 & 636 & 0.41 & 1555  \\
+p5.3.x & 66 & 3 & 40.00 & 3 & 10 & 22357 & 685 & 615 & 643 & 0.41 & 1555  \\
+p5.3.x & 66 & 3 & 40.00 & 4 & 10 & 7311 & 555 & 475 & 498 & 0.32 & 1555  \\
+p5.3.x & 66 & 3 & 40.00 & 5 & 10 & 54239 & 750 & 630 & 668 & 0.43 & 1555  \\
+p7.4.t & 102 & 4 & 100.00 & 1 & 10 & 143760 & 542 & 472 & 506 & 0.47 & 1077  \\
+p7.4.t & 102 & 4 & 100.00 & 2 & 10 & 42255 & 504 & 471 & 485 & 0.45 & 1077  \\
+p7.4.t & 102 & 4 & 100.00 & 3 & 10 & 45952 & 542 & 463 & 488 & 0.45 & 1077  \\
+p7.4.t & 102 & 4 & 100.00 & 4 & 10 & 11587 & 322 & 268 & 284 & 0.26 & 1077  \\
+p7.4.t & 102 & 4 & 100.00 & 5 & 10 & 96642 & 509 & 478 & 491 & 0.46 & 1077  \\
+\hline
+\end{tabular}
+\end{center}
+
+\bigskip
+
+Configuraciones: 
+\begin{itemize}
+  \item \textbf{C = 1}: MI.100;MNC.100;PS.500;EP.0,30;MP.0,05;EGC.70;HEU.;TOP.0;D.G
+  \item \textbf{C = 2}: MI.150;MNC.30;PS.200;EP.0,25;MP.0,05;EGC.60;HEU.;TOP.0;D.G 
+  \item \textbf{C = 3}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;HEU.;TOP.0;D.G
+  \item \textbf{C = 4}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;HEU.;TOP.0;D.S
+  \item \textbf{C = 5}: MI.250;MNC.50;PS.250;EP.0,15;MP.0,05;EGC.50;HEU.;TOP.0;D.G 
+\end{itemize}
+
+\bigskip
+
+Como sintesis de estos resultados digo que la configuracion basica poco influye en el beneficio final de la solución. En el caso de la instancia 'p5.3.x', el $i_{f}$ siempre se encuentra en el intervalo [0.41,0.43] y en en 'p7.4.t' el intervalo es [0.45,0.47]. Para ambas intancias hay una configuración que es claramente peor y es la configuracion \textbf{C = 4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Luego claramente en esta version del BRKGA el decodificador tiene gran impacto en resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Minima cantidad de iteraciones, minima cantidad de iteraciones sin cambios, tamaño de la poblacion, poblacion elite, etc). Si impactan en el tiempo en que finaliza el algoritmo. Cuando llegue a este punto en mi trabajo, considere que tenía dos opciones por donde continuar. La primera, crear nuevos decodificadores. La segunda, agregar heuristicas de busqueda local para aplicar a las mejores individuos de cada generación. Tome el camino de la segunda opción.
+
+\bigskip
 
 \section{Heuristicas de busqueda local}
 
@@ -844,13 +900,60 @@ public static Solution UpdateRandomKeys(Solution s);
 
 \subsection{Secuencia de Aplicación de las Heuristicas}
 
-El orden en que las heuristicas se aplican es muy importante. Por ejemplo si la última heuristica que aplicamos es Swap o 2-Opt, luego la distancias disminuídas de las rutas no sería aprobechado por ninguna cliente.
+Todas las heuristicas mencionadas, implementan el interfaz:
 
+\begin{lstlisting}
+public interface ILocalSearchHeuristic
+{
+	void ApplyHeuristic(Solution solution);
+}
+\end{lstlisting}
 
+Esto lo hice así de modo de poder inicializar el vector de heuristicas a aplicar en la creación del algoritmo BRKGA. Luego al momento de aplicar las búsquedas locales, llama en orden de inserción de tal vector y ejecuta su metodo ApplyHeuristic. Así se pueden testear multiples ordenes distintos de búsquedas locales con un simple modificación del parametro de entrada del constructor del BRKGA. El orden en que las heuristicas se aplican es muy relevante. Por ejemplo, si la última heuristica que aplicamos es Swap o 2-Opt, luego la distancias disminuídas de las rutas no sería aprobechado por ninguna cliente.
 
+\bigskip
 
+Genere soluciones para las mismas seis instancias diversas, varian en la configuración solamente el orden de las búsquedas locales y el decodificador obteniendo los siguientes resultados:
 
+\bigskip
 
+TODO Resultados
 
+\bigskip
+
+Configuraciones: 
+\begin{itemize}
+  \item \textbf{Comun a todas}: MI.200;MNC.50;PS.150;EP.0,3;MP.0,1;EGC.70;TOP.2
+  \item \textbf{C = 1}: HEU.IROS;D.G
+  \item \textbf{C = 2}: HEU.SIORSOR;D.G
+  \item \textbf{C = 3}: HEU.SIORSOR;D.S
+  \item \textbf{C = 4}: HEU.SOIR;D.G
+  \item \textbf{C = 5}: HEU.SOIR;D.S
+  \item \textbf{C = 6}: HEU.SOISOIR;D.G
+\end{itemize}
+
+Recordando los codigos de HUE: 
+\begin{itemize}
+  \item \textbf{I}: Insert (Cliente no visitado)
+  \item \textbf{R}: Replace (Cliente no visitado por uno visitado)
+  \item \textbf{0}: 2-Opt (Swap dentro de una misma ruta)
+  \item \textbf{S}: Swap (Swap entre dos rutas distintas)
+\end{itemize}
+
+\bigskip
+
+Observaciones de estos resultados:
+
+\bigskip
+
+Claramente el peor orden de heuristicas locales es IROS (Insert, Replace, 2-Opt, Swap). Esto es por lo que explicamos anteriormente, Insert y Replace intentan agregar mas clientes o intercambiar clientes mas rentables mejorando el beneficio de la ruta. Mientras que 2-Opt y Swap hacen un reordenamiento de la secuencia en que se visitan los clientes seleccionados, luego minimizan la distancia recorrida de una ruta. Al primero los de beneficio y luego los de distancia, no se utiliza la distancia ahorrada.
+
+\bigskip
+
+Luego el mejor orden segun estos resultados, fue SIORSOR. Notar que repito heuristicas en este orden, esto en una primera impresión parece redundante pero no lo es. Por ejemplo, la primera vez que se aplica 2-opt se hace luego de un Insert que utiliza toda la distancia disponible. Y la segunda vez que se aplica el 2-opt es luego de un Swap que modifico rutas de forma tal que quiza disminuyo la distancia recorrida.
+
+\bigskip
+
+Sobre $T_{avg}$, notar entre la configuración 2 y 3 el tiempo puede llegar a ser más del doble y la única diferencia es que se uso el decodificador simple vs el goloso. Esto lo logra con un $i_f$ prácticamente igual en todas las intancias. Lo mismo podemos observar entre la configuración 4 y 5. Por lo tanto, habiendo agregado las heuristicas de búsqueda local, el decodificador goloso no mejora el beneficio final y el decodificador simple reduce el tiempo de ejecución. Por este motivo para los resultados finales utilicé el decodificar simple.
 
 

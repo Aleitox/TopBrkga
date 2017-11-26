@@ -11,12 +11,12 @@ namespace TesisUnitTests
     [TestClass]
     public class TestCreateResults
     {
-        [TestMethod]
-        public void TestMethod()
+        [TestMethod] // *** Decos
+        public void DecodersResult()
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
-            //var intancesIds = Provider.GetSelectedInstancesForTesting();
-            var intancesIds = new List<int>() { 628 };
+            var intancesIds = Provider.GetSelectedInstancesForTesting();
+            //var intancesIds = new List<int>() { 628 };
             var intances = new List<Main.Entities.Instance>();
             foreach (var instanceId in intancesIds)
             {
@@ -28,16 +28,24 @@ namespace TesisUnitTests
         }
 
         [TestMethod]
-        public void Test_Basic_Configuration_On_One_Instance_2()
+        public void RunAllTests()
+        {
+            AllSixIntances20TimesGenericConfig();
+            ConfigTestOverBig();
+            ConfigTestOverAllWithHeuristicsVarience();
+        }
+
+        [TestMethod] // (60) Elegir una config y hacer 10 veces para cada una de las 6 intancias y ver mismo que antes
+        public void AllSixIntances20TimesGenericConfig()
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
 
-            var config = PaperConfigsFactory.GetConfigOne();
-            var instances = Provider.GetProblematicInstances();
+            var config = PaperConfigsFactory.GetConfigTwo();
+            var instances = Provider.GetSelectedInstancesForTesting();
 
-            foreach(var intance in instances)
+            foreach (var intance in instances)
             {
-                for (var index = 0; index < 100; index++)
+                for (var index = 0; index < 10; index++)
                 {
                     var instance = instanceRepository.GetById(intance);
                     var brkga = BrkgaFactory.Get(instance, config);
@@ -45,5 +53,51 @@ namespace TesisUnitTests
                 }
             }
         }
+
+        [TestMethod] //(120) Elegir 6 configs y hacer 10 veces para las 2 instancias molestas
+        public void ConfigTestOverBig()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+
+            var configs = PaperConfigsFactory.Get6Configs();
+            var instances = Provider.GetProblematicInstances();
+
+            foreach(var intance in instances)
+            {
+                foreach (var config in configs)
+                {
+                    for (var index = 0; index < 10; index++)
+                    {
+                        var instance = instanceRepository.GetById(intance);
+                        var brkga = BrkgaFactory.Get(instance, config);
+                        brkga.Start();
+                    }
+                }
+            }
+        }
+
+        [TestMethod] //(180) Elegir una config y hacer 10 veces para cada una de las 6. En el config variar 4 ordenes de euristicas
+        public void ConfigTestOverAllWithHeuristicsVarience()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+
+            var configs = PaperConfigsFactory.Get5Configs();
+            var instances = Provider.GetSelectedInstancesForTesting();
+
+            foreach (var intance in instances)
+            {
+                foreach (var config in configs)
+                {
+                    for (var index = 0; index < 8; index++)
+                    {
+                        var instance = instanceRepository.GetById(intance);
+                        var brkga = BrkgaFactory.Get(instance, config);
+                        brkga.Start();
+                    }
+                }
+            }
+        }
+
+
     }
 }
