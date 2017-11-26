@@ -15,10 +15,14 @@ namespace TesisUnitTests.Helper
             return 776;
         }
 
+        public static List<int> GetProblematicInstances()
+        {
+            return new List<int>() { 776 };//628
+        }
 
         public static List<int> GetSelectedInstancesForTesting()
         {
-            return new List<int>() { 522, 407, 400, 776, 721, 532 };
+            return new List<int>() { 628, 407, 400, 776, 721, 532 };
         }
 
         public static List<BrkgaConfiguration> GetSelectedConfigurationsForTesting()

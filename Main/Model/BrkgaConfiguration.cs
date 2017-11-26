@@ -27,6 +27,8 @@ namespace Main.Model
 
         public DecoderEnum DecoderType { get; set; }
 
+        public int Fase { get; set; }
+
         public void SetDescription()
         {
             var outterSeparator = ";";

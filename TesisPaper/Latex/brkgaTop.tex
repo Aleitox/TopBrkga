@@ -24,7 +24,57 @@ Donde $Profit(Implementacion_v.xyz(i))$ representa la ganancia de la mejor soluc
 
 \bigskip
 
-Para cada uno de los siguientes modulos y submodulos, se mostraran su pseudocodigo y su índice de efectividad. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implemente el desarrollo. El objetivo del pseudocodigo es meramente descriptivo, el método que representa puede ser implementado con ciertas variaciones que no viene al caso describir. Tales variaciones para no mostrar: variables de medición de tiempo, variables para monitorear estados, testing, manejo de excepciones, persistencia de resultados, etc. Ademas variaciones para ser mas ilutrativo de la funcionalidad. 
+Para cada uno de los siguientes modulos y submodulos, se mostraran su pseudocodigo y su índice de efectividad. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implemente el desarrollo. El objetivo del pseudocodigo es meramente descriptivo, el método que representa puede ser implementado con ciertas variaciones que no viene al caso describir. Tales variaciones para no mostrar: variables de medición de tiempo, variables para monitorear estados, testing, manejo de excepciones, persistencia de resultados, y demas, con el objetivo de ser mas ilutrativo de la funcionalidad del algoritmo. 
+
+
+\bigskip
+
+Para la valuación del índice de efectividad se eligieron seis intancias del benchmark de modo que fueran variadas entre si. Tome dos pequeñas, dos medianas y dos grandes, cuyas descripción pueden observarse en la siguiente tabla:
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c| } 
+ \hline
+Autor & Instancea & Vertices & Vehículos & TMax \\
+\hline
+Tsiligirides & p2.2.k & 21 & 2 & 22.50 \\
+Tsiligirides & p2.3.g & 21 & 3 & 10.70 \\
+Tsiligirides & p3.4.p & 33 & 4 & 22.50 \\
+Chao & p5.3.x & 66 & 3 & 40.00 \\
+Chao & p7.2.e & 102 & 2 & 50.00 \\
+Chao & p7.4.t & 102 & 4 & 100.00 \\
+ \hline
+\end{tabular}
+\end{center}
+
+
+\bigskip
+
+Las tablas donde mostraré el índice de efectividad de los resultados parciales tendrá el siguiente encabezado:
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+ \hline
+$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\bigskip
+
+Donde:\label{tableHeader}
+$Profit(CGW(i))$, $Profit(AHS(i)$, $Profit(TMH(i))$
+\begin{itemize}
+	\item \textbf{$I$}: Nombre de la instancia. Ej: p2.3.g
+	\item \textbf{$\#N$}: Cantidad de nodos de la instancia. Ej: 21
+	\item \textbf{$\#V$}: Cantidad de vehículos de la instancia. Ej: 3
+	\item \textbf{$tMax$}: Distancia máxima de la ruta de los vehículos de la instancia. Ej: 10.70
+	\item \textbf{$\#S$}: Cantidad de soluciones de las cuales se sacaron los datos. Ej: 200
+	\item \textbf{$B_{max}$}: Beneficio máximo de las \#S soluciones generadas. Ej: 140
+	\item \textbf{$B_{min}$}: Beneficio mínimo de las \#S soluciones generadas. Ej: 45
+	\item \textbf{$B_{avg}$}: Beneficio promedio de las \#S soluciones generadas. Ej: 45
+	\item \textbf{$i_{f}$}: Indice de efectividad. Se utiliza el $B_{avg}$ para tener un valor que mejor refleje la efectividad real. Si usara $B_{max}$, el indice aparentaría muy bueno si entre las \#S soluciones se genero una muy buena aleatoriamente. Ej: $B_{avg} / BTP_{max} = 0.57$
+	\item \textbf{$BTP_{max}$}: Beneficio de Trabajos Previos máximo para la misma instancia. Los trabajos previos utilizados son CGW, AHS y TMH. Ej: 145
+\end{itemize}
 
 \section{Decodificador}
 
@@ -96,9 +146,24 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 }
 \end{lstlisting}
 
-\bigskip
+A partir de 200 $RandomKeys$ generé 200 soluciones con el decoder simple para las subconjunto de instancias diversas elegidas. Se utilizaron distintos sets de 200 $RandomKeys$ para cada instancia. La siguiente tabla tiene los resultados obtenidos (ver \ref{tableHeader} para significado de columnas):
 
-TODO Indice de efectividad
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+\hline
+$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+\hline
+p2.2.k & 21 & 2 & 22.50 & 200 & 175 & 40 & 102 & 0.37 & 275  \\
+p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 45 & 83 & 0.57 & 145  \\
+p3.4.p & 33 & 4 & 22.50 & 200 & 270 & 90 & 170 & 0.30 & 560  \\
+p5.3.x & 66 & 3 & 40.00 & 200 & 405 & 195 & 295 & 0.19 & 1555  \\
+p7.2.e & 102 & 2 & 50.00 & 200 & 98 & 8 & 39 & 0.13 & 290  \\
+p7.4.t & 102 & 4 & 100.00 & 200 & 221 & 40 & 116 & 0.11 & 1077  \\
+\hline
+\end{tabular}
+\end{center}
+
+En estos resultados ya se puede observar una correlación que sera recurrente, para intancias pequeñas los resultados son mejores.
 
 \subsection{Caracteristicas y debilidades del decodificador simple}
 
@@ -163,7 +228,25 @@ Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculo
 
 \bigskip
 
-TODO Indice de efectividad
+
+Nuevamente, utlizando distintos sets de 200 $RandomKeys$ para cada instancia se generaron los siguientes resultados:
+
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
+\hline
+$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+\hline
+p2.2.k & 21 & 2 & 22.50 & 200 & 260 & 95 & 164 & 0.60 & 275   \\
+p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 95 & 122 & 0.84 & 145   \\
+p3.4.p & 33 & 4 & 22.50 & 200 & 410 & 180 & 288 & 0.51 & 560   \\
+p5.3.x & 66 & 3 & 40.00 & 200 & 525 & 305 & 412 & 0.26 & 1555   \\
+p7.2.e & 102 & 2 & 50.00 & 200 & 163 & 31 & 96 & 0.33 & 290   \\
+p7.4.t & 102 & 4 & 100.00 & 200 & 438 & 160 & 280 & 0.26 & 1077   \\
+\hline
+\end{tabular}
+\end{center}
+
+Todos los resultados promedio, mínimo y máximos mejoran considerablemente. Tal es así, que el $i_{f}$ en algunos casos es mayor al doble de lo obtenido en el decodificador simple. Por otro lado, se vuelve a observar la correlación entre tamaño de la instancia y el $i_{f}$.
 
 \section{BRKGA}
 

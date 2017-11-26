@@ -99,7 +99,7 @@ namespace Main.Factory
 
         private static bool CanBeReached(Destiny destiny, Destiny startPoint, Destiny endPoint, decimal tMax)
         {
-            return EuclidianCalculator.GetDistanceBetween(startPoint, destiny) + EuclidianCalculator.GetDistanceBetween(startPoint, destiny) <= tMax;
+            return EuclidianCalculator.GetDistanceBetween(startPoint, destiny) + EuclidianCalculator.GetDistanceBetween(destiny, endPoint) <= tMax;
         }
 
         private static bool ValidateArgs(List<int> profits, List<Coordinate> distances)

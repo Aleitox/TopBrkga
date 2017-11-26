@@ -4,6 +4,7 @@ using Main.BrkgaTop;
 using Main.Entities;
 using Main.GuidedLocalSearchHeuristics;
 using Main.Repositories;
+using System.Linq;
 
 namespace Main.Brkga
 {
@@ -14,6 +15,7 @@ namespace Main.Brkga
         {
             ProblemManager = problemManager;
             SolutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
+            Fase = 0;
         }
         
         public IProblemManager ProblemManager { get; set; }
@@ -21,6 +23,8 @@ namespace Main.Brkga
         public SolutionRepository SolutionRepository { get; set; }
 
         public EncodedSolution EncodedSolution { get; set; }
+
+        public int Fase { get; set; }
 
         public void Start()
         {
@@ -48,12 +52,18 @@ namespace Main.Brkga
             //    SolutionRepository.SaveSolution(encodedSolution.GetSolution);
             //}
 
-            LastImprovementTry(ref encodedSolution);
+            // No quiero intentar mejorar cuando no configure heuristicas locales
+            if(ProblemManager.Heuristics.Count > 0)
+                LastImprovementTry(ref encodedSolution);
             encodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
 
             EncodedSolution = encodedSolution;
 
-            SolutionRepository.SaveSolution(EncodedSolution.GetSolution);
+            var solution = EncodedSolution.GetSolution;
+            solution.Fase = Fase;
+            solution.ProfitEvolution = string.Join(";", ProblemManager.HistoricalEncodedSolutions.Select(s => s.GetSolution.GetCurrentProfit.ToString()).ToList());
+
+            SolutionRepository.SaveSolution(solution);
         }
 
         private void LastImprovementTry(ref EncodedSolution encodedSolution)

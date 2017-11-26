@@ -12,10 +12,17 @@ namespace Main.Factory
         public static Main.Brkga.Brkga Get(Instance instance, BrkgaConfiguration config)
         {
             var problemResourceProvider = ProblemProviderFactory.CreateProblemProvider(instance, config.Description);
-            var problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
+            IProblemDecoder problemDecoder;
+            if (config.DecoderType == DecoderEnum.Greedy)
+                problemDecoder = new GreedyVehicleDecoder(problemResourceProvider);
+            else if (config.DecoderType == DecoderEnum.Simple)
+                problemDecoder = new FirstSimpleDecoder(problemResourceProvider);
+            else
+                throw new System.Exception("Decoder type not contemplated");
             var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations(), config.PopulationSize, config.ElitePercentage, config.MutantPercentage, config.EliteGenChance);
             var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.ApplyHeuristicsToTop, false, config.MinIterations, config.MinNoChanges);
             var brkga = new Brkga.Brkga(problemManager);
+            brkga.Fase = config.Fase;
             return brkga;
         }
 

@@ -71,6 +71,7 @@ namespace Main.Repositories
             solution.Fase = modelSolution.Fase;
             solution.CreationDate = modelSolution.CreationDate;
             solution.Run = modelSolution.Run;
+            solution.ProfitEvolution = modelSolution.ProfitEvolution;
             return solution;
         }
 
@@ -89,6 +90,7 @@ namespace Main.Repositories
             solution.Fase = modelSolution.Fase;
             solution.CreationDate = DateTime.Now;
             solution.Run = modelSolution.Run;
+            solution.ProfitEvolution = modelSolution.ProfitEvolution;
             Insert(solution);
             return solution;
         }

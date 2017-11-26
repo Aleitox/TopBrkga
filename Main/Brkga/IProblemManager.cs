@@ -42,7 +42,7 @@ namespace Main.Brkga
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinNoChanges = minNoChanges;
-            LastProfits =new Queue<double>();
+            LastProfits = new Queue<double>();
         }
 
         public ProblemManager(IPopulationGenerator populationGenerator, List<ILocalSearchHeuristic> heuristics, int applyHeuristicsToTop, bool logPopulation = false, int minIterations = 100, int minNoChanges = 10)
@@ -57,12 +57,12 @@ namespace Main.Brkga
             LastProfits = new Queue<double>();
         }
 
-        public bool StoppingRuleFulfilled 
-        {  
+        public bool StoppingRuleFulfilled
+        {
             get
             {
                 return PopulationGenerator.Generation >= MinIterations && NoChanges();
-            } 
+            }
         }
 
         // TODO: Ver
@@ -131,9 +131,9 @@ namespace Main.Brkga
             LastProfits.Enqueue(Population.GetOrderByMostProfitable().First().GetSolution.GetCurrentProfit);
             if (LastProfits.Count > MinNoChanges)
                 LastProfits.Dequeue();
-
+            
             HistoricalEncodedSolutions.Add(Population.GetOrderByMostProfitable().First());
-        }
+        }        
 
         public bool LogPopulation { get; set; }
 

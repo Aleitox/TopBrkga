@@ -46,6 +46,7 @@
           <Property Name="TimeElapsedInMilliseconds" Type="bigint" />
           <Property Name="CreationDate" Type="datetime" Nullable="false" />
           <Property Name="Fase" Type="int" Nullable="false" />
+          <Property Name="ProfitEvolution" Type="varchar(max)" />
         </EntityType>
         <EntityType Name="Vehicles">
           <Key>
@@ -292,6 +293,7 @@
           <Property Name="CreationDate" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Fase" Type="Int32" Nullable="false" />
           <Property Name="Run" Type="Int32" Nullable="false" />
+          <Property Name="ProfitEvolution" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
         </EntityType>
         <Association Name="FK_Instance">
           <End Type="TOPModel.Instance" Role="Instance" Multiplicity="1" />
@@ -373,6 +375,7 @@
           <EntitySetMapping Name="Solutions">
             <EntityTypeMapping TypeName="TOPModel.Solution">
               <MappingFragment StoreEntitySet="Solutions">
+                <ScalarProperty Name="ProfitEvolution" ColumnName="ProfitEvolution" />
                 <ScalarProperty Name="Run" ColumnName="Run" />
                 <ScalarProperty Name="Fase" ColumnName="Fase" />
                 <ScalarProperty Name="CreationDate" ColumnName="CreationDate" />
