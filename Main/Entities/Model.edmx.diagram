@@ -10,11 +10,12 @@
         <AssociationConnector Association="TOPModel.FK_DestinyId" />
         <EntityTypeShape EntityType="TOPModel.Instance" Width="1.5" PointX="3" PointY="0.75" />
         <AssociationConnector Association="TOPModel.FK__Destinies__Insta__15502E78" />
-        <EntityTypeShape EntityType="TOPModel.Vehicle" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="TOPModel.Vehicle" Width="1.5" PointX="5.375" PointY="5.875" />
         <AssociationConnector Association="TOPModel.FK_VehicleId" />
         <EntityTypeShape EntityType="TOPModel.Solution" Width="1.5" PointX="5.5" PointY="0.75" />
         <AssociationConnector Association="TOPModel.FK_Instance" />
         <AssociationConnector Association="TOPModel.FK_Solution" />
+        <EntityTypeShape EntityType="TOPModel.ExternalSolution" Width="1.5" PointX="3.25" PointY="7.25" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

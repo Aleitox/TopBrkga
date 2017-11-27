@@ -30,5 +30,6 @@ namespace Main.Entities
         public virtual DbSet<Instance> Instances { get; set; }
         public virtual DbSet<Vehicle> Vehicles { get; set; }
         public virtual DbSet<Solution> Solutions { get; set; }
+        public virtual DbSet<ExternalSolution> ExternalSolutions { get; set; }
     }
 }

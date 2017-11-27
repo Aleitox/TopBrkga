@@ -53,8 +53,8 @@ namespace Main.Brkga
             //}
 
             // No quiero intentar mejorar cuando no configure heuristicas locales
-            //if(ProblemManager.Heuristics.Count > 0)
-            //    LastImprovementTry(ref encodedSolution);
+            if (ProblemManager.Heuristics.Count > 0)
+                LastImprovementTry(ref encodedSolution);
             encodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
 
             EncodedSolution = encodedSolution;
@@ -79,6 +79,11 @@ namespace Main.Brkga
                 new SwapHeuristic(),
                 new TwoZeroPtSwap(),
                 new InsertHeuristic(),
+                new ReplaceHeuristic(),
+                new SwapHeuristic(),
+                new InsertHeuristic(),
+                new SwapHeuristic(),
+                new TwoZeroPtSwap(),
                 new ReplaceHeuristic()
             };
 

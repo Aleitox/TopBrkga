@@ -350,5 +350,24 @@ namespace Main.Factory
             config.SetDescription();
             return config;
         }
+
+        public static BrkgaConfiguration GetFinalConfig()
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 200,
+                MinNoChanges = 50,
+                PopulationSize = 150,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic() },
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Simple,
+                Fase = 8
+            };
+            config.SetDescription();
+            return config;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Main.Factory;
 using TesisUnitTests.Helper;
@@ -94,6 +94,27 @@ namespace TesisUnitTests
                         var brkga = BrkgaFactory.Get(instance, config);
                         brkga.Start();
                     }
+                }
+            }
+        }
+
+
+        [TestMethod] //Final 199 * 10
+        public void FinalResults()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+            var externalSolutionsRepository = new ExternalSolutionsRepository(TopEntitiesManager.GetContext());
+            var instances = externalSolutionsRepository.GetAll().Select(e => e.InstanceId).Distinct().ToList();
+
+            var config = PaperConfigsFactory.GetFinalConfig();
+
+            foreach (var intance in instances.Where(i => i != null))
+            {
+                for (var index = 0; index < 10; index++)
+                {
+                    var instance = instanceRepository.GetById(intance.Value);
+                    var brkga = BrkgaFactory.Get(instance, config);
+                    brkga.Start();
                 }
             }
         }

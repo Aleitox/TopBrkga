@@ -16,6 +16,24 @@
           <Property Name="Profit" Type="int" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="150" Nullable="false" />
         </EntityType>
+        <EntityType Name="ExternalSolutions">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InstanceId" Type="int" />
+          <Property Name="InstanceName" Type="nvarchar" MaxLength="150" />
+          <Property Name="AHS_Gen_Tabu_Penalty_Min" Type="int" />
+          <Property Name="AHS_Gen_Tabu_Penalty_Max" Type="int" />
+          <Property Name="AHS_Gen_Tabu_Feasible_Min" Type="int" />
+          <Property Name="AHS_Gen_Tabu_Feasible_Max" Type="int" />
+          <Property Name="AHS_Fast_Vns_Feasible_Min" Type="int" />
+          <Property Name="AHS_Fast_Vns_Feasible_Max" Type="int" />
+          <Property Name="AHS_Slow_Vns_Feasible_Min" Type="int" />
+          <Property Name="AHS_Slow_Vns_Feasible_Max" Type="int" />
+          <Property Name="TMH" Type="int" />
+          <Property Name="CGH" Type="int" />
+        </EntityType>
         <EntityType Name="Instances">
           <Key>
             <PropertyRef Name="Id" />
@@ -130,6 +148,7 @@
         </Association>
         <EntityContainer Name="TOPModelStoreContainer">
           <EntitySet Name="Destinies" EntityType="Self.Destinies" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExternalSolutions" EntityType="Self.ExternalSolutions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Instances" EntityType="Self.Instances" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Solutions" EntityType="Self.Solutions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vehicles" EntityType="Self.Vehicles" Schema="dbo" store:Type="Tables" />
@@ -185,6 +204,7 @@
             <End Role="Solution" EntitySet="Solutions" />
             <End Role="Vehicle" EntitySet="Vehicles" />
           </AssociationSet>
+          <EntitySet Name="ExternalSolutions" EntityType="TOPModel.ExternalSolution" />
           </EntityContainer>
         <EntityType Name="VehiclesDestiny">
           <Key>
@@ -319,6 +339,24 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <EntityType Name="ExternalSolution">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InstanceId" Type="Int32" />
+          <Property Name="InstanceName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="AHS_Gen_Tabu_Penalty_Min" Type="Int32" />
+          <Property Name="AHS_Gen_Tabu_Penalty_Max" Type="Int32" />
+          <Property Name="AHS_Gen_Tabu_Feasible_Min" Type="Int32" />
+          <Property Name="AHS_Gen_Tabu_Feasible_Max" Type="Int32" />
+          <Property Name="AHS_Fast_Vns_Feasible_Min" Type="Int32" />
+          <Property Name="AHS_Fast_Vns_Feasible_Max" Type="Int32" />
+          <Property Name="AHS_Slow_Vns_Feasible_Min" Type="Int32" />
+          <Property Name="AHS_Slow_Vns_Feasible_Max" Type="Int32" />
+          <Property Name="TMH" Type="Int32" />
+          <Property Name="CGH" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -388,6 +426,25 @@
                 <ScalarProperty Name="FatherId" ColumnName="FatherId" />
                 <ScalarProperty Name="Generation" ColumnName="Generation" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExternalSolutions">
+            <EntityTypeMapping TypeName="TOPModel.ExternalSolution">
+              <MappingFragment StoreEntitySet="ExternalSolutions">
+                <ScalarProperty Name="CGH" ColumnName="CGH" />
+                <ScalarProperty Name="TMH" ColumnName="TMH" />
+                <ScalarProperty Name="AHS_Slow_Vns_Feasible_Max" ColumnName="AHS_Slow_Vns_Feasible_Max" />
+                <ScalarProperty Name="AHS_Slow_Vns_Feasible_Min" ColumnName="AHS_Slow_Vns_Feasible_Min" />
+                <ScalarProperty Name="AHS_Fast_Vns_Feasible_Max" ColumnName="AHS_Fast_Vns_Feasible_Max" />
+                <ScalarProperty Name="AHS_Fast_Vns_Feasible_Min" ColumnName="AHS_Fast_Vns_Feasible_Min" />
+                <ScalarProperty Name="AHS_Gen_Tabu_Feasible_Max" ColumnName="AHS_Gen_Tabu_Feasible_Max" />
+                <ScalarProperty Name="AHS_Gen_Tabu_Feasible_Min" ColumnName="AHS_Gen_Tabu_Feasible_Min" />
+                <ScalarProperty Name="AHS_Gen_Tabu_Penalty_Max" ColumnName="AHS_Gen_Tabu_Penalty_Max" />
+                <ScalarProperty Name="AHS_Gen_Tabu_Penalty_Min" ColumnName="AHS_Gen_Tabu_Penalty_Min" />
+                <ScalarProperty Name="InstanceName" ColumnName="InstanceName" />
                 <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

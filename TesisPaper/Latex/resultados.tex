@@ -1,1 +1,38 @@
 \chapter{Resultados}
+
+En este capítulo mostraré los resultados finales obtenidos. Dentro de todos los papers de trabajos previos que encontré que incluyeran resultados que utilizaran el benchmark de intancias de Chao y los de Tsiligirides, seleccioné el de Archetti et al. \cite{ArchettiHertzSperanza}. En su paper presentan varias soluciones, algunas utilizando un tabu search y otras utilizando una busqueda de vecindario variable. Luego las comparan con los resultados de Chao et al. Chao \cite{ChaoGoldenWasil} y de Tang et al. \cite{TangMillerHooks}. Dentro de las soluciones propuestas de Archetti et al., seleccione los resultados de su 'Slow VNS Feasible' ya que tenía los mejores resultados al correrlos con el benchmark de instancias. 
+
+\bigskip
+
+La configuración final utilizada para el BRKGA fue:
+
+\begin{itemize}
+  \item \textbf{MinIterations}: 200
+  \item \textbf{MinNoChanges}: 50
+  \item \textbf{PopulationSize}: 150
+  \item \textbf{ElitePercentage}: 0.3 
+  \item \textbf{MutantPercentage}: 0.1
+  \item \textbf{EliteGenChance}: 70 
+  \item \textbf{Heuristics}: Swap, Insert, 2-Opt, Replace, Swap, 2-Opt, Replace
+  \item \textbf{ApplyHeuristicsToTop}: 2
+  \item \textbf{DecoderType}: Simple
+\end{itemize}
+
+Además agregué un último paso una vez que corta el algoritmo, antes de entregar la mejor solución encontrada se le aplica una secuencia larga de heuristicas locales distinta a la aplicada a los mejores individuos de cada generación.
+
+\bigskip
+
+Los resultados fueron generados corriendo la implementación en una laptop hp con las siguientes especificaciones:
+
+\begin{itemize}
+  \item Procesador: Intel Core i7 5500u
+  \item Memoria: DDR3 12 GBytes
+  \item Graphics: Intel HD Graphics 5500
+  \item Sistema Operativo: Windows 10 64-bit Home
+  \item Ide: Visual Studio Enterprice 2015
+  \item Lenguaje: C\# .Net Framework 4.5
+\end{itemize}
+
+\bigskip
+
+A continuación los mejores resultados de 199 instancias del bechmark para mi algoritmo (LK), el de Archetti, Hertz y Speranza(AHS), Tang y Miller-Hooks(TMH) y Chao, Golden, y Wasil (CGW). En el caso de mi algoritmo, para cada instancia lo ejecute diez veces y me quede con el mejor resultado obtenido.
