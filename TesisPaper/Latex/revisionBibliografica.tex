@@ -30,23 +30,22 @@ Ke et al. \cite{KeArchettiFeng} utilizan un enfoque de optimización de colonia 
 
 \bigskip
 
-TODO: Hablar un poco de cada uno de los siguientes:
+Los autores Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}, crearon un algoritmo compuesto donde primero construyen una solución y luego la mejoran con una combinación de heuristicas de búsqueda local. Tales heuristicas como swap, replace, move, insert y 2-opt. Una vez que la solución es mejorada, si es la mejor encontrada hasta el momento la guardan. Luego tienen un método para encontrar nuevas soluciones partiendo de una solución, quitandole destinos a las rutas y así poder explorar distintas opciones.
 
-1. 
-A guided local search metaheuristic for the team orienteering problem. Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}.
-%2009_VSVO_A_Guided.Local.Search.Mtaheuristic.For.The.Team.Orienteering.Problem
+\bigskip
 
-2. 
-A path relinking approach for the team orienteering problem. Souffriau et al. \cite{SouffriauVansteenwegenBergheOudheusden}.
-%2009_SVBO_A.Path.Relinking.Approach.For.The.Team.Orienteering.Problem
+Souffriau et al. \cite{SouffriauVansteenwegenBergheOudheusden} proponen una metaheuristica de 'Path Relinking' para resolver TOP. Su propuesta esta basada en un 'Greedy Randomised Adative Search Procedure' (GRASP), una metaheuristica introducida por Feo y Resende. A grandes rasgos su algoritmo consiste de una iteración que continua mientras no se exceda la máxima cantidad de iteraciones sin mejoras. El loop contiene cuatro fases. La primera de construcción de la solución, seguido por la fase de búsqueda local donde aplican 2-opt, swap, replace e insert. La tercer fase es de enlace con los elites donde toma dos soluciones como argumentos y visita todas las soluciones intermedia para de ir de una solución hacia la otra. La última fase del loop es actualizar el conjunto de soluciones elite. Finalmente cuando corta el loop retorna la mejor solución encontrada.
 
-3. 
-A memetic algorithm for the team orienteering problem Bouly et al. \cite{BoulyDangMoukrim}.
-%2009_BDM__A.Memetic.Algorithm.For.The.Team.Orienteering.Problem
+\bigskip
 
-4. 
-A PSO-based memetic algorithm for the team orienteering problem. Dang et al. \cite{DangGuibadjMoukrim}, este último siendo el mejor actual en la clase. 
-%2011_DGM__A.PSO-Based.Memetic.Algorithm.for.the.Team.Orienteering.Problem
+Bouly et al. \cite{BoulyDangMoukrim} idearon un algoritmo memético para resolver TOP. Los algoritmos meméticos (MA) son una combinación de un algoritmo evolutivo y tecnicas de busqueda local. Se dice que una codificación es indirecta si se necesita un procedimiento de decodificación para extraer soluciones de los cromosomas. En su trabajo usan una codificación indirecta simple que denotan como un recorrido gigante, y un procedimiento de división óptima como el proceso de decodificación. La división óptima fue presentada por primera vez por Beasley (1983) y Ulusoy (1985), respectivamente, para los problemas Node Routing y el Arc Routing. El procedimiento de división que propusieron es específico del TOP.
+
+\bigskip
+
+Dang et al. \cite{DangGuibadjMoukrim}, este siendo el mejor actual en su clase, proponen un algoritmo memético basado en 'Particle Swarm Optimization'
+(PSO). Su algoritmo PSOMA provee de soluciones de alta calidad para TOP. El algoritmo está relativamente cerca de MA propuesto en Bouly et al. \cite{BoulyDangMoukrim} y presenta los mismos componentes básicos, como la técnica de división de rutas, el inicializador de población y los barrios de búsqueda local. Sin embargo, el esquema global se ha modificado por una optimización de enjambre de partículas. La optimización de enjambre de partículas (PSO) es una de las técnicas de inteligencia de enjambre con la idea básica de simular la inteligencia colectiva y el comportamiento social de los animales salvajes.
+
+\bigskip
 
 5.  
 Solving the team orienteering problem Souffriau et al. \cite{SouffriauVansteenwegenBergheOudheusden}.
@@ -63,7 +62,7 @@ A novel Randomized Heuristic for the Team Orienteering Problem Zettam y Elbenani
 
 \bigskip
 
-En la investigación sobre los trabajos realizados, no se encontraron trabajos que implementen algoritmos geneticos. En este trabajo se propone resolver TOP utilizando biased random key generation algorithim (BRKGA)
+Esos fueron los trabajos encontrados en mi investigación sobre trabajos previos, hay algunos que implementen algoritmos geneticos pero ninguno que implemente un biased random key generation algorithim (BRKGA).
 
 
 
