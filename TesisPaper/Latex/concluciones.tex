@@ -1,3 +1,42 @@
 \chapter{Concluciones}
 
-\section{Trabajos Futúros}
+El problema de orientación de equipo es el problema donde se puede visitar un grupo de clientes, con un beneficio garantizado para cada visita. Un equipo de vehículos está disponible y cada miembro del equipo puede visitar cualquier conjunto de clientes dentro de un límite de tiempo determinado. El beneficio de cada cliente puede ser recaudado por un solo vehículo como máximo. El problema combina la decisión de qué clientes seleccionar con la decisión de cómo planificar la ruta.
+
+\bigskip
+
+Al ser un problema reconocido como un modelo de muchas aplicaciones reales diferentes, se han generado varios trabajos que encaran el mismo. Incluso algunos pocos con algoritmos genéticos pero no encontré ninguno que implemente un BRKGA. Mi contribución al problema TOP consiste en generar una implementación que utilice como base de su construcción de soluciones al algoritmo BRKGA. Y analizar que tan efectivo puede ser el mismo. La implementación final utiliza el algoritmo BRKGA y además, unas búsquedas locales para mejorar algunos individuos selectos de cada generación. La efectividad de la implementación final terminó dependiendo fuertemente de las heuristicas de busqueda local.
+
+\bigskip
+
+Los resultados obtenidos son muy buenos, con al menos un tercio de los resultados llegaron a la solución optima de la instacia testeada. Y el resto obtuvo un $i_f$ en el intervalo [0.95, 0.99], salvo por algunas excepciones. Ahora, si considero el resultado obtenido por el BRKGA puro, los resultados son muy malos para instancias grandes del problema, llegando a tener un $i_f$ aproximado de '0.5'. Esto no me deja satisfecho con el BRKGA. De hecho creo que los individuos resultantes del método de apareamiento son muy distintos a sus individuos progenitores. Lo que significaría que estoy explorando el dominio de soluciónes de una manera erratica ó aleatoria. Luego el algoritmo de BRKGA solo puede llegar a buenas soluciones con la ayuda de otras metaheuristicas como es en este caso.
+
+\bigskip
+
+Uno de los grandes problemas del BRKGA para TOP es que su secuencia genética no es utilizada completamente ya que parte del problema es que no todos los clientes son visitables dadas las restricciones del problema. Asignar todos los clientes a algun vehiculo siempre generaría una solución no factible. De serlo, no sería TOP. Este problema de completitud entre genes y clientes visitados quiza puede ser resuelto modificando lo que representa un gen. Es decir, con un decoder totalmente diferente.
+
+\section{Trabajos Futuros}
+
+Para empezar me hubiese gustado tener una herramienta para visualizar las soluciones en un plano cartesiano, puediendo ver rápidamente que clientes se quedaron sin ser visitados y así poder idear alternativas para que los clientes cercanos sean incluídos. También para poder ver la similitud entre individuos y sus individuos progenitores, a modo de tener una idea clara de que tan cercanos son. De todos modos, para un analisis mas preciso de tal correlación, sería mas eficiente idear una función que analizando las rutas de ambas soluciones genere un índice de parentesco.
+
+\bigskip
+
+El BRKGA necesita mejoras, no estoy contento con los resultados obtenidos utilizando solo el BRKGA. Si tuviera tiempo hubiese encarado por los dos ángulos que creo que pueden impactar fuertemente en su beneficio final. 
+
+\bigskip
+
+Primero por el decodificador. Buscar alguna manera de que su secuencia genetica sea 'completa', es decir que cada gen impacte en la formación de la solución. Para entender esto tomar como ejemplo el decodificador simple. Sea una instancia con 10 clientes y una solución generada a partir de su secuencia de genes que visita a 6 de los 10 clientes, luego existen 4 alelos/genes que no impactan en el resultado final. Quizá no sea parte del problema que tiene BRKGA, pero no me imagino una especie con millones de años de evolución que llegue a tener un 40% de sus genes que no modifiquen el especimen en absoluto. Quiza podría implementarse de tal forma, que los clientes se distribuyan uniformemente entre todos los vehículos y luego con un proceso de limpieza se convierta la solución en una factible. Sino, que de alguna manera existan pre establecido sectores asignados a un solo vehículo, basados en cercania ó el centro de gravedad del sector.
+
+\bigskip
+
+El segundo ángulo por el que intentaría mejorar los resultados del BRKGA es modificando el algoritmo de apariamiento. Quiza cada alelo represente una ruta de un vehículo. Luego el individuo descendiente herede dos rutas de un padre y la tercer ruta del otro, finalmente con algun proceso de limpieza se muevan los clientes que se visitan de forma repetida y se incluyan otros. En este contexto, la cantidad de genes que tendría una solución estaría dictaminado por la cantidad de vehículos. Esto podría representar un problema ya que existen muchos menos vehículos que clientes, generando baja diversidad de soluciones, es decir explorando muy poco el dominio de soluciones posibles.
+
+\bigskip
+
+Sobre trabajos futuros relacionados a las heuristicas de búsqueda local, podría haber implementado la heuristica 'move', para mover un cliente visitado de una ruta hacia otra, acumulando mayor distancia libre en una sola ruta. También podría optimizar la heuristica 'replace' que actualmente cambia a un cliente visitado por otro no visitado si incrementa el beneficio total. La optimización sería buscar un 'replace' que no necesariamente sea de uno por uno. Podría ser el caso que hayan dos cliente no visitados cuyo beneficio total supere el de un cliente visitado, pero el beneficio de cada uno por separado, sea menor que el visitado. En este escenario el 'Replace' actual no efectua el cambio. También podría haber implementado alguna heuristica local tabu de modo de salir de mínimos locales. Estas optimizaciones no las realice por que ya había llegado a muy buenos resultados al agregar las búsquedas locales y no tuve más tiempo.
+
+
+
+
+
+
+
