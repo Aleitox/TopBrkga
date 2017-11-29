@@ -98,7 +98,7 @@ public class RandomKey
 
 \bigskip
 
-El propositio de $PositionIndex$ es para mapear un Key con un Cliente. Existe un arreglo de clientes en el Mapa del problema. Los clientes siempre tienen la misma posicion y esa posicion es un entero en el intervalo $[0, \#Clientes-1]$. Luego para un vector de RandomKeys de tamaño $\#Clientes$ no existen dos RandomKeys con mismo valor de PositionIndex y todos los PositionIndex se encuentran en el itervalo $[0, \#Clientes-1]$. De forma que cada RandomKey matchea siempre con solo RandomKey. Luego se matchean los clientes con los randomKeys por su position index y se los ordena de forma ascendente por el Key aleatorio.
+El propositio de $PositionIndex$ es para mapear un Key con un Cliente. Existe un arreglo de clientes en el Mapa del problema. Los clientes siempre tienen la misma posicion y esa posicion es un entero en el intervalo $[0, \#Clientes-1]$. Luego para un vector de RandomKeys de tamaño $\#Clientes$ no existen dos RandomKeys con mismo valor de PositionIndex y todos los PositionIndex se encuentran en el itervalo $[0, \#Clientes-1]$. De forma que cada RandomKey matchea siempre con solo RandomKey. Luego se matchean los clientes con los randomKeys por su position index y se los ordena de forma ascendente por el Key aleatorio. Esto se puede ver en la figura \ref{fig:RandomKeysOrdenando}.
 
 \bigskip
 
@@ -108,6 +108,13 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 	return randomKeys.OrderBy(r => r.Key).Select(r => Map.Clients[r.PositionIndex]);
 }
 \end{lstlisting}
+
+\begin{figure}[h]
+	\caption{RandomKeys ordenando clientes}
+	\centering
+	\includegraphics{RandomKeysOrdenando}
+	\label{fig:RandomKeysOrdenando}
+\end{figure}
 
 \subsection{Decodificador simple}
 
@@ -119,7 +126,7 @@ El decodificador simple recibe como parametro el vector de enteros aleatorios y 
 
 \bigskip
 
-Pseudocodigo del metodo decode del decodificador simple:
+Pseudocodigo del método decode del decodificador simple:
 
 \bigskip
 
@@ -173,7 +180,14 @@ Tiene un orden de complejidad de $O(\#clientes)$.
 
 \bigskip
 
-Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solucion.
+Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solucion. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
+
+\begin{figure}[h]
+	\caption{Marcados con un color por vehiculo como quedan los clientes distribuidos con el decoder simple}
+	\centering
+	\includegraphics{DistribucionClientesDecoSimple}
+	\label{fig:DistribucionClientesDecoSimple}
+\end{figure}
 
 \bigskip
 
@@ -187,9 +201,6 @@ Esto puede generar soluciones de la poblacion donde existan vehiculos con rutas 
 
 Otro problema que tiene este decodificador es que cambia de vehiculo al primer intento fallido de expandir su ruta. Luego puede generar soluciones con rutas muy pequeñas, por este motivo implemente un Decodificador Goloso.
 
-\bigskip
-
-TODO Imagen de un vector de cuadrados pintados con colores segun a que vehiculo pertenece el cliente.
 
 \subsection{Decodificador Goloso}
 
@@ -226,10 +237,20 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 
 \bigskip
 
-Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculos)$. De todos modos la cantidad de vehículos en todas las intancias del becnhmark utilizado siempre son menores o iguales a 4, luego no tiene un impacto en su performance. En promedio aumenta el profit de las soluciones generadas por el decodificador.
+Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculos)$. Aunque la cantidad de vehículos de las instancias del benchmark esta acotado por cuatro, esta diferencia de complejidad tiene un impacto ya que este algoritmo de decodificación corre $PopulationSize$ por generación. Luego para mismo tamaño de población y cantidad de generaciones, usar el decoder simple contra el goloso tiene un efecto visible en el tiempo de ejecución. Por otro lado, nn promedio aumenta el profit de las soluciones generadas por el decodificador. Ese es trade-off que tenemos entre el decodificador simple y el goloso. 
 
 \bigskip
 
+Un detalle de menor importancia, el decoder goloso no tiene los clientes de forma continua por vehiculo asignado al ordenar los clientes por el RandomKeys. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
+
+\begin{figure}[h]
+	\caption{Marcados con un color por vehiculo como quedan los clientes distribuidos con el decoder goloso}
+	\centering
+	\includegraphics{DistribucionClientesDecoGoloso}
+	\label{fig:DistribucionClientesDecoGoloso}
+\end{figure}
+
+\bigskip
 
 Nuevamente, utlizando distintos sets de 200 $RandomKeys$ para cada instancia se generaron los siguientes resultados:
 
@@ -720,7 +741,7 @@ public void ApplyHeuristic(Solution solution)
 
 \bigskip
 
-Como menciones en sobre la implementacion de COG, solo se utiliza cuando es necesario. Luego para cada vehiculo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el insert. El metodo \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo bool que denota que el cliente puede ser insertado o no en el vehiculo consultado. Y otro campo que tiene la posicion donde se debe insertar, en caso de poder insertarlo. En caso de poder insertar el cliente, este se lo agrega al vehiculo que actualiza su COG, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método ApplyHeuristic de la clase InsertHeuristic es: 
+Como menciones en sobre la implementacion de COG, solo se utiliza cuando es necesario. Luego para cada vehiculo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el insert. El método \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo bool que denota que el cliente puede ser insertado o no en el vehiculo consultado. Y otro campo que tiene la posicion donde se debe insertar, en caso de poder insertarlo. En caso de poder insertar el cliente, este se lo agrega al vehiculo que actualiza su COG, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método ApplyHeuristic de la clase InsertHeuristic es: 
 
 \begin{equation*}
 0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
@@ -774,7 +795,7 @@ private bool Do2OptSwap(Vehicle vehicle)
 
 \bigskip
 
-Basicamente a cada vehículo le aplica el 2-opt. El metodo Do2OptSwap primero obtiene una lista de las permutaciones posibles. Luego por cada combinacion intenta hacer un swap dentro de la ruta. Si el swap sucede, luego vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el swap solo sucede cuando la nueva distancia es estrictamente menor, el loop siempre termina. Una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un order de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
+Basicamente a cada vehículo le aplica el 2-opt. El método Do2OptSwap primero obtiene una lista de las permutaciones posibles. Luego por cada combinacion intenta hacer un swap dentro de la ruta. Si el swap sucede, luego vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el swap solo sucede cuando la nueva distancia es estrictamente menor, el loop siempre termina. Una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un order de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
 
 \subsection{Replace}
 
@@ -833,11 +854,16 @@ Agregar heuristicas de busqueda local entre generación de poblaciones conlleva 
 ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. 
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucion}.
 
 \bigskip
 
-TODO Dibujo didactico?
+\begin{figure}[h]
+	\caption{Como se codifica una solución}
+	\centering
+	\includegraphics{codificacionDeSolucion}
+	\label{fig:codificacionDeSolucion}
+\end{figure}
 
 \bigskip
 
