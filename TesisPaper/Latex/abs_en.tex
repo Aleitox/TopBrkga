@@ -1,23 +1,23 @@
 
 \chapter*{\tituloAbstractEn}
 
-\noindent In the orienteering problem (OP), a set of vertices is given, each with a certain score. The objective is to determine a path, limited in length, that visits some clients in order that maximises the sum of the collected scores. Orienteering can be formulated in the following way. Given $n$ nodes in the Euclidean plane each with a score, where $score(vertex_i) \geq 0$ and $score(vertex_1) = score(vertex_n) = 0$, find a route of maximum score through these nodes beginning at $vertex_1$ and ending at $vertex_n$ of length no greater than $tMax$.
+\noindent In the\textit{Orienteering Problem} (OP), a set of nodes is given, each with a certain benefit. The objective is to determine a path, limited in length, that visits some nodes in order that maximizes the sum of the collected benefits. The OP can be formulated in the following way. Given $n$ nodes in the euclidean plane each with a benefit, where $benefit(node_i) \geq 0$ y $benefit(node_1) = benefit(node_n) = 0$, find a route of maximum score through these nodes beginning at $node_1$ and ending at $node_n$ of length no greater than $tMax$. Tsiligirides \cite{Tsiligirides} refers to this as the \textit{Generalized Traveling Salesman Problem} (GTSP).
 
 \bigskip
 
-The team orienteering problem (TOP) is the generalization to the case of multiple tours of the Orienteering Problem, know also as Selective Traveling Salesman Problem (TSP). TOP involves finding a set of paths from the starting point to the ending point such that the total collected reward received from visiting a subset of locations is maximized and the length of each path is restricted by a pre-specified limit. TOP is known as an NP-complete problem. The solution to this problem requires not only determining a calling order on each tour, but also selecting which subset of nodes in the graph to service.
+The \textit{Team Orienteering Problem} (TOP) is the generalization to the case of multiple tours of the \textit{Orienteering Problem}. Solving TOP involves finding a set of paths from the starting point to the ending point such that the total collected benefit received from visiting a subset of nodes is maximized, the length of each path is restricted by $tMax$ and no node is visited more than once. The OP belongs to the class of NP-Hard problems, as it contains the well known \textit{Traveling Salesman Problem} as a special case (see Garey y Johnson \cite{GareyJohnson}). In the same way, TOP belongs to the NP-Hard problems as it contains the OP as a special case when there is only one path. Solving TOP requires not only determining a calling order on each tour, but also selecting which subset of nodes in the graph to service.
 
 \bigskip
 
-In this thesis, a biased random key genetic algorithm (BRKGA) approach is proposed for the team orienteering problem. Random-key genetic algorithms initialized their population with a set of random-key vectors and a decoder. The decoder converts a random-key vector in a valid solution of the problem. Biased random-key genetic algorithms are a variant of random-key genetic algorithms, where one of the parents used for mating is biased to be of higher fitness than the other parent.
+In this thesis, a genetic algorithm called \textit{Biased Random Key Genetic Algorithm} (BRKGA) is proposed to solve TOP. The BRKGA algorithm initialize its population using a decoder that converts a set of random-key vectors into a set of valid solutions of the problem. The BRKGA is a variant of the \textit{Random Key Genetic Algorithm} (RKGA). The BRKGA differs from RKGA in the mating process, in BRKGA one of the parents always belongs to the set of best solutions of the population and this parent has better chances of transmitting his gens to the child solution.
 
 \bigskip
 
-Also, in every new generation, the best unenhanced solution is enhanced with a sequence of local search heuristics. Local search heuristics such as Insert, Swap, Replace and 2-opt are used in order to find better local solutions for a given solution. 
+In my algorithm, in every new generation, the best solution is enhanced with a local search. The local search algorithms \textit{Insert}, \textit{Swap}, \textit{Replace} and \textit{2-Opt}  are used in order to find better neighbor solutions of a given solution.
 
 \bigskip
 
-Computational experiments are made on standard instances. Then, this results, were compared to the results obtained by Chao, Golden, and Wasil (CGW), Tang and Miller-Hooks (TMH) and Archetti, Hertz, Speranza (AHS). Though my results where very good and competitive in most intances, in some they were not as good as mentioned previous works.
+Computational experiments are made on standard instances. Then, this results, were compared to the results obtained by Chao, Golden, and Wasil \cite{ChaoGoldenWasil} (CGW), Tang and Miller-Hooks \cite{TangMillerHooks} (TMH) and Archetti, Hertz, Speranza \cite{ArchettiHertzSperanza} (AHS). My results are are very good and competitive in most instances.
 
 \bigskip
 

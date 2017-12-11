@@ -1,17 +1,15 @@
 
 \chapter*{\tituloAbstractEs}
 
-\noindent En el \textit{Orienteering Problem} (OP), se da un conjunto de nodos, cada uno con un beneficio determinado. El objetivo es determinar una ruta, limitado en su longitud, que visita a algunos nodos maximizando la suma de los beneficios obtenidos. OP se puede formular de la siguiente manera. Dado $n$ nodos en el plano euclidiano, cada uno con un beneficio, donde $beneficio(nodo_i) \geq 0$ y $beneficio(nodo_1) = beneficio(nodo_n) = 0$, se debe encontrar una ruta de beneficio máximo a través de estos nodos, iniciando en $nodo_1$ y finalizando en $nodo_n$, de longitud no mayor que $tMax$. Tsiligirides \cite{Tsiligirides} se refirió a esto como \textit{Generalized Traveling Salesman Problem} (GTSP).
+\noindent En el \textit{Orienteering Problem} (OP), se da un conjunto de nodos, cada uno con un beneficio determinado. El objetivo es determinar una ruta, limitado en su longitud, que visita a algunos nodos maximizando la suma de los beneficios obtenidos. El OP se puede formular de la siguiente manera. Dado $n$ nodos en el plano euclidiano, cada uno con un beneficio, donde $beneficio(nodo_i) \geq 0$ y $beneficio(nodo_1) = beneficio(nodo_n) = 0$, se debe encontrar una ruta de beneficio máximo a través de estos nodos, iniciando en $nodo_1$ y finalizando en $nodo_n$, de longitud no mayor que $tMax$. Tsiligirides \cite{Tsiligirides} se refirió a esto como \textit{Generalized Traveling Salesman Problem} (GTSP).
 
 \bigskip
 
-TODO:  TOP es un problema NP-hard: Reformular
-
-El \textit{Team Orienteering Problem} (TOP) es la generalización al caso de múltiples rutas del orienteering problem. Resolver TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final, de modo que ningún nodo pertenezca a dos rutas diferentes, la distancia de todas las rutas debe ser menor o igual a $tMax$, maximizando la sumatoria de los beneficios obtenidos de cada una de sus rutas. TOP es un problema NP-hard. Resolver TOP requiere determinar un orden para cada ruta y además, se debe seleccionar qué subconjunto de nodos a visitar, ya que no necesariamente se visitan todos los nodos.
+El \textit{Team Orienteering Problem} (TOP) es la generalización al caso de múltiples rutas del \textit{Orienteering Problem}. Resolver TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final de forma tal que se maximice la sumatoria de beneficios recolectados, la distancia de todas las rutas no supere a $tMax$ y ningún nodo sea visitado más de una vez. El OP pertenece a la clase problemas NP-Completo ya que contiene al problema \textit{Traveling Salesman Problem} como caso especial (ver Garey y Johnson \cite{GareyJohnson}). De la misma manera, TOP pertenece a la clase de problemas NP-Completo porque contiene a OP como un caso especial donde solo hay una ruta. Resolver TOP requiere determinar un orden para cada ruta y además, seleccionar qué subconjunto de nodos a visitar, ya que no necesariamente se visitan todos los nodos.
 
 \bigskip
 
-En esta tesis, se propone un algoritmo genético llamado \textit{Biased Random Key Genetic Algorithm} (BRKGA) para resolver TOP. El BRKGA inicializa su población utilizando un decodificador que convierte un conjunto de vectores de clave aleatoria, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). El BRKGA se diferencia del RKGA en el apareamiento, en BRKGA uno de los padres utilizado siempre pertenece al subconjunto de las mejores soluciones de la población y el padre que pertenece a tal conjunto tiene mayor probabilidad de trasmitir sus genes a la solución hija.
+En esta tesis, se propone un algoritmo genético llamado \textit{Biased Random Key Genetic Algorithm} (BRKGA) para resolver TOP. El BRKGA inicializa su población utilizando un decodificador que convierte un conjunto de vectores de clave aleatoria, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). El BRKGA se diferencia del RKGA en el proceso de apareamiento, en BRKGA uno de los padres utilizado siempre pertenece al subconjunto de las mejores soluciones de la población y este padre tiene mayor probabilidad de trasmitir sus genes a la solución hija.
 
 \bigskip
 
@@ -19,7 +17,7 @@ En mi algoritmo, en cada nueva generación, la mejor solución se mejora con una
 
 \bigskip
 
-Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil (CGW) \cite{ChaoGoldenWasil}, Tang y Miller-Hooks (TMH) \cite{TangMillerHooks} y Archetti, Hertz, Speranza (AHS) \cite{ArchettiHertzSperanza}. Mis resultados fueron muy buenos y competitivos en la mayoría de las instancias.
+Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil \cite{ChaoGoldenWasil} (CGW), Tang y Miller-Hooks \cite{TangMillerHooks} (TMH) y Archetti, Hertz, Speranza \cite{ArchettiHertzSperanza} (AHS). Mis resultados son muy buenos y competitivos en la mayoría de las instancias.
 
 \bigskip
 
