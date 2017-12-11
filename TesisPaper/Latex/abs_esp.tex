@@ -1,24 +1,26 @@
 
 \chapter*{\tituloAbstractEs}
 
-\noindent En el problema de orientación (OP), se da un conjunto de vértices, cada uno con un puntaje determinado. El objetivo es determinar un camino, limitado en su longitud, que visita a algunos clientes a modo de maximizar la suma de los puntajes obtenidos. La orientación se puede formular de la siguiente manera. Dado $n$ nodos en el plano euclidiano, cada uno con un puntaje, donde $puntaje(vertice_i) \geq 0$ y $puntaje(vertice_1) = puntaje(vertice_n) = 0$, encuentre una ruta de puntaje máximo a través de estos nodos, inciando en $vertice_1$ y termina en $vertice_n$ de longitud no mayor que $tMax$.
+\noindent En el \textit{Orienteering Problem} (OP), se da un conjunto de nodos, cada uno con un beneficio determinado. El objetivo es determinar una ruta, limitado en su longitud, que visita a algunos nodos maximizando la suma de los beneficios obtenidos. OP se puede formular de la siguiente manera. Dado $n$ nodos en el plano euclidiano, cada uno con un beneficio, donde $beneficio(nodo_i) \geq 0$ y $beneficio(nodo_1) = beneficio(nodo_n) = 0$, se debe encontrar una ruta de beneficio máximo a través de estos nodos, iniciando en $nodo_1$ y finalizando en $nodo_n$, de longitud no mayor que $tMax$. Tsiligirides \cite{Tsiligirides} se refirió a esto como \textit{Generalized Traveling Salesman Problem} (GTSP).
 
 \bigskip
 
-El problema de orientación de equipo (TOP) es la generalización al caso de múltiples recorridos del problema de orientación, también conocido como Problema de vendedor ambulante selectivo (TSP). TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final, de modo que la recompensa total obtenida al visitar un subconjunto de ubicaciones se maximice y la longitud de cada ruta esté restringida por un límite preestablecido. TOP es conocido como un problema NP-completo. La solución a este problema requiere no solo determinar un orden para cada recorrido, sino también seleccionar qué subconjunto de vertices en el gráfico visitar.
+TODO:  TOP es un problema NP-hard: Reformular
+
+El \textit{Team Orienteering Problem} (TOP) es la generalización al caso de múltiples rutas del orienteering problem. Resolver TOP implica encontrar un conjunto de rutas desde el punto de inicio hasta el punto final, de modo que ningún nodo pertenezca a dos rutas diferentes, la distancia de todas las rutas debe ser menor o igual a $tMax$, maximizando la sumatoria de los beneficios obtenidos de cada una de sus rutas. TOP es un problema NP-hard. Resolver TOP requiere determinar un orden para cada ruta y además, se debe seleccionar qué subconjunto de nodos a visitar, ya que no necesariamente se visitan todos los nodos.
 
 \bigskip
 
-En esta tesis, se propone un enfoque de algoritmo genético de clave aleatoria sesgada (BRKGA) para el problema de orientación de equipo. Los algoritmos genéticos de clave aleatoria inicializaron su población con un conjunto de vectores de clave aleatoria y un decodificador. El decodificador convierte un vector de clave aleatoria en una solución válida del problema. Los algoritmos genéticos de clave aleatoria sesgada son una variante de los algoritmos genéticos de clave aleatoria, donde uno de los padres utilizado para el apareamiento está predispuesto a tener una mejor forma física que el otro progenitor.
+En esta tesis, se propone un algoritmo genético llamado \textit{Biased Random Key Genetic Algorithm} (BRKGA) para resolver TOP. El BRKGA inicializa su población utilizando un decodificador que convierte un conjunto de vectores de clave aleatoria, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). El BRKGA se diferencia del RKGA en el apareamiento, en BRKGA uno de los padres utilizado siempre pertenece al subconjunto de las mejores soluciones de la población y el padre que pertenece a tal conjunto tiene mayor probabilidad de trasmitir sus genes a la solución hija.
 
 \bigskip
 
-Además, en cada nueva generación, la mejor solución no mejorada se mejora con una secuencia de heurística de búsqueda local. Las heurísticas de búsqueda local como Insertar, Cambiar, Reemplazar y 2-opt se utilizan para encontrar mejores soluciones locales para una solución dada.
+En mi algoritmo, en cada nueva generación, la mejor solución se mejora con una búsqueda local. Los algoritmos de búsqueda local \textit{Insert}, \textit{Swap}, \textit{Replace} y \textit{2-Opt} se utilizan para encontrar mejores soluciones vecinas de una solución dada.
 
 \bigskip
 
-Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Aunque mis resultados fueron muy buenos y competitivos en la mayoría de las intancias, en algunos no fueron tan buenos como mencioné trabajos anteriores.
+Los experimentos computacionales se realizan en instancias estándar. Luego, estos resultados se compararon con los resultados obtenidos por Chao, Golden y Wasil (CGW) \cite{ChaoGoldenWasil}, Tang y Miller-Hooks (TMH) \cite{TangMillerHooks} y Archetti, Hertz, Speranza (AHS) \cite{ArchettiHertzSperanza}. Mis resultados fueron muy buenos y competitivos en la mayoría de las instancias.
 
 \bigskip
 
-\noindent\textbf{Keywords:} Problema de Orientación de Equipo, Algoritmo Genético de Clave Aleatoria Sesgada, Problema de Enrutamiento, Heurística de Búsqueda Local, Construcción de Soluciones Golosas.
+\noindent\textbf{Keywords:} Team Orienteering Problem, Biased Random Key Genetic Algorithm, Problema de Enrutamiento, Búsqueda Local, Construcción de Soluciones Golosas.
