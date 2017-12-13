@@ -1,46 +1,58 @@
 \chapter{Introducción}
 
-\section{Historia}
-
-Orientación (Orienteering) es un deporte al aire libre usualmente jugado en una zona montañosa o fuertemente boscosa. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de cotrol específico e intenta visitar tantos otros puntos de control como sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de la orientación es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Un competidor tiene que seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total sujeto a la restricción de tiempo. Esto se conoce como problema de orientación de un solo competidor (Single-Competitor Orienteering Problem) y se denota por OP.
+\textit{Orienteering} es un deporte al aire libre usualmente jugado en una zona montañosa o fuertemente boscosa. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de control específico e intenta visitar tantos otros puntos de control como sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de la orientación es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Un competidor tiene que seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total sujeto a la restricción de tiempo. Esto se conoce como \textit{Orienteering Problem} y se denota por OP.
 
 \bigskip
 
-El equipo de orientación extiende la versión de un solo competidor del deporte. Un equipo formado por varios competidores (digamos 2, 3 o 4 miembros) comienza en el mismo punto. Cada miembro del equipo intenta visitar tantos puntos de control como sea posible dentro de un límite de tiempo prescrito, y luego termina en el punto final. Una vez que un miembro del equipo visita un punto y se le otorga la puntuación asociada, ningún otro miembro del equipo puede obtener una puntuación por visitar el mismo punto. Por lo tanto, cada miembro de un equipo tiene que seleccionar un subconjunto de puntos de control para visitar, de modo que haya una superposición mínima en los puntos visitados por cada miembro del equipo, el límite de tiempo no sea violado y la puntuación total del equipo sea maximizada. Lo llamamos el Problema de Orientación de Equipo (Team Orienteering Problem ) y lo denotan por TOP.
+El equipo de orientación extiende la versión de un solo competidor del deporte. Un equipo formado por varios competidores (digamos 2, 3 o 4 miembros) comienza en el mismo punto. Cada miembro del equipo intenta visitar tantos puntos de control como sea posible dentro de un límite de tiempo prescrito, y luego termina en el punto final. Una vez que un miembro del equipo visita un punto y se le otorga la puntuación asociada, ningún otro miembro del equipo puede obtener una puntuación por visitar el mismo punto. Por lo tanto, cada miembro de un equipo tiene que seleccionar un subconjunto de puntos de control para visitar, de modo que haya una superposición mínima en los puntos visitados por cada miembro del equipo, el límite de tiempo no sea violado y la puntuación total del equipo sea maximizada. Se llama \textit{Team Orienteering Problem} y lo denotan por TOP.
 
 \bigskip
 
-Notar que la versión de un solo competidor (OP) de este problema ha demostrado ser NP-dura por Golden, Levy, y Vohra \cite{goldenlevyvohra}, por lo que el TOP es al menos tan difícil. Por lo tanto, la mayoría de la investigación sobre estos problemas se han centrado en proporcionar enfoques heurísticos.
-
-\section{Aplicaciones de TOP}
-
-El TOP ha sido reconocido como un modelo de muchas aplicaciones reales diferentes. El juego deportivo de orientación de equipo por Chao et al \cite{ChaoGoldenWasil}. Algunas aplicaciones de servicios de recogida o entrega que implican el uso de transportistas comunes y flotas privadas por Ballou y Chowdhury \cite{BallouChowdhury}. También hay plicaciones en varios campos, como la planificación de viajes turísticos, enrutamiento técnico y reclutamiento de atletas.
+La versión de un solo competidor (OP) de este problema es NP-Completa como demostraron Golden, Levy, y Vohra \cite{GoldenLevyVohra}, por lo que el TOP es al menos tan difícil. Por lo tanto, la mayoría de las propuestas para estos problemas se han centrado en proporcionar enfoques heurísticos.
 
 \bigskip
 
-El problema de entrega de combustible con vehículos múltiples de Golden, Levy y Vohra \cite{goldenlevyvohra}. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. Una característica clave de este problema es que el suministro de combustible del cliente (nivel de inventario) debe mantenerse en un nivel adecuado en todo momento. Es decir, cada cliente tiene una capacidad de tanque conocida y se espera que su nivel de combustible permanezca por encima de un valor crítico preespecificado que puede denominarse punto de reabastecimiento. Las entregas siguen un \textit{sistema de empuje} en el sentido de que están programados por la empresa en base a un pronóstico de los niveles de los tanques de los clientes. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
+El TOP ha sido reconocido como un modelo de muchas aplicaciones reales diferentes como por ejemplo:
 
-\bigskip
+\begin{enumerate}[i]
+
+\item
+
+El juego deportivo de orientación de equipo explicado anteriormente (ver Chao et al \cite{ChaoGoldenWasil}). 
+
+\item
+
+Algunas aplicaciones de servicios de recogida o entrega que implican el uso de transportistas comunes y flotas privadas (ver Ballou y Chowdhury \cite{BallouChowdhury}). 
+
+\item
+
+La planificación de viajes turísticos.
+
+\item
+
+El problema de entrega de combustible con vehículos múltiples de Golden, Levy y Vohra \cite{GoldenLevyVohra}. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. Una característica clave de este problema es que el suministro de combustible del cliente (nivel de inventario) debe mantenerse en un nivel adecuado en todo momento. Es decir, cada cliente tiene una capacidad de tanque conocida y se espera que su nivel de combustible permanezca por encima de un valor crítico preespecificado que puede denominarse punto de reabastecimiento. Las entregas siguen un sistema de empuje en el sentido de que están programados por la empresa en base a un pronóstico de los niveles de los tanques de los clientes. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
+
+\item
 
 El reclutamiento de jugadores de fútbol americano universitario de Butt y Cavalier \cite{ButtCavalier}. Un método exitoso de reclutamiento utilizado en muchas pequeñas divisiones del \textit{National Collegiate Athletic Association} es visitar los campus de las escuelas secundarias y reunirse con los miembros superiores de los equipos de fútbol americano. A modo maximizar su potencial para reclutar futuros jugadores, deben visitar tantas escuelas secundarias como sea posible dentro de un radio de 100 km del campus. Pero, sabían por experiencia previa que visitar todas las escuelas en esta área no era posible. Por lo tanto, querían visitar el mejor subconjunto de escuelas en esta área.
 
-\bigskip
+\item
 
 El enrutamiento de técnicos para atender a los clientes en ubicaciones geográficamente distribuidas. En este contexto, cada vehículo en el modelo TOP representa un solo técnico y hay a menudo una limitación en el número de horas que cada técnico puede programar para trabajar en un día dado. Por lo tanto, puede no ser posible incluir a todos los clientes que requieren servicio en los horarios de los técnicos para un día determinado. En su lugar, se seleccionará un subconjunto de los clientes. Las decisiones sobre qué clientes elegir para su inclusión en cada uno de los horarios de los técnicos de servicio pueden tener en cuenta la importancia del cliente o la urgencia de la tarea. Notar que este requisito de selección de clientes también surge en muchas aplicaciones de enrutamiento en tiempo real.
 
-\section{Como se modelo TOP en nuestra solucion}
+\end{enumerate}
 
-Para la generación y comparación de resultados se utilizaron instancias de test de Tsiligirides y de Chao. Las intancias de Tsiligirides y de Chao comparten el mismo formato. 
+Para la generación y comparación de resultados se utilizaron instancias de test de Tsiligirides y de Chao \cite{IntancesChaoTsiligirides}. Ambos autores comparten el mismo formato. 
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-Una instancea de TOP contiene:
+Una instancia de TOP contiene:
 
 \begin{itemize}
-  \item N vehículos de carga, cada vehículo tiene una distancia máxima, llamada TMAX, que puede recorrer. En esta implementación cada vehículo puede tener una distancia máxima diferente. De todos modos en las intancias de test utilizadas todos los vehículos tienen el mismo valor de distancia máxima.
-  \item M clientes. Cada cliente tiene un beneficio mayor a cero. Además tienen un set de coordenadas X e Y que representan su ubicación en un plano cartesiano.
-  \item Un punto de inicio y fin de ruta para cada vehículo. Ambos puntos tienen un beneficio de cero y tienen un set de coordenadas X e Y.
+  \item $N$ vehículos de carga. Cada vehículo tiene una distancia máxima, llamada $tMax$, que puede recorrer. En esta implementación cada vehículo puede tener una distancia máxima diferente. De todos modos en las instancias de test utilizadas, los vehículos tienen el mismo $tMax$.
+  \item $M$ clientes. Un cliente es un nodo con beneficio mayor a cero. Cada cliente tienen un set de coordenadas $X$ e $Y$ que representan su ubicación en un plano cartesiano.
+  \item Un nodo de inicio y fin de ruta. Todos los vehículos comparten inician y finalizan el recorrido en estos nodos. Ambos nodos tienen un beneficio de cero y tienen un set de coordenadas $X$ e $Y$.
 \end{itemize}
 \end{minipage}
 
@@ -50,19 +62,25 @@ Una instancea de TOP contiene:
 También es importante mencionar que:
 
 \begin{itemize}
-	\item Se utiliza la distancia euclidiana para medir distancias.
+	\item Todas las instancias del benchmark utilizan un plano cartesiano y se utiliza la distancia euclidiana para medir distancias.
 	\item Una solución es valida si:
 	\begin{itemize}
 		\item Para todo vehículo, la distancia de su ruta es menor o igual a la distancia máxima (\textit{tMax}) del vehículo que realiza tal ruta.
-		\item Ningun cliente pertenece a dos rutas distintas.
-		\item Toda ruta parte del vértice de inicio y finaliza en el punto de vértice.
+		\item Ningún cliente pertenece a dos rutas distintas.
+		\item Toda ruta parte del nodo de inicio y finaliza en el nodo de fin.
 	\end{itemize}
 	\item La función objetivo retorna la sumatoria de los beneficios de los clientes visitados.
 \end{itemize}
 \end{minipage}
 
+\bigskip
 
-
+En el capítulo 2 se encuentra la revisión bibliográfica, donde se sintetizaron las propuestas de los trabajos previos que resolvieron TOP.
+En el capítulo 3 se presentará el modelo matemático de TOP, es el mismo que presentaron Tang y Miller-Hooks \cite{TangMillerHooks} .
+En el capítulo 4 se explica sobre algoritmos genéticos en general, luego se explica en particular el RKGA y el BRKGA. Por último se comenta sobre el algoritmo decodificador que utiliza el BRKGA.
+En el capítulo 5 se detalla en profundidad la implementación de toda la solución. Comenzando por los decoder utilizados, su eficiencia, desventajas y comportamiento. Luego se explica el algoritmo BRKGA, detallando las configuraciones testeadas, resultados parciales y problemas encontrados. Por ultimo en este mismo capitulo se describen las búsquedas locales implementadas, el objetivo de cada una, los distintos ordenes en que se aplicaron las búsquedas locales y los resultados parciales sobre un subconjunto diverso del benchmark de instancias.
+En el capítulo 6 muestro los resultados obtenidos sobre 199 instancias del benchmark de problemas.
+Por último en el capítulo 7 comento sobre las conclusiones y trabajos futuros.
 
 
 
