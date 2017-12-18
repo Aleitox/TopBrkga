@@ -112,7 +112,7 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 \begin{figure}[h]
 	\caption{RandomKeys ordenando clientes}
 	\centering
-	\includegraphics{RandomKeysOrdenando}
+	\includegraphics[width=14cm]{RandomKeysOrdenando}
 	\label{fig:RandomKeysOrdenando}
 \end{figure}
 
@@ -183,9 +183,9 @@ Tiene un orden de complejidad de $O(\#clientes)$.
 Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solucion. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
 
 \begin{figure}[h]
-	\caption{Marcados con un color por vehiculo como quedan los clientes distribuidos con el decoder simple}
+	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de RandomKeys de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de tiempo, no intento agregar a los siguientes clientes.}
 	\centering
-	\includegraphics{DistribucionClientesDecoSimple}
+	\includegraphics[width=14cm]{DistribucionClientesDecoSimple}
 	\label{fig:DistribucionClientesDecoSimple}
 \end{figure}
 
@@ -244,9 +244,9 @@ Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculo
 Un detalle de menor importancia, el decoder goloso no tiene los clientes de forma continua por vehiculo asignado al ordenar los clientes por el RandomKeys. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
 
 \begin{figure}[h]
-	\caption{Marcados con un color por vehiculo como quedan los clientes distribuidos con el decoder goloso}
+	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir el cliente 5, intenta en orden con el resto de los clientes aún no visitados y logra insertar el cliente 8. De un modo simlilar, sucede con la segunda ruta al no poder incluir al cliente 4.}
 	\centering
-	\includegraphics{DistribucionClientesDecoGoloso}
+	\includegraphics[width=14cm]{DistribucionClientesDecoGoloso}
 	\label{fig:DistribucionClientesDecoGoloso}
 \end{figure}
 
@@ -854,15 +854,22 @@ Agregar heuristicas de busqueda local entre generación de poblaciones conlleva 
 ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucion}.
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
 
 \bigskip
 
 \begin{figure}[h]
-	\caption{Como se codifica una solución}
+	\caption{Como se mejora una solución}
 	\centering
-	\includegraphics{codificacionDeSolucion}
-	\label{fig:codificacionDeSolucion}
+	\includegraphics[width=14cm]{codificacionDeSolucionParteUno}
+	\label{fig:codificacionDeSolucionUno}
+\end{figure}
+
+\begin{figure}[h]
+	\caption{Como se actualiza el \textit{RandomKeys} y hash de una solución luego de mejorar la solución \ref{fig:codificacionDeSolucionDos}}
+	\centering
+	\includegraphics[width=14cm]{codificacionDeSolucionParteDos}
+	\label{fig:codificacionDeSolucionDos}
 \end{figure}
 
 \bigskip
