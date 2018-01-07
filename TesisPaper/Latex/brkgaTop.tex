@@ -1,30 +1,38 @@
 
 \chapter{Algoritmo BRKGA con búsqueda local para TOP}
 
-En el presente capítulo ahondaremos en detalle la solución implementada para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencionamos en el capítulo BRKGA tiene la tarea de convertir un arreglo de enteros aleatorios en una solución válida del problema. Luego el algoritmo BRKGA, cuya implementación puede hacerce con total independencia del problema a resolver. Por último las heurísticas locales aplicadas en cada nueva generación a el mejor individuo de la población, al cual no se le hayan aplicado previamente. 
+En el presente capítulo describiremos en detalle la solución implementada para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencionamos en el capítulo BRKGA tiene la tarea de convertir un arreglo de enteros aleatorios en una solución válida del problema. Luego el algoritmo BRKGA, cuya implementación puede hacerse con total independencia del problema a resolver. Por último las búsquedas locales aplicadas en cada nueva generación a los mejores individuo de la población. 
 
 \bigskip
 
-En el capítulo \textit{Resultados} se mostrara en detalle los resultados obtenidos de la versión final de la implementación sobre el benchmark de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides}. Se compararon los resultados con los obtenidos de los trabajos previos de Chao et al. \cite{ChaoGoldenWasil}, de Archetti et al. \cite{ArchettiHertzSperanza} y los de Tang and E. Miller-Hooks \cite{TangMillerHooks}. En este capítulo se utilizaran los resultados de tales trabajos previos para crear un índice de efectividad a modo de poder evaluar la efectividad de la solución generada por el modulo analizado.
+TODO: Agregar mencion de resultados de BDM
+
+En el capítulo \textit{Resultados} se mostrará en detalle los resultados obtenidos de la versión final de la implementación sobre el benchmark de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides}. Se compararon los resultados con los obtenidos de los trabajos previos de Chao et al. \cite{ChaoGoldenWasil} (CGW), de Archetti et al. \cite{ArchettiHertzSperanza} (AHS) y los de Tang and E. Miller-Hooks \cite{TangMillerHooks} (TMH).
 
 \bigskip
 
-Además contaré las dificultades encontradas y desiciones tomadas para llegar a soluciones más competitivas con los trabajos previos seleccionados. A modo de monitorear el progreso, primero se seleccionó un subconjunto diverso del benchmark de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides}. Luego, para cada versión de la implementación que fui generando, se les calculó su índice de efectividad. Tal índice lo definí de la siguiente manera:
+En este capítulo mostré los resultados parciales obtenidos a lo largo del desarrollo de la implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida cree un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución para el la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el índice de efectividad. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
+
+\bigskip
+
+Se seleccionó un subconjunto del benchmark de instancias de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides} para medir el progreso de mi desarrollo. Las seis instancias seleccionadas varían en cantidad de clientes y vehículos, esto es importante para que el análisis del rendimiento sea lo más objetivo posible. Luego de obtener una solución para cada una de estas instancias, se calcula el $i_e$ que definí de la siguiente manera:
+
+TODO: Agregar profit de resultados de BDM
 
 \begin{equation*}
-bestProfit(i) = Max(Profit(CGW(i)), Profit(AHS(i)), Profit(TMH(i)))
+bestProfit(i) = max(profit(CGW(i)), profit(AHS(i)), profit(TMH(i))) \label{eq:bestProfit}
 \end{equation*}
 \begin{equation*}
-efectividad(imp_{v.xyz}) = Profit(imp_{v.xyz}(i)) / bestProfit(i)
+i_e(imp_{v.xyz},i) = profit(imp_{v.xyz}(i)) / bestProfit(i) \label{eq:efectividad}
 \end{equation*}
 
 \bigskip
 
-Donde $Profit(Implementacion_v.xyz(i))$ representa la ganancia de la mejor solución obtenida luego de ejecutar una cierta cantidad de veces la version $xyz$ para la intancia del problema $i$. Luego $Profit(CGW(i))$, $Profit(AHS(i)$, $Profit(TMH(i))$ representan la ganancia de las implementaciones de Chao et al., Archetti et al. y Tang Miller-Hooks respectivamente para la misma instancia $i$. El índice es simplemenete devidir la ganancia obtenida por la mejor ganancia encontrada por los trabajos previos seleccionados. Si el $efectividad(imp_{v.xyz}) = 1$, luego nuestra implementación habra generado una solución tan buena como los trabajos previos. Si $0.95 \leq efectividad(imp_{v.xyz}) < 1$, mi solución no sera tan buena pero considero que esta en un rango donde es  competitiva. A lo largo de todo el desarrollo, el objetivo fue maximizar el índice de efectividad sin tener certeza de llegar a buenas soluciones utlizando la heurística BRKGA.
+De la primera ecuación \eqref{eq:bestProfit} obtenemos el mejor beneficio de entre los trabajos previos seleccionados para la instancia $i$. Luego en la función \eqref{eq:efectividad} calculo que tan efectiva es la versión $xyz$ de mi implementación para la instancia $i$. Esto se hace dividiendo el beneficio obtenido de mi implementación sobre el mejor beneficio calculado previamente. Luego analizar el rendimiento de $i_e$ es muy sencillo. Si $i_e = 1$, la solución encontrada es tan buena como la mejor solución encontrada hasta el momento. Si $0.90 < i_e < 1$, luego la solución encontrada no es tan buena como la mejor pero la considero competitiva.
 
 \bigskip
 
-Para cada uno de los siguientes modulos y submodulos, se mostraran su pseudocodigo y su índice de efectividad. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implemente el desarrollo. El objetivo del pseudocodigo es meramente descriptivo, el método que representa puede ser implementado con ciertas variaciones que no viene al caso describir. Tales variaciones para no mostrar: variables de medición de tiempo, variables para monitorear estados, testing, manejo de excepciones, persistencia de resultados, y demas, con el objetivo de ser mas ilutrativo de la funcionalidad del algoritmo. 
+Se explicará en detalle el funcionamiento de los módulos que componen la implementación, incluyendo su pseudocódigo y los resultados parciales obtenidos luego de implementar tal módulo. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implemente el desarrollo. El objetivo del pseudocódigo es ilustrar el comportamiento del método que representa, tal método es implementado con ciertas variaciones que no viene al caso describir. Considere que no aportaba a su descripción las lineas de código relacionadas con: medición de tiempo, monitoreo de estados, testing, manejo de excepciones, persistencia de resultados, etc. 
 
 
 \bigskip

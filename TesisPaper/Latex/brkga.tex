@@ -31,7 +31,7 @@ El \textit{Biased Random Key Genetic Algorithms} (BRKGA), difiere del RKGA en la
 	\caption{bias crossover}
 	\centering
 	\includegraphics[width=15cm]{BiasCrossover}
-	\label{fig:biascrossover}
+	\label{fig:biasCrossover}
 \end{figure}
 
 \bigskip
@@ -55,5 +55,5 @@ Una característica importante para mencionar del BRKGA es que el decodificador 
 
 \bigskip
 
-En el caso de esta implementación del BRKGA, entre cada generación se ejecuta una búsqueda local sobre las mejores soluciones de la población. Como estas heuristicas trabajan sobre una instancia de la solución, requiere que exista un objeto codificador. Es decir, es decir un algoritmo capas de convertir una solución del problema en un vector de enteros aleatorios. De este modo, una vez que se mejora una solución, podemos actualizar su vector aleatorio que lo representa y seguir el curso del BRKGA. 
+En el caso de esta implementación del BRKGA, entre cada generación se ejecuta una búsqueda local sobre las mejores soluciones de la población. Como estas búsquedas locales trabajan con una solución decodificada, requiere que exista un objeto codificador para actualizar el vector aleatorio de enteros de la solución mejorada. Es decir, un algoritmo capas de convertir una solución del problema en un vector de enteros aleatorios. De este modo, una vez que se mejora una solución, se actualiza su vector de enteros aleatorios que lo representa y luego sigue el curso normal del BRKGA. 
 
