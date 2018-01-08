@@ -19,12 +19,12 @@ Se seleccionó un subconjunto del benchmark de instancias de problemas de Chao y
 
 TODO: Agregar profit de resultados de BDM
 
-\begin{equation*}
+\begin{equation}
 bestProfit(i) = max(profit(CGW(i)), profit(AHS(i)), profit(TMH(i))) \label{eq:bestProfit}
-\end{equation*}
-\begin{equation*}
+\end{equation}
+\begin{equation}
 i_e(imp_{v.xyz},i) = profit(imp_{v.xyz}(i)) / bestProfit(i) \label{eq:efectividad}
-\end{equation*}
+\end{equation}
 
 \bigskip
 
@@ -37,12 +37,12 @@ Se explicará en detalle el funcionamiento de los módulos que componen la imple
 
 \bigskip
 
-Para la valuación del índice de efectividad se eligieron seis intancias del benchmark de modo que fueran variadas entre si. Tome dos pequeñas, dos medianas y dos grandes, cuyas descripción pueden observarse en la siguiente tabla:
+Para la valuación de $i_e$ se eligieron seis instancias del benchmark \cite{IntancesChaoTsiligirides} de modo que fueran variadas entre sí. Tome dos pequeñas, dos medianas y dos grandes, cuyas descripción pueden observarse en la siguiente tabla:
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c| } 
  \hline
-Autor & Instancea & Vertices & Vehículos & TMax \\
+Autor & Instancia & Nodos & Vehículos & tMax \\
 \hline
 Tsiligirides & p2.2.k & 21 & 2 & 22.50 \\
 Tsiligirides & p2.3.g & 21 & 3 & 10.70 \\
@@ -57,42 +57,48 @@ Chao & p7.4.t & 102 & 4 & 100.00 \\
 
 \bigskip
 
-Las tablas donde mostraré el índice de efectividad de los resultados parciales tendrá un subconjunto de los siguientes encabezados:
+Las tablas donde mostraré el $i_e$ y el beneficio de los resultados parciales tendrá un subconjunto de los siguientes encabezados:
 
 \begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|c| } 
  \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eMax}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 \end{tabular}
 \end{center}
 
 \bigskip
 
-Donde:\label{tableHeader}
-$Profit(CGW(i))$, $Profit(AHS(i)$, $Profit(TMH(i))$
+Descripciones:
 \begin{itemize}
-	\item \textbf{$I$}: Nombre de la instancia. Ej: p2.3.g
-	\item \textbf{$\#N$}: Cantidad de nodos de la instancia. Ej: 21
-	\item \textbf{$\#V$}: Cantidad de vehículos de la instancia. Ej: 3
-	\item \textbf{$tMax$}: Distancia máxima de la ruta de los vehículos de la instancia. Ej: 10.70
-	\item \textbf{$C$}: Configuración general del BRKGA. Es un código que sintetisa la configuración basica global, explicado en detalla más adelante (ver sección \label{sec:descrCongif}).
-	\item \textbf{$\#S$}: Cantidad de soluciones de las cuales se sacaron los datos. Ej: 200
-	\item \textbf{$T_{avg}$}: Tiempo promedio en milisegundos de la ejecución total de la implementación. Ej: 21578
-	\item \textbf{$B_{max}$}: Beneficio máximo de las \#S soluciones generadas. Ej: 140
-	\item \textbf{$B_{min}$}: Beneficio mínimo de las \#S soluciones generadas. Ej: 45
-	\item \textbf{$B_{avg}$}: Beneficio promedio de las \#S soluciones generadas. Ej: 45
-	\item \textbf{$i_{f}$}: Indice de efectividad. Se utiliza el $B_{avg}$ para tener un valor que mejor refleje la efectividad real. Si usara $B_{max}$, el indice aparentaría muy bueno si entre las \#S soluciones se genero una muy buena aleatoriamente. Ej: $B_{avg} / BTP_{max} = 0.57$
-	\item \textbf{$BTP_{max}$}: Beneficio de Trabajos Previos máximo para la misma instancia. Los trabajos previos utilizados son CGW, AHS y TMH. Ej: 145
+	\item \textbf{$I$}: Nombre de la instancia.
+	\item \textbf{$\#N$}: Cantidad de nodos (clientes mas punto de partida y fin de recorrido) de la instancia.
+	\item \textbf{$\#V$}: Cantidad de vehículos de la instancia.
+	\item \textbf{$tMax$}: Distancia máxima de la ruta de cada vehículos de la instancia.
+	\item \textbf{$C$}: Configuración general del BRKGA. Es un código que sintetiza la configuración básica global, explicado en detalle más adelante (ver sección \label{sec:descrCongif}).
+	\item \textbf{$\#S$}: Cantidad de soluciones de las cuales se sacaron los datos.
+	\item \textbf{$T_{avg}$}: Tiempo promedio en milisegundos de la ejecución total de la implementación.
+	\item \textbf{$B_{max}$}: Beneficio máximo de las \#S soluciones generadas.
+	\item \textbf{$B_{min}$}: Beneficio mínimo de las \#S soluciones generadas.
+	\item \textbf{$B_{avg}$}: Beneficio promedio de las \#S soluciones generadas.
+	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. Utilizado en los resultados finales. Utilizo mi mejor beneficio obtenido para una instancia \eqref{eq:efectividad}.
+	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. Utilizado en los resultados parciales. Utilizo el promedio de los beneficios obtenidos para una misma instancia \eqref{eq:efectividad}.
+	\item \textbf{$BTP_{max}$}: Beneficio de Trabajos Previos máximo para la misma instancia. Los trabajos previos son: CGW \cite{ChaoGoldenWasil}, AHS \cite{ArchettiHertzSperanza} y TMH \cite{TangMillerHooks}.
 \end{itemize}
+
+TODO: Agregar mención de resultados de BDM arriba
 
 \section{Decodificador}
 
-El decodificador debe generar una solución valida del problema dado un vector aleatorio de enteros y conociendo la instancia del problema (vehículos disponibles, clientes, tmax, etc). A modo El decodificador construye una solución valida asignando clientes a las rutas de los vehículos disponibles respetando tmax, su distancia maáxima de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Es ahí donde utilizaremos el vector aleatorio de enteros, el vector aleatorio de enteros marcara el orden en el cual se tomaran los clientes para asignarlos a una ruta. Por lo tánto el vector aleatorio de enteros tendrá una longitud equivalente a la cantidad de clientes del problema (vertices con beneficio mayor a cero).
+El decodificador debe generar una solución valida del problema dado un vector aleatorio de enteros y conociendo la instancia del problema (vehículos disponibles, clientes, tmax, etc). Con tal objetivo construye una solución valida asignando clientes a las rutas de los vehículos disponibles respetando \textit{tMax}, su distancia máxima de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Es el vector de enteros aleatorios quien determina el orden en el cual se tomarán los clientes para asignarlos a una ruta. Por lo tanto el vector tendrá una longitud equivalente a la cantidad de clientes del problema (nodos con beneficio mayor a cero).
+
+\bigskip
+
+Propuse dos decodificadores, uno al cual llamo \textit{Decodificador Simple} y otro que llamé \textit{Decodificador Goloso}. Ambos decodificadores tienen sus ventajas y desventajas.
 
 \subsection{Orden de los clientes a considerar}\label{sec:ordenDeco}
 
-Dado una instacia de un problema con $n$ clientes y un vector de enteros aleatorio de tamaño $n$, un decoder genera una solución valida de un problema. El vector, en mi implementacion, es un vector de RandomKeys. Un $RandomKey$ tiene dos propiedades, el entero aleatorio llamado $Key$ y otro entero llamado $PositionIndex$. 
+Dado una instancia de un problema con $n$ clientes y un vector de enteros aleatorio de tamaño $n$, un decodificador genera una solución valida de un problema. El vector, en mi implementación, es un vector de \textit{RandomKeys}. Un \textit{RandomKey} tiene dos propiedades, el entero aleatorio llamado \textit{Key} y otro entero llamado \textit{ClientId} como podemos ver en a continuación. 
 
 \bigskip
 
@@ -100,20 +106,20 @@ Dado una instacia de un problema con $n$ clientes y un vector de enteros aleator
 public class RandomKey
 {        
 	public int Key { get; private set; }
-	public int PositionIndex { get; private set; }
+	public int ClientId { get; private set; }
 }
 \end{lstlisting}
 
 \bigskip
 
-El propositio de $PositionIndex$ es para mapear un Key con un Cliente. Existe un arreglo de clientes en el Mapa del problema. Los clientes siempre tienen la misma posicion y esa posicion es un entero en el intervalo $[0, \#Clientes-1]$. Luego para un vector de RandomKeys de tamaño $\#Clientes$ no existen dos RandomKeys con mismo valor de PositionIndex y todos los PositionIndex se encuentran en el itervalo $[0, \#Clientes-1]$. De forma que cada RandomKey matchea siempre con solo RandomKey. Luego se matchean los clientes con los randomKeys por su position index y se los ordena de forma ascendente por el Key aleatorio. Esto se puede ver en la figura \ref{fig:RandomKeysOrdenando}.
+El propósito de $ClientId$ es mapear un \textit{RandomKey} con un \textit{Cliente}. Existe un vector de \textit{Clientes} en el Mapa del problema, a cada \textit{Cliente} se le asigna un identificador que es un numero entero en el intervalo $[1, \#Clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#Clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#Clientes]$. De esta forma cada \textit{RandomKey} siempre mapea con un solo \textit{Cliente}. Luego de mapear cada \textit{Cliente} con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual mapeo. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. Podemos ver esto sintetizado en una linea de pseudocódigo en \ref{lst:GetOrderedClients}. La figura \ref{fig:RandomKeysOrdenando} muestra como ordenamos un vector de \textit{RandomKeys}.
 
 \bigskip
 
-\begin{lstlisting} 
+\begin{lstlisting} [label={lst:GetOrderedClients}]
 public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 {        
-	return randomKeys.OrderBy(r => r.Key).Select(r => Map.Clients[r.PositionIndex]);
+	return randomKeys.OrderBy(r => r.Key).Select(r => Map.Clients[r.ClientId]);
 }
 \end{lstlisting}
 
@@ -126,19 +132,11 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 
 \subsection{Decodificador simple}
 
-El decodificador simple recibe como parametro el vector de enteros aleatorios y con eso genera los clientes ordenados. Luego por cada vehiculo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehiculo. Un cliente $c_i$ se puede agregar a la ruta si al agregarlo no supera la distancia maxima permitida para la ruta. Sean $v$ vehiculo, $dMax$ la distancia maxima de $v$, $dAct$ la distancia actual de $v$, $f$ el destino final de la ruta, $c_u$ el ultimo cliente agregado a la ruta de $v$ y $c_i$ cliente a evaluar agregar a la ruta de $v$. Luego cree la funcion can visit que implementa la siguiente formula:
+El decodificador simple recibe como parámetro el vector de enteros aleatorios y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Estos se puede ver en detalle en el pseudocódigo \ref{lst:Decode}. 
 
 \bigskip
 
-\( dAct\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, f)\, -\, distancia(c_u, f) \leq dMax\)
-
-\bigskip
-
-Pseudocodigo del método decode del decodificador simple:
-
-\bigskip
-
-\begin{lstlisting} 
+\begin{lstlisting} [label={lst:Decode}]
 public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 {
 	var clients = GetOrderedClients(randomKeys);
@@ -163,12 +161,20 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 }
 \end{lstlisting}
 
-A partir de 200 $RandomKeys$ generé 200 soluciones con el decoder simple para las subconjunto de instancias diversas elegidas. Se utilizaron distintos sets de 200 $RandomKeys$ para cada instancia. La siguiente tabla tiene los resultados obtenidos (ver \ref{tableHeader} para significado de columnas):
+Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $tMax$ la distancia máxima de $v$, $tAct$ la distancia actual de $v$, $f$ el destino final de la ruta, $c_u$ el ultimo cliente agregado a la ruta de $v$ y $c_i$ cliente a evaluar agregar a la ruta de $v$. Como podemos observar en el pseudocódigo \ref{lst:Decode}, cree un método llamado \textit{CanVisit} que retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario. El método \textit{CanVisit} modela la siguiente fórmula:
+
+\bigskip
+
+\( tAct\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, f)\, -\, distancia(c_u, f) \leq tMax\)
+
+\bigskip
+
+Una vez que termine de implementar el decodificador simple, analice el rendimiento de las soluciones generadas a partir de este decodificador. Hice este análisis para saber que tan buena sería la población inicial de mi algoritmo BRKGA si utiliza el decodificador simple. Para realizar el análisis cree 200 vectores $RandomKeys$ que el decodificador simple convirtió en 200 soluciones validas del problema. Luego se calculó el beneficio máximo, promedio, mínimo y el índice de efectividad promedio. Esto se repitió para las seis instancias del benchmark seleccionadas anteriormente. La siguiente tabla tiene los resultados obtenidos:
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
 \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 p2.2.k & 21 & 2 & 22.50 & 200 & 175 & 40 & 102 & 0.37 & 275  \\
 p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 45 & 83 & 0.57 & 145  \\
@@ -180,15 +186,15 @@ p7.4.t & 102 & 4 & 100.00 & 200 & 221 & 40 & 116 & 0.11 & 1077  \\
 \end{tabular}
 \end{center}
 
-En estos resultados ya se puede observar una correlación que sera recurrente, para intancias pequeñas los resultados son mejores.
+En estos resultados podemos observar que para instancias pequeñas los resultados son mejores. Notar como $i_{eAvg}$ disminuye a medida que la instancia tiene mayor numero de clientes ($\#N$).
 
-\subsection{Caracteristicas y debilidades del decodificador simple}
+\subsection{Características y debilidades del decodificador simple}
 
-Tiene un orden de complejidad de $O(\#clientes)$.
+Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la practica nunca se llega recorrer todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logro insertar en su ruta. Por lo tanto en la practica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
 
 \bigskip
 
-Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solucion. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
+Una característica menos relevante es el orden en que quedan los clientes asignados en los vehículos al ver el vector de \textit{RandomKeys}.  Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solución. En otras palabras, los clientes quedan agrupados por vehículo cuando los vemos en el vector ordenado. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
 
 \begin{figure}[h]
 	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de RandomKeys de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de tiempo, no intento agregar a los siguientes clientes.}
@@ -199,20 +205,24 @@ Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Exis
 
 \bigskip
 
-Un problema que tiene este decodificar es en la existencia de un cliente inalcansable, es decir si existe $c$ cliente tal que:
-
-\( distancia(i, c)\, +\, distancia(c, f)\, >\, dMax\)
-
-Esto puede generar soluciones de la poblacion donde existan vehiculos con rutas vacias. La solucion facil a este problema es filtrando todos los clientes inalcansables previo a la ejecucion del BRKGA.
+Un problema que tiene este decodificar es en la existencia de un cliente inalcanzable, es decir si existe $c$ cliente tal que:
 
 \bigskip
 
-Otro problema que tiene este decodificador es que cambia de vehiculo al primer intento fallido de expandir su ruta. Luego puede generar soluciones con rutas muy pequeñas, por este motivo implemente un Decodificador Goloso.
+\( distancia(i, c)\, +\, distancia(c, f)\, >\, tMax\)
+
+\bigskip
+
+Esto puede generar soluciones de la población donde existan vehículos con rutas vacías. Supongamos que existe un cliente inalcanzable y que es el primer cliente en ser considerado a agregar a la ruta de un vehículo, como el cliente es inalcanzable no entra en la ruta del primer vehículo luego se considera que el vehículo tiene la ruta completa y se pasa con el siguiente vehículo y así sucesivamente. La solución fácil a este problema es filtrando todos los clientes inalcanzables previo a la ejecución del BRKGA. Esta solución es la mejor y mas barata ya que reducimos el tamaño del problema antes de comenzar a resolverlo.
+
+\bigskip
+
+Otro problema que tiene este decodificador es que cambia de vehículo al primer intento fallido de expandir su ruta. Luego puede generar soluciones con rutas muy pequeñas, por este motivo implementé el \textit{Decodificador Goloso}.
 
 
 \subsection{Decodificador Goloso}
 
-El decodificador goloso en principio funciona igual que el decodificador simple hasta que llega a un cliente que no pudo agregar a la ruta de un vehículo. En este caso, en vez de pasar a trabajar con el siguiente vehículo disponible, intenta agregar al siguiente cliente y así sucesivamente hasta que no hay mas clientes que intentar. Luego al pasar al siguiene vehiculo intenta solamente con los clientes no asignadas a los vehículos anteriores y siempre respetando el orden de los clientes asignado por el vector de enteros aleatorios.
+El decodificador goloso en principio funciona igual que el decodificador simple hasta que llega a un cliente que no pudo agregar a la ruta de un vehículo. En este caso, en vez de pasar a trabajar con el siguiente vehículo disponible, intenta agregar al siguiente cliente y así sucesivamente hasta que no hay mas clientes que intentar. Luego al pasar al siguiente vehículo intenta solamente con los clientes no asignados a los vehículos anteriores y siempre respetando el orden de los clientes asignado por el vector de enteros aleatorios.
 
 \bigskip
 
@@ -220,23 +230,22 @@ El decodificador goloso en principio funciona igual que el decodificador simple 
 public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 {
 	var clients = GetOrderedClients(randomKeys);
-	var cIterator = new Iterator(cliets);
+	var cIterator = new Iterator(clients);
 	var vehicles = pi.GetVehicles();	
 	var iv = 0;
 	while(iv < vehicles.Length)
 	{
-		while(!cIterator.IsEmpty)
+		var currentClient = cIterator.Next;
+		while(currentClient != null)
 		{
-			if(vehicles[iv].CanVisit(cIterator.Current))
+			if(vehicles[iv].CanVisit(currentClient))
 			{
-				vehicles[iv].AddClient(cIterator.Current);
-				cIterator.RemoveCurrent;
+				vehicles[iv].AddClient(currentClient);
+				cIterator.Remove(currentClient);
 			}
-			else
-			{
-				cIterator.Next;			
-			}			
+			currentClient = cIterator.Next;
 		}
+		cIterator.ToStartingPosition;
 	}
 	var solution = pi.InstanceSolution(vehicles);
 	return problem;
@@ -245,11 +254,11 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 
 \bigskip
 
-Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculos)$. Aunque la cantidad de vehículos de las instancias del benchmark esta acotado por cuatro, esta diferencia de complejidad tiene un impacto ya que este algoritmo de decodificación corre $PopulationSize$ por generación. Luego para mismo tamaño de población y cantidad de generaciones, usar el decoder simple contra el goloso tiene un efecto visible en el tiempo de ejecución. Por otro lado, nn promedio aumenta el profit de las soluciones generadas por el decodificador. Ese es trade-off que tenemos entre el decodificador simple y el goloso. 
+Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculos)$. El metodo \textit{decode} es usado tantas veces que este a lo largo del BRKGA que este pequeño aumento en su complejidad algorítmica tiene un impacto visible en el tiempo de ejecución. Por otro lado, en promedio aumenta el beneficio de las soluciones generadas por el decodificador. Esa es la compensación que tenemos entre el decodificador simple y el goloso. 
 
 \bigskip
 
-Un detalle de menor importancia, el decoder goloso no tiene los clientes de forma continua por vehiculo asignado al ordenar los clientes por el RandomKeys. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
+Una observación de menor importancia que podemos hacer sobre el decodificador goloso es que al observar el vector ordenado de \textit{RandomKeys}, ya no tenemos los clientes de forma continua según su vehículo asignado como sucedía con el decodificador simple. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
 
 \begin{figure}[h]
 	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir el cliente 5, intenta en orden con el resto de los clientes aún no visitados y logra insertar el cliente 8. De un modo simlilar, sucede con la segunda ruta al no poder incluir al cliente 4.}
@@ -260,12 +269,12 @@ Un detalle de menor importancia, el decoder goloso no tiene los clientes de form
 
 \bigskip
 
-Nuevamente, utlizando distintos sets de 200 $RandomKeys$ para cada instancia se generaron los siguientes resultados:
+Del mismo modo que hice con el decodificador simple, le hice el mismo análisis de rendimiento al decodificador goloso. Genere otros 200 vectores de \textit{RandomKeys} para cada una de las mismas seis instancias de problemas y el decodificador goloso creo 200 soluciones validas para cada uno de seis los problemas:
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
 \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 p2.2.k & 21 & 2 & 22.50 & 200 & 260 & 95 & 164 & 0.60 & 275   \\
 p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 95 & 122 & 0.84 & 145   \\
@@ -277,15 +286,15 @@ p7.4.t & 102 & 4 & 100.00 & 200 & 438 & 160 & 280 & 0.26 & 1077   \\
 \end{tabular}
 \end{center}
 
-Todos los resultados promedio, mínimo y máximos mejoran considerablemente. Tal es así, que el $i_{f}$ en algunos casos es mayor al doble de lo obtenido en el decodificador simple. Por otro lado, se vuelve a observar la correlación entre tamaño de la instancia y el $i_{f}$.
+Todos los resultados promedio, mínimo y máximos mejoran considerablemente. Tal es así, que el $i_{eAvg}$ en algunos casos es mayor al doble de lo obtenido con en el decodificador simple. Por otro lado, se vuelve a observar como disminuye $i_{eAvg}$ a medida que crece el tamaño de la instancia del problema.
 
-\section{BRKGA}
+\section{Biased Random Key Genetic Algorithms}
 
-En una primera intancia se implementa un BRKGA estandar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la poblacion. Es decir generamos una nueva generacion de soluciones a partir de la generación anterior como se explico en la sección BRKGA ~(ver sección~\ref{sec:brkga}).
+En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir creamos una nueva generación de soluciones a partir de la generación anterior como se explicó en la sección BRKGA ~(ver sección~\ref{sec:brkga}).
 
 \bigskip
 
-Pseudocódigo de una vista macro general del algoritmo BRKGA implementado.
+A continuación muestro el pseudocódigo de una vista macro general del algoritmo BRKGA implementado:
 
 \bigskip
 
@@ -305,11 +314,11 @@ public Solution RunBrkga(ProblemManager problemManager)
 
 \bigskip
 
-El objeto ProblemManager es el orquestrador del mi BRKGA, se setea con un objeto Configuración y el objeto PopulationGenerator. Tiene acceso de forma indirecta, atravéz de PopulationGenerator, de toda la información del problema (vehículos, clientes, tmax, etc.).
+El objeto \textit{ProblemManager} es el orquestrador del BRKGA, se setea con un objeto \textit{Configuración} y el objeto \textit{PopulationGenerator}. Tiene acceso de forma indirecta, a través de \textit{PopulationGenerator}, de toda la información del problema (vehículos, clientes, tMax, etc.).
 
 \subsection{Configuración}
 
-A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto $Configuration$ que setea todas las configuraciones que impactan en el resultado final del BRKGA. Este objeto es esencial para tunear el implementacion de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, ganaba mucho tiempo en al testear variaciones de mi implementación. Además, al estar centralizada toda la información variable se obtiene una lectura veloz del BRKGA que se esta usando. En otras palabras incrementamos nuestra capacidad de monitoreo y control de mi implementación.
+A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto \textit{Configuration} que setea todas las configuraciones que impactan en el resultado final del BRKGA. Este objeto es esencial para tunear el implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, ganaba mucho tiempo al testear variaciones de mi implementación. Además, al estar centralizada toda la información variable se obtiene una lectura veloz del BRKGA que se está usando. En otras palabras incrementamos nuestra capacidad de monitoreo y control del desarrollo. A continuación el objeto \textit{Configuration} y sus propiedades:
 
 \bigskip
 
@@ -339,22 +348,22 @@ public class BrkgaConfiguration
 Descripción de las propiedades del objeto Configuración:
 
 \begin{itemize}
-  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto. Su funcionalidad es poder identificar rápidamente la configuración global del BRKGA. Solo puede ser seteado con el metodo SetDescription() que utilza la clave y el valor de el resto de las propiedades.
-  \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que debe genererar el BRKGA para finalizar. 
+  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto. Su funcionalidad es poder identificar rápidamente la configuración global del BRKGA. Solo puede ser seteado con el metodo SetDescription() que utiliza la clave y el valor de el resto de las propiedades.
+  \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que debe completar el BRKGA para finalizar. 
   \item \textbf{MinNoChanges}: Clave \textbf{MNC}. Valor entero utilizado en la función de corte. Cantidad de generaciones sin modificaciones del mejor beneficio necesario para cortar el algoritmo BRKGA.
   \item \textbf{PopulationSize}: Clave \textbf{PS}. Valor entero denota el tamaño de la población.
-  \item \textbf{ElitePercentage}: Clave \textbf{EP}. Valor decimal en el itervalo $(0, 1)$ que determina el tamaño de la poblacion elite. 
-  \item \textbf{MutantPercentage}: Clave \textbf{MP}. Valor decimal en el itervalo $(0, 1)$ que determina el tamaño mínimo de la poblacion mutante. 
-  \item \textbf{EliteGenChance}: Clave \textbf{EGC}. Valor entero en el intervalo $(0, 100)$ que determina la probabilidad que tiene un key del padre elite, en transmitirse a su descendiente. 
-  \item \textbf{Heuristics}: Clave \textbf{HEU}. Secuencia de heuristicas de busqueda local que se le aplicaran a la mejor solución de cada generación, a la cual no se le hayan aplicado las heuristicas locales aún. Se implementaron cuatro heuristicas locales:
+  \item \textbf{ElitePercentage}: Clave \textbf{EP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño de la población elite. 
+  \item \textbf{MutantPercentage}: Clave \textbf{MP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño mínimo de la población mutante. 
+  \item \textbf{EliteGenChance}: Clave \textbf{EGC}. Valor entero en el intervalo $(0, 100)$ que determina la probabilidad que tiene el alelo del padre elite, en transmitirse a su descendiente. 
+  \item \textbf{Heuristics}: Clave \textbf{HEU}. Secuencia de algoritmos de búsquedas locales que se le aplicaran a la mejor solución de cada generación, a la cual no se le hayan aplicado las búsquedas locales aún. Se implementaron cuatro búsquedas locales (Su desarrollo sera explicado mas adelante en otra sección.):
 	\begin{itemize}
 		\item \textbf{Swap}: Valor \textbf{S}.
 		\item \textbf{Insert}: Valor \textbf{I}.
 		\item \textbf{2-Opt}: Valor \textbf{O}.
 		\item \textbf{Replace}: Valor \textbf{R}.
 	\end{itemize}  
-  \item \textbf{ApplyHeuristicsToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las heuristicas de busqueda local.
-  \item \textbf{DecoderType}: Clave \textbf{D}. Es una enumeracion que determina el decoder que se va a utilizar.
+  \item \textbf{ApplyHeuristicsToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las búsquedas locales.
+  \item \textbf{DecoderType}: Clave \textbf{D}. Es una enumeración que determina el decodificador que se va a utilizar.
 	\begin{itemize}
 		\item \textbf{Simple}: Valor \textbf{S}.
 		\item \textbf{Goloso}: Valor \textbf{G}.
@@ -363,7 +372,7 @@ Descripción de las propiedades del objeto Configuración:
 
 \bigskip
 
-El método SetDescription() toma las tuplas de clave y valor de todas las propiedades del objeto configuration excepto Description y genera un string intercalando con un separador.
+El método \textit{SetDescription()} toma las tuplas de clave y valor de todas las propiedades del objeto \textit{Configuración} excepto \textit{Description} y lo concatena creando un \textit{string} intercalando con un separador.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting} 
@@ -378,7 +387,7 @@ public void SetDescription()
 
 
 \begin{minipage}{\textwidth}
-Luego dado un description podemos ver como esta configurado el BRKGA.
+Luego leyendo la propiedad \textit{Description} podemos ver como esta configurado el BRKGA.
 
 Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;D.G"
 
@@ -397,11 +406,11 @@ Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;D.G"
 
 \subsection{Inicialización de la Población}
 
-Utilizando $PopulationSize$ del objeto $Configuration$ seteo el tamaña de la población. Luego para generar la población inicial se genereran $PopulationSize$ vectores de enteros aleatorios de tamaño $\#clientes$ de la instancia del problema. Este conjunto de vectores se lo pasa como argumento al decodificador, quien genere un individuo por cada vector de enteros aleatorios.
+Utilizando \textit{PopulationSize} del objeto \textit{Configuration} seteo el tamaña de la población. Luego para generar la población inicial se generaran \textit{PopulationSize} vectores de enteros aleatorios de tamaño $\#clientes$ de la instancia del problema. Este conjunto de vectores se lo pasa como argumento al decodificador, quien genere un individuo por cada vector de enteros aleatorios.
 
 \subsection{Condición de parada}
 
-En un principio la condición de parada era simple, el bucle terminaba cuando iteraba una $x$ cantidad de veces seteado en el objeto $Configurations$ por $MinIerations$. Es decir que el bucle principal cortaba luego de evolucionar la poblacion $MinIerations$ veces. Luego de analizar las últimas generaciones de la solución y ver que era frecuente que la mejor solución se habia generado recientemente, agregue una condicion de corte adicional. Ahora, para cortar ademas de la condición anterior, el beneficio de la mejor solución no debería haberse modificado durante las últimas $n$ generaciones . Es decir durante las últimas $n$ genereciones no debe haber aparecido una nueva mejor solución. Este valor es ajustable desde la propiedad $MinNoChanges$ del objeto $Configurations$.
+En un principio la condición de parada era simple, el bucle terminaba cuando iteraba una \textit{MinIterations} veces, seteado en el objeto \textit{Configurations}. Es decir que el bucle principal cortaba luego de evolucionar la población $MinIerations$ veces. Luego de analizar las últimas generaciones de la solución y ver que era frecuente que la mejor solución se había generado recientemente, agregue una condición de corte adicional. Ahora, para cortar ademas de la condición anterior, el beneficio de la mejor solución no debería haberse modificado durante las últimas \textit{MinNoChanges} generaciones. Es decir durante las últimas \textit{MinNoChanges} generaciones no debe haber aparecido una nueva mejor solución. \textit{MinNoChanges} es un entero que se setea en el objeto \textit{Configurations}.
 
 \bigskip
 
@@ -421,7 +430,7 @@ private bool NoChanges()
 
 \subsection{Evolución de la población}
 
-Se toma la población y se los ordena descendientemente segun su beneficio calculado por la función objetivo. Se setea la población de elite y la non-elite. La población de elite son los mejores $x$ individuos de la población. Siendo $x$ un porcentaje de la población total seteado con la propiedad $ElitePercentage$ del objeto $Configuration$. La población non-elite son todos aquellos individuos no incluídos en la población de elite. Luego se generan $y$ individuos mutantes, $y$ es un porcentaje de la población total seteado por la propiedad $MutantPercentage$. Pasan a la nueva genereción todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población non-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA ~(ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución identica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación.
+Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Pasan a la nueva generación todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA ~(ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. A continuación el pseudocódigo de la evolución de la población.
 
 \bigskip
 
@@ -436,13 +445,13 @@ public Population Evolve(Population population)
     var evolvedPopulation = new pop(elites, mutatants);
     while (evolvedPopulation.Size() < PopulationSize)
     {
-		var anElite = GetRandomItem(elites);
-		var aNoneElite = GetRandomItem(nonElites);
-        var childSolution = Mate(anElite, aNoneElite);
-        if (evolvedPopulation.Any(x => x.Equals(childSolution)))
-            evolvedPopulation.Add(GenerateSolution());
-        else
-            evolvedPopulation.Add(childSolution);
+	var anElite = GetRandomItem(elites);
+	var aNoneElite = GetRandomItem(nonElites);
+      var childSolution = Mate(anElite, aNoneElite);
+	if (evolvedPopulation.Any(x => x.Equals(childSolution)))
+		evolvedPopulation.Add(GenerateSolution());
+      else
+		evolvedPopulation.Add(childSolution);
     }
     return evolvedPopulation;
 }
@@ -471,7 +480,7 @@ private Solution Mate(Solution eliteP, Solution nonEliteP)
 
 \bigskip
 
-Como mencioné anteriormente, los individuos mutantes son individuos generedos a partir de un vector de RandomKeys, del mismo modo que la población inicial. Con el fín de mostrar lo simple que es la generación de un nuevo vector de RandomKeys, presento el pseudocodigo del GenerateSolution que al final termina llamando al método decode del decoder descripto anteriormente.
+Como mencioné anteriormente, los individuos mutantes son individuos generados a partir de un vector de \textit{RandomKeys}, del mismo modo que la población inicial. Con el fin de mostrar lo simple que es la generación de un nuevo vector de \textit{RandomKeys}, presento el pseudocódigo del \textit{GenerateSolution} que al final termina llamando al método \textit{Decode} de alguno de los decodificador descrito anteriormente (puede ser cualquiera).
 
 \bigskip
 
@@ -493,7 +502,7 @@ private Solution GenerateSolution()()
 
 \bigskip
 
-Verificar que dos soluciones son iguales tiene un costo muy bajo en BRKGA. Esto se debe a que el decodificador es un algoritmo deterministico. Por lo tanto para dos vectores de RandomKeys cuyo orden de clientes que genere sea el mismo, el decodificador generará la misma solución. Luego lo unico que hay que comparar es el hash de ambas soluciones y esto se puede hacer en $O(1)$. El hash de una solución, se calcula una sola vez cuando se construye la solución a partir de su vector de RandomKey. El hash es una concatenación de la propiedad PositionIndex de cada RandomKey en el vector ordenados por la propiedad Key, itercalados con un separador. Es decir, es el orden de la cuidades que toma el decoder intercalados con un separador. Si ya existe un individuo con el mismo hash, se genera una solución mutante y continua el apareamiento de otros dos individuos. Decidí no reintentar el apareamiento entre los dos padres que genereron la solución ya existente, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta. Ademas, aún si en un segundo intento no generera una solución idéntica a alguna de la nueva población, lo más seguro que la solución originada se muy cercana a una existente. Luego tome esta desición para optimizar el apareamiento y disminuir soluciones dentro de un mismo vecindario por genereración.
+Verificar que dos soluciones son iguales tiene un costo muy bajo en BRKGA. Nosotros sabemos que dado un vector de \textit{RandomKeys}, al decodificarlo siempre obtenemos la misma solución. Por lo tanto para dos vectores de \textit{RandomKeys} cuyo orden de clientes que genere sea el mismo, el decodificador generará la misma solución. Luego no es necesario comparar las soluciones, nos es suficiente comparando el hash de cada soluciones y esto se puede hacer en $O(1)$. El hash de una solución, se calcula una sola vez cuando se construye la solución a partir de su vector de \textit{RandomKeys} y no es mas que una concatenación de los \textit{ClientId} de cada \textit{RandomKey} en el vector ordenados por la propiedad \textit{Key}, intercalados con un separador. Es decir, es el orden en que el decodificador toma los clientes para asignarlos a una ruta. Luego, cada vez que se obtiene una solución durante el método de \textit{crossover}, si ya existe un individuo con el mismo hash, se genera una solución mutante y continua el apareamiento de otros dos individuos. Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta cuando ya sucedió una vez. Volver a intentar indefinidamente se traduce a un incremento del tiempo de ejecución. Luego tome esta decisión para optimizar el apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generación.
 
 \bigskip
 
@@ -506,7 +515,7 @@ public string GetHash()
 		return pseudoHash;
 		
 	var ork = RandomKeys.OrderBy(r => r.Key)
-	pseudoHash = string.Join("@", ork.Select(k => k.PositionIndex));
+	pseudoHash = string.Join("@", ork.Select(k => k.ClientId));
 	return pseudoHash;
 }
 \end{lstlisting}
@@ -647,11 +656,11 @@ r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist \nonumber
 \end{equation*}
 
 \begin{equation*}
-r_a'.Dist \leq v'_a.dMax
+r_a'.Dist \leq v'_a.tMax
 \end{equation*}
 
 \begin{equation*}
-r_b'.Dist \leq v'_b.dMax
+r_b'.Dist \leq v'_b.tMax
 \end{equation*}
 
 Al aplicar esta heuristica a una solución, para todos par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Si hay $n$ rutas, la cantidad de pares de rutas es $n * (n-1) / 2$. \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, si efectivamente conviene hacer un swap, lo realiza y continua probando pares de clientes. De modo de no estar cambiando multiples veces un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente, se lo banea de cambios hasta que no termine la actual ejecución de \textit{SwapDestinationsBetween}. La metaheuristica Swap no mejora el beneficio total de una solución. Lo que hace es disminuir la distancia recorrida de alguna ruta, lo que aumente la probabilidad de encontrar algun cliente no visitado que se pueda insertar en alguna de las rutas modificadas.
@@ -862,7 +871,7 @@ Agregar heuristicas de busqueda local entre generación de poblaciones conlleva 
 ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{PositionIndex}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
 
 \bigskip
 
@@ -899,17 +908,17 @@ public static Solution UpdateRandomKeys(Solution s);
 	var randomKeys = s.GetOrderedRandomKeys();
 	// Todas las keys ordenadas ascendente
 	var keys = randomKeys.Select(k => k.Key).ToList();
-	var positionIndexes = new List<int>();
+	var ClientIds = new List<int>();
 	// Get Position Indexes from Visited Clients
 	foreach (var r in s.Routes)
 	{
 		var d = r.GetDestinations();
-		var rpi = d.Select(d => d.PositionIndex);
-		positionIndexes.AddRange(rpi);
+		var rpi = d.Select(d => d.ClientId);
+		ClientIds.AddRange(rpi);
 	}
 	// Get Position Indexes from Unvisited Clients
-	var uPositionIndexes = GetUnvisitedPositionIndexes(randomKeys, newRoutes);
-	positionIndexes.AddRange(unvistedPositionIndexes);
+	var uClientIds = GetUnvisitedClientIds(randomKeys, newRoutes);
+	ClientIdes.AddRange(unvistedClientIdes);
 
 	// Hay un break por cada cantidad de clientes en ruta 
 	var breaks = new Queue(newRoutes.Select(r => r.GetDestinations.Count));
@@ -928,7 +937,7 @@ public static Solution UpdateRandomKeys(Solution s);
 		var randomKey = new RandomKey()
 		{
 			Key = keys[index],
-			PositionIndex = positionIndexes[index],
+			ClientId = ClientIdes[index],
 			ForceVehicleChangeAfterThis = endRoute
 		};
 		newRandomKeys.Add(randomKey);
