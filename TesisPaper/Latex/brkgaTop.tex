@@ -523,18 +523,19 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar que la solución no existiese en la población. Dado una población de soluciones no repetidas, la probabilidad de de generar una solucion existente al evolucionar la población, es baja. Aún así, una vez que sucede, la probabilidad de generar otra más aumenta considerablemente ya que ahora hay mas probabilidades de utilizar padres ídenticos. Si además la solución repetida se ecuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto generaba un efecto bola de nieve donde cada nueva generación tenía cada vez más individuos repetidos. Incluso se llego al caso donde toda una población constituía de una unica solución excepto por las soluciones mutantes. Esto reducía ampliamente la cantidad de soluciones diferentes exploradas, luego reducía fuertemente la frecuencia con la que una nueva mejor solución aparecía. Además si uno tiene varios individuos iguales en una solución, el algoritmo se vuelve menos eficiente ya que repite trabajo en donde obtiene los mismos resultados. Entonces el costo total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(PopulationSize * NonElitePopulationSize)$, resulta muy bajo comparado con el costo de trabajar con multiples soluciones repetidas.
+En una primera instancia se insertaban los individuos sin verificar que la existencia de un individuo idéntico en la población. Dado una población de soluciones no repetidas, la probabilidad de de generar una solución existente al evolucionar la población, es baja. Aún así, una vez que sucede, la probabilidad de generar otra más aumenta considerablemente ya que ahora hay mas probabilidades de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto bola de nieve donde cada nueva generación tiene cada vez más individuos repetidos. Incluso he llegado al caso donde toda una población constituía de una única solución excepto por las soluciones mutantes. Esto reducía ampliamente la cantidad de soluciones diferentes exploradas, luego reducía fuertemente la frecuencia con la que una nueva mejor solución aparecía. Además si uno tiene varios individuos iguales en una solución, el algoritmo se vuelve menos eficiente ya que repite trabajo en donde obtiene los mismos resultados. Entonces el costo total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(PopulationSize * NonElitePopulationSize)$, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones repetidas.
 
 \subsection{Resultados de la primer versión}
 
-La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los indices de efectividad que mostrare a continuación corresponden con una primera versión que no admitía repetidos y el objeto configuracion. Para estos primeros resultados genere resultados por intancia y utilice una configuración estandar sin heurisitcas locales aún:\\ 'MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;HEU.;TOP.0;MI.G' (ver sección~\ref{sec:descrCongif}).
+La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los resultados que mostraré a continuación corresponden con una segunda versión que no admitía repetidos y existía el objeto configuración. Se utilizo una configuración estándar sin búsquedas locales aún: 
+\\ 'MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;HEU.;TOP.0;MI.G' (ver sección~\ref{sec:descrCongif}).
 
 \bigskip
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
  \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 p2.2.k & 21 & 2 & 22.50 & 2977 & 260 & 240 & 249 & 0.91 & 275  \\
 p2.3.g & 21 & 3 & 10.70 & 1990 & 145 & 145 & 145 & 1.00 & 145  \\
@@ -548,12 +549,12 @@ p7.4.t & 102 & 4 & 100.00 & 31532 & 513 & 458 & 481 & 0.45 & 1077  \\
 
 \bigskip
 
-De estos primeros resultados podemos ver que el BRKGA puro sin otras heuristicas funciona muy bien para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil (CGW), Tang y Miller-Hooks (TMH) y Archetti, Hertz, Speranza (AHS). Esto se refleja en la instancia \textit{p2.3.k} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_f$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_f$. Una observació que quiero destacar de estos resultados es sobre el $i_f$ de la instancia 'p7.2.e'. Notar que tiene tantos nodos como 'p7.4.t' y sin embargo su $i_f$ ampliamente mayor. Esto se puede estar dando por que solo son 2 vehículos, en vez de 4, adicionalmente la distancia máxima, $tMax$, es 50 en vés de 100 reduciendo la combinatoria de soluciones posibles.
+De estos primeros resultados podemos ver que el BRKGA puro sin otras heurísticas funciona muy bien para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil \cite{ChaoGoldenWasil} (CGW), Tang y Miller-Hooks \cite{TangMillerHooks} (TMH) y Archetti, Hertz, Speranza \cite{ArchettiHertzSperanza} (AHS). Esto se refleja en la instancia \textit{p2.3.k} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_eAvg$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_eAvg$. Una observación que quiero destacar de estos resultados es sobre el $i_eAvg$ de la instancia \textit{p7.2.e}. Notar que tiene tantos nodos como \textit{p7.4.t} y sin embargo tiene un $i_eAvg$ ampliamente mayor. Esto seguramente sea por la diferencia en $tMax$, es 50 en vez de 100 reduciendo la combinatoria de soluciones posibles.
 
 
 \bigskip
 
-Como estos resultados no eran satisfactorios, tomé las dos intancias de este subconjunto con menor $i_{f}$ y las utilice para testear distintas configuracions. Probé multipes variaciones del objeto configuración. A continuación el resultado de algunas de tales variaciones:
+Como estos resultados no eran satisfactorios, tomé las dos instancias de este subconjunto con menor $i_{eAvg}$ y las utilice para testear distintas configuraciones. Probé múltiples variaciones del objeto configuración. A continuación el resultado de algunas de tales variaciones:
 
 \bigskip
 
@@ -561,7 +562,7 @@ Como estos resultados no eran satisfactorios, tomé las dos intancias de este su
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
  \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 p5.3.x & 66 & 3 & 40.00 & 1 & 10 & 60782 & 700 & 635 & 656 & 0.42 & 1555  \\
 p5.3.x & 66 & 3 & 40.00 & 2 & 10 & 23363 & 660 & 620 & 636 & 0.41 & 1555  \\
@@ -590,17 +591,17 @@ Configuraciones:
 
 \bigskip
 
-Como sintesis de estos resultados digo que la configuracion basica poco influye en el beneficio final de la solución. En el caso de la instancia 'p5.3.x', el $i_{f}$ siempre se encuentra en el intervalo [0.41,0.43] y en en 'p7.4.t' el intervalo es [0.45,0.47]. Para ambas intancias hay una configuración que es claramente peor y es la configuracion \textbf{C = 4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Luego claramente en esta version del BRKGA el decodificador tiene gran impacto en resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Minima cantidad de iteraciones, minima cantidad de iteraciones sin cambios, tamaño de la poblacion, poblacion elite, etc). Si impactan en el tiempo en que finaliza el algoritmo. Cuando llegue a este punto en mi trabajo, considere que tenía dos opciones por donde continuar. La primera, crear nuevos decodificadores. La segunda, agregar heuristicas de busqueda local para aplicar a las mejores individuos de cada generación. Tome el camino de la segunda opción.
+Como síntesis de estos resultados digo que la configuración básica poco influye en el beneficio final de la solución. En el caso de la instancia \textit{p5.3.x}, el $i_{eAvg}$ siempre se encuentra en el intervalo [0.41,0.43] y en en \textit{p7.4.t} el intervalo es [0.45,0.47]. Para ambas instancias hay una configuración que es claramente peor y es la configuración \textbf{C = 4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Luego claramente en esta versión del BRKGA el decodificador tiene gran impacto en el resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Mínima cantidad de iteraciones, mínima cantidad de iteraciones sin cambios, tamaño de la población, población elite, etc). Si impactan en el tiempo en que finaliza el algoritmo. Como no estaba del todo conforme con los resultados, decidí agregar algunas búsquedas locales para mejorar algunas soluciones entre cada iteración.
 
 \bigskip
 
-\section{Heuristicas de busqueda local}
+\section{Búsqueda local}
 
-En pos de optimizar los resultados mencionados anteriormente se implementaron heuristicas de busqueda local. La idea fue aplicar estas heurísticas a la mejores $x$ soluciónes de cada nueva generación. Donde $x$ toma el valor de la propiedad $ApplyHeuristicsToTop$. En caso de que a la solución ya se le hubiese aplicado las heuristicas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los indiviuos del conjunto de elite pasan a la siguiente generación. La idea de implementar heuristicas de busqueda local la obtuve de la publicación \textit{A guided local search metaheuristic for the team orienteering problem.} de Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. Todas las heuristicas de busqueda local al modificar una solucion, la misma sigue siendo una solucion valida. Es decir se siguen respetando las restricciones de distancia y la cantidad de vehiculos. 
+En pos de optimizar los resultados mencionados anteriormente se implementaron algunas búsquedas locales. La idea fue aplicar estas búsquedas algunas de las mejores soluciones de cada nueva generación. La cantidad de individuos a mejorar sería regida por el atributo \textit{ApplyHeuristicsToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. La idea de implementar búsquedas locales la obtuve de el trabajo \textit{A guided local search metaheuristic for the team orienteering problem.} de Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}, aunque es algo recurrente que encontré en varios trabajos previos de la literatura. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado y la solución resultante es valida. Es decir se siguen respetando las restricciones de distancia máxima por vehículo, ningún cliente es visitado mas de una ves y la cantidad de vehículos se respeta. 
 
 \subsection{Center of Gravity}
 
-Para las heuriticas de busqueda local Insert y Replace se deben tomar una lista de clientes a considerar con algun orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza es por su distancia al centro de gravedad (COG) de una ruta. A menor distancia, mayor prioridad tendra el cliente. Implementé el calculo de COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordena COG de una ruta se calcula con las siguietes formulas:
+Para las búsquedas local \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes a considerar con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza es por su distancia al centro de gravedad (COG) de una ruta. A menor distancia, mayor prioridad tendrá el cliente. Implementé el calculo de COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada COG de una ruta se calcula con las siguientes formulas:
 
 \begin{equation}
 x_{cog} = (\sum_{\forall i \in ruta} x_i * B_i) / \sum_{\forall i \in ruta} B_i
@@ -613,7 +614,7 @@ y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i
 \bigskip
 
 Donde $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio.
-El calculo de COG tiene una complejidad de $O(ruta.Length)$. No es tan costoso, de todos modos como no quiero realizar calculos innecesarios, el COG de una ruta solo se calcula cuando se necesita, es decir cuando se es. Ademas se calcula una vez y se mantiene en memoria. Cuando se modifica la ruta, actualizo el COG.
+El calculo de COG tiene una complejidad de $O(ruta.Length)$. No es tan costoso, de todos modos como no quiero realizar cálculos innecesarios, el COG de una ruta solo se calcula cuando se necesita, es decir cuando la solución es seleccionada para ser mejorada. Se calcula una sola vez y cuando se modifica la ruta, actualizo el COG.
 
 \bigskip
 
@@ -641,15 +642,14 @@ r'.x_{cog} =  \frac{(\sum_{\forall i \in ruta} x_i * B_i) + x_k * B_k}{(\sum_{\f
 
 \bigskip
 
-Luego actualizar el COG de una ruta al agregar ó remover un cliente tiene una complejidad de $O(1)$ si guardamos en memoria y actualizamos los valores de $x_{cog.num}$ y $x_{cog.den}$ para cada ruta (Lo mismo aplica para la coordenada $y$).
+Luego actualizar el COG de una ruta al agregar ó remover un cliente tiene una complejidad de $O(1)$ si no perdemos los valores de $x_{cog.num}$ y $x_{cog.den}$ al calcular COG (Lo mismo aplica para la coordenada $y$).
 
 \bigskip
 
 
-
 \subsection{Swap}
 
-El objetivo de esta heuristica es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas mientras sigan respetando la restricción de distancia máxima por vehículo. Es decir dados $v_a$, $v_b$ vehiculos y sus respectivas rutas $r_a$, $r_b$, se puede realizar un swap entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$, valen:
+El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas, respetando la restricción de distancia máxima por vehículo. Es decir dados $v_a$, $v_b$ vehículos y sus respectivas rutas $r_a$, $r_b$, se puede realizar un \textit{swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$, son validas las siguientes formulas:
 
 \begin{equation*}
 r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist \nonumber
@@ -663,7 +663,7 @@ r_a'.Dist \leq v'_a.tMax
 r_b'.Dist \leq v'_b.tMax
 \end{equation*}
 
-Al aplicar esta heuristica a una solución, para todos par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Si hay $n$ rutas, la cantidad de pares de rutas es $n * (n-1) / 2$. \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, si efectivamente conviene hacer un swap, lo realiza y continua probando pares de clientes. De modo de no estar cambiando multiples veces un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente, se lo banea de cambios hasta que no termine la actual ejecución de \textit{SwapDestinationsBetween}. La metaheuristica Swap no mejora el beneficio total de una solución. Lo que hace es disminuir la distancia recorrida de alguna ruta, lo que aumente la probabilidad de encontrar algun cliente no visitado que se pueda insertar en alguna de las rutas modificadas.
+Al aplicar esta búsqueda a una solución, para todo par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Por lo tanto, este método sera llamado $n * (n-1) / 2$, siendo $n$ la cantidad de rutas en la solución. \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, y si efectivamente conviene hacer un \textit{swap}, lo realiza. Luego continua probando si conviene intercambiar otro par de clientes entre las mismas rutas. De modo de no estar cambiando múltiples veces un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente, se lo agrega en una lista de clientes prohibidos para hacer intercambiar hasta que termine la ejecución actual de \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta, aumentando la probabilidad de encontrar algún cliente no visitado que se pueda insertar en alguna de las rutas modificadas.
 
 \bigskip
 
@@ -716,7 +716,7 @@ public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 
 \bigskip
 
-El orden de complejidad del método ApplyHeuristic de la clase SwapHeuristic es:
+El orden de complejidad del método \textit{ApplyHeuristic} de la clase \textit{SwapHeuristic} es:
 
 \begin{equation*}
 O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
@@ -724,7 +724,7 @@ O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
 
 \subsection{Insert}
 
-El objetivo de esta heuristica es encontrar una posición en alguna ruta para un cliente no visitado. Básicamente para cada vehiculo y cada cliente no visitado se busca en que posición se puede insertar minimizando el incremento de distancia. Si la distancia resultante es menor a la distancia máxima del vehiculo, se inserta el cliente en tal posicion. El orden en que se toman los clientes no visitados es segun su distancia al COG de la ruta a optimizar, de forma ascendente.
+El objetivo de esta búsqueda local es encontrar una posición en alguna ruta para un cliente no visitado sin sobrepasar el limite de distancia máxima de la ruta. Básicamente para cada vehículo y cada cliente no visitado se busca en que posición se debe insertar el cliente de forma tal que minimice el incremento de distancia recorrida. Si la distancia resultante es menor a la distancia máxima del vehículo, se inserta el cliente en tal posición. En caso contrario, no se inserta y se prueba con el siguiente cliente no visitado. El orden en que se toman los clientes no visitados es según su distancia al COG de la ruta a optimizar, de forma ascendente.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
@@ -758,7 +758,7 @@ public void ApplyHeuristic(Solution solution)
 
 \bigskip
 
-Como menciones en sobre la implementacion de COG, solo se utiliza cuando es necesario. Luego para cada vehiculo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el insert. El método \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo bool que denota que el cliente puede ser insertado o no en el vehiculo consultado. Y otro campo que tiene la posicion donde se debe insertar, en caso de poder insertarlo. En caso de poder insertar el cliente, este se lo agrega al vehiculo que actualiza su COG, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método ApplyHeuristic de la clase InsertHeuristic es: 
+Como mencioné en la implementación de COG, solo se utiliza cuando es necesario, luego para cada vehículo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo de tipo \textit{bool} que denota que el cliente puede ser insertado o no en el vehículo consultado. Y otro campo que tiene la posición donde se debe insertar, en caso de poder insertarse. En caso de poder insertar el cliente, se inserta y se actualiza el COG de la ruta, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyHeuristic} de la clase \textit{InsertHeuristic} es: 
 
 \begin{equation*}
 0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
@@ -766,7 +766,7 @@ Como menciones en sobre la implementacion de COG, solo se utiliza cuando es nece
 
 \subsection{2-opt}
 
-El algoritmo 2-opt es un simple algoritmo de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un swap de posiciones de dos clientes dentro de una misma ruta.
+El algoritmo \textit{2-opt} es un simple algoritmo de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un \textit{swap} de posiciones de dos clientes dentro de una misma ruta.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
@@ -812,11 +812,11 @@ private bool Do2OptSwap(Vehicle vehicle)
 
 \bigskip
 
-Basicamente a cada vehículo le aplica el 2-opt. El método Do2OptSwap primero obtiene una lista de las permutaciones posibles. Luego por cada combinacion intenta hacer un swap dentro de la ruta. Si el swap sucede, luego vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el swap solo sucede cuando la nueva distancia es estrictamente menor, el loop siempre termina. Una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un order de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
+Básicamente a cada vehículo le aplica el \textit{2-opt}. El método \textit{Do2OptSwap} primero obtiene una lista de las permutaciones posibles. Luego por cada permutación intenta hacer un \textit{swap} dentro de la ruta. Si el \textit{swap} se realiza, vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el \textit{swap} solo sucede cuando la nueva distancia es estrictamente menor, el bucle siempre termina ya que una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un orden de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
 
 \subsection{Replace}
 
-Esta heuristica busca intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta. Del mismo modo que la heuristica insert, los clientes no visitados se toman en orden segun su distancia al COG de la ruta, empezndo por los mas cercanos.
+Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta. Del mismo modo que la heuristica insert, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
@@ -861,17 +861,17 @@ private bool Replace(Solution solution, Vehicle vehicle)
 
 \bigskip
 
-La heurística de replace es muy parecida al insert y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Por lo tanto ahora se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario remueve de la ruta el peor destino, que en el peor de los casos es el mismo cliente que se acaba de insertar. Cualquier otro cliente que se remueva de la ruta significará que se efectuo un replace y aumento el beneficio total de la ruta. Replace tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. 
+El \textit{replace} es muy similar al \textit{insert} y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Por lo tanto ahora se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario remueve de la ruta el peor destino, que en el peor de los casos es el mismo cliente que se acaba de insertar. Cualquier otro cliente que se remueva de la ruta significará que se efectuó un \textit{replace} y aumento el beneficio total de la ruta. \textit{Replace} tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. 
 
 \subsection{Encoder}
 
-Agregar heuristicas de busqueda local entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se modifica su genética, es decir su \textit{RandomKeys}, sus descendientes heredarán los genes que generan una solucion no optimizada por las búsquedas locales. Del mismo modo que una persona no hereda las cirujias esteticas de sus padres. 
+Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se actualizamos su genética acorde a los cambios realizados a la solución, es decir su \textit{RandomKeys}, sus descendientes heredarán los genes que generan una solución no optimizada por las búsquedas locales.
 
 \begin{equation*}
 ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation*}
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Luego el primer cliente con el que trabaja el decoder, es el cliente con menor \textit{Key} de su \textit{RandomKey} asociado. Algo que no menciones en Decoder es que el primer vehiculo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehiculos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de intances de problemas utilizado. De todos modos ahora debo respetar la desición que tome en el decoder. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor key. Así, cuando el decoder inicie lo primero que hará es tomar este cliente e intentara adjudicarselo al primer vehículo que sera el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier RandomKey. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantuvieran el mismo orden que mantenian antes de la optimización. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que habia disponible. Con esto me aseguro que todos los clientes que estaban en el primer vehículo, esten en el primer vehiculo al decodificar el random keys. Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
+Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Luego el primer cliente con el que trabaja el decodificador, es el cliente con menor valor de \textit{Key}. Algo que no mencioné sobre la implementación de los decodificadores es que el primer vehículo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehículos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de instancias de problemas. De todos modos ahora debo respetar la decisión que tomé en el desarrollo de los decodificadores. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor \textit{Key}. Así, cuando el decodificador inicie, lo primero que hará es tomar este cliente e intentará adjudicárselo al primer vehículo, que justamente será el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier \textit{RandomKey}. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantengan el mismo orden que tenían antes de la mejora. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que había disponible.  Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
 
 \bigskip
 
