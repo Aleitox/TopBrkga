@@ -3,7 +3,7 @@
 %TODO: Resultados de 2009_BDM__A.Memetic.Algorithm.For.The.Team.Orienteering.Problem
 %TODO: paper-top-psoia PSOMA
 
-En este capítulo mostraré los resultados finales obtenidos. Dentro de todos los papers de trabajos previos que encontré que incluyeran resultados que utilizaran el benchmark de intancias de Chao y los de Tsiligirides, seleccioné el de Archetti et al. \cite{ArchettiHertzSperanza}. En su paper presentan varias soluciones, algunas utilizando un tabu search y otras utilizando una busqueda de vecindario variable. Luego las comparan con los resultados de Chao et al. Chao \cite{ChaoGoldenWasil} y de Tang et al. \cite{TangMillerHooks}. Dentro de las soluciones propuestas de Archetti et al., seleccione los resultados de su 'Slow VNS Feasible' ya que tenía los mejores resultados al correrlos con el benchmark de instancias. 
+En este capítulo mostraré los resultados finales obtenidos. Dentro de todos los trabajos previos de la literatura que encontré y que incluyeran resultados que utilizaran el benchmark de instancias de Chao y los de Tsiligirides \cite{IntancesChaoTsiligirides}, seleccioné los resultados de Archetti et al. \cite{ArchettiHertzSperanza}, los de Chao et al. Chao \cite{ChaoGoldenWasil} y los de Tang et al. \cite{TangMillerHooks}. Dentro de las soluciones propuestas de Archetti et al., seleccione los resultados de su 'Slow VNS Feasible' ya que tenía los mejores resultados al correrlos con el benchmark de instancias. Seleccione estos trabajos porque plantean distintos enfoques y tienen los mejores resultados para el benchmark de problemas utilizado.
 
 \bigskip
 
@@ -21,7 +21,7 @@ La configuración final utilizada para el BRKGA fue:
   \item \textbf{DecoderType}: Simple
 \end{itemize}
 
-Además agregué un último paso una vez que corta el algoritmo, antes de entregar la mejor solución encontrada se le aplica una secuencia larga de heuristicas locales distinta a la aplicada a los mejores individuos de cada generación.
+Además agregué un último paso una vez que corta el algoritmo, antes de entregar la mejor solución encontrada se le aplica una secuencia larga de búsquedas locales distinta a la aplicada a los mejores individuos de cada generación.
 
 \bigskip
 
@@ -38,7 +38,7 @@ Los resultados fueron generados corriendo la implementación en una laptop hp co
 
 \bigskip
 
-A continuación los resultados de 199 instancias del bechmark para mi algoritmo, el de Archetti, Hertz y Speranza(AHS), Tang y Miller-Hooks(TMH) y Chao, Golden, y Wasil (CGW). En el caso de mi algoritmo, cada instancia se ejecuto diez veces y muestro $B_{min}$, $B_{avg}$ y $B_{max}$ denotando la peor solucion, la solucion media y la mejor solucion encontrada respectivamente entre las diez ejecuciones.
+A continuación los resultados de 199 instancias del bechmark para mi algoritmo, el de Archetti, Hertz y Speranza(AHS), Tang y Miller-Hooks(TMH) y Chao, Golden, y Wasil (CGW). En el caso de mi algoritmo, cada instancia se ejecuto diez veces y muestro $B_{min}$, $B_{avg}$ y $B_{max}$ denotando la peor solución, la solución media y la mejor solución encontrada respectivamente entre las diez ejecuciones.
 
 
 \begin{center}
