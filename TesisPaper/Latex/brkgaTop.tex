@@ -502,7 +502,7 @@ private Solution GenerateSolution()()
 
 \bigskip
 
-Verificar que dos soluciones son iguales tiene un costo muy bajo en BRKGA. Nosotros sabemos que dado un vector de \textit{RandomKeys}, al decodificarlo siempre obtenemos la misma solución. Por lo tanto para dos vectores de \textit{RandomKeys} cuyo orden de clientes que genere sea el mismo, el decodificador generará la misma solución. Luego no es necesario comparar las soluciones, nos es suficiente comparando el hash de cada soluciones y esto se puede hacer en $O(1)$. El hash de una solución, se calcula una sola vez cuando se construye la solución a partir de su vector de \textit{RandomKeys} y no es mas que una concatenación de los \textit{ClientId} de cada \textit{RandomKey} en el vector ordenados por la propiedad \textit{Key}, intercalados con un separador. Es decir, es el orden en que el decodificador toma los clientes para asignarlos a una ruta. Luego, cada vez que se obtiene una solución durante el método de \textit{crossover}, si ya existe un individuo con el mismo hash, se genera una solución mutante y continua el apareamiento de otros dos individuos. Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta cuando ya sucedió una vez. Volver a intentar indefinidamente se traduce a un incremento del tiempo de ejecución. Luego tome esta decisión para optimizar el apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generación.
+Verificar que dos soluciones son iguales tiene un costo muy bajo en BRKGA. Nosotros sabemos que dado un vector de \textit{RandomKeys}, al decodificarlo siempre obtenemos la misma solución. Por lo tanto para dos vectores de \textit{RandomKeys} cuyo orden de clientes que genere sea el mismo, el decodificador generará la misma solución. Luego no es necesario comparar las soluciones, nos es suficiente comparando el hash de cada soluciones y esto se puede hacer en $O(1)$. El hash de una solución, se calcula una sola vez cuando se construye la solución a partir de su vector de \textit{RandomKeys} y no es mas que una concatenación de los \textit{ClientId} de cada \textit{RandomKey} en el vector ordenados por la propiedad \textit{Key}, intercalados con un separador. La figura \ref{fig:codificacionDeSolucionParteDos} muestra un \textit{RandomKeys} y su hash correspondiente.Es decir, es el orden en que el decodificador toma los clientes para asignarlos a una ruta. Luego, cada vez que se obtiene una solución durante el método de \textit{crossover}, si ya existe un individuo con el mismo hash, se genera una solución mutante y continua el apareamiento de otros dos individuos. Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta cuando ya sucedió una vez. Volver a intentar indefinidamente se traduce a un incremento del tiempo de ejecución. Luego tome esta decisión para optimizar el apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generación.
 
 \bigskip
 
@@ -883,25 +883,30 @@ Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{R
 \end{figure}
 
 \begin{figure}[h]
-	\caption{Como se actualiza el \textit{RandomKeys} y hash de una solución luego de mejorar la solución \ref{fig:codificacionDeSolucionDos}}
-	\centering
-	\includegraphics[width=14cm]{codificacionDeSolucionParteDos}
-	\label{fig:codificacionDeSolucionDos}
-\end{figure}
+    \caption{Este es el \textit{RandomKeys} corregido y su hash luego que la solución de la figura \ref{fig:codificacionDeSolucionUno} fue mejorada con una búsqueda local.}
+    \centering
+    \includegraphics[width=14cm]{codificacionDeSolucionParteDos}
+    \label{fig:codificacionDeSolucionDos}
+\end{figure} 
+
 
 \bigskip
 
-Ahora bien, digamos que existe un escenario donde el decoder se encuentra trabajando con un RandomKeys que fue generado por el encoder y sucede lo siguiente. Al agregar al último cliente de la primer ruta, como es un decoder goloso, intentará agregar a la primer ruta al resto de los clientes y supongamos que efectivamente encuentra uno. Cuando vi la posibilidad de este escenario, decidi agregar unos delimitadores de modo que si el decoder se encuentra con uno, siempre cambie de vehículo. Estos delimitadores son modelas por la propiedad, \textit{ForceVehicleChangeAfterThis}, con la que extendia al objeto \textit{RandomKey}. De este modo el Decoder, luego de utilizar el \textit{RandomKey}, se fija si \textit{ForceVehicleChangeAfterThis} es \textit{true} y si lo es, deja de intentar agregar clientes a la ruta del vehículo actual, pasando al siguiente. Los delimitadores no son heredados a los descendientes. Estos delimitadores me aseguran que valga: 
+Ahora bien, digamos que existe un escenario donde el decodificador se encuentra trabajando con un \textit{RandomKeys} que fue generado por el codificador y sucede lo siguiente. Al agregar al último cliente de la primer ruta, el decodificador intentará agregar a la primer ruta al resto de los clientes y supongamos que efectivamente encuentra uno. Cuando vi la posibilidad de este escenario, decidí agregar unos delimitadores de modo que si el decodificador se encuentra con uno, siempre cambie de vehículo. Estos delimitadores son modelados por la propiedad \textit{ForceVehicleChangeAfterThis}, con la que extendí al objeto \textit{RandomKey}. De este modo el decodificador, luego de utilizar el \textit{RandomKey}, se fija si \textit{ForceVehicleChangeAfterThis} es \textit{true} y si lo es, deja de intentar agregar clientes a la ruta del vehículo actual. Los delimitadores no son heredados a los descendientes. Estos delimitadores me aseguran la ecuación \ref{eq:reversibilidad} sea válida.
 
-\begin{equation} \label{eq:1}
+\begin{equation} \label{eq:reversibilidad}
 ApplyHeuristic(s) = Decoder.Decode(s.RandomKeys, ProblemInfo)
 \end{equation}
 
 \bigskip
 
-En caso de no tener los delimitadores, como dije antes, una ruta podría tener un cliente extra, que para fines del algoritmo, no es malo. Al agregar un cliente, hay dos opciones. La primera es que el cliente perteneciera al subconjunto de clientes que no estaba visitado. En este caso aumentaria el beneficio total. Pero para que esto suceda, la heuristica de insert no debería haber funcionado correctamente ó no fue la última en aplicarse. En caso de que el cliente perteneciece a otro vehículo, el beneficio total no se modifica. El peor escenario es que este segundo vehiculo se quede con el cliente de un tercer vehiculo, sucediendo un especie de cambios en cadenados de clientes entre una secuencia de vehículos sin decrementar el beneficio total. Luego por mas que tomé la desicion de agregar los delimitadores, considero que ambas opciones eran igual de buenas considerando solamente la función objetivo. Como agregar los delimitadores asegura la valides de la ecuación \ref{eq:1}.
+En caso de no tener los delimitadores, como dije antes, una ruta podría tener un cliente extra, que para fines del algoritmo, no es malo. Al agregar un cliente, hay dos opciones. La primera es que el cliente perteneciera al subconjunto de clientes que no estaba visitado. En este caso aumentaría el beneficio total. Pero para que esto suceda, el algoritmo de \textit{Insert} no debería haber funcionado correctamente ó no fue la última en aplicarse. En caso de que el cliente perteneciere a otro vehículo, el beneficio total no se modifica. El peor escenario es que este segundo vehículo se quede con el cliente de un tercer vehículo, sucediendo un especie de cambios encadenados de clientes entre un subconjunto de vehículos sin que decremente el beneficio total. Luego por mas que tomé la decisión de agregar los delimitadores, considero que ambas opciones eran igual de buenas considerando solamente la función objetivo. Agregando los delimitadores, aseguro la valides de la ecuación \ref{eq:reversibilidad}.
 
-%\begin{minipage}{\textwidth}
+\bigskip
+
+A continuación el pseudocodigo del algoritmo que actualiza el \textit{RandomKeys} de una solución mejorada:
+
+\begin{minipage}{\textwidth}
 \begin{lstlisting}
 public static Solution UpdateRandomKeys(Solution s);
 {
@@ -909,19 +914,19 @@ public static Solution UpdateRandomKeys(Solution s);
 	// Todas las keys ordenadas ascendente
 	var keys = randomKeys.Select(k => k.Key).ToList();
 	var ClientIds = new List<int>();
-	// Get Position Indexes from Visited Clients
+	// Get ClientId from Visited Clients
 	foreach (var r in s.Routes)
 	{
 		var d = r.GetDestinations();
-		var rpi = d.Select(d => d.ClientId);
-		ClientIds.AddRange(rpi);
+		var rci = d.Select(d => d.ClientId);
+		ClientIds.AddRange(rci);
 	}
-	// Get Position Indexes from Unvisited Clients
+	// Get ClientId from Unvisited Clients
 	var uClientIds = GetUnvisitedClientIds(randomKeys, newRoutes);
-	ClientIdes.AddRange(unvistedClientIdes);
+	ClientIds.AddRange(uClientIds);
 
 	// Hay un break por cada cantidad de clientes en ruta 
-	var breaks = new Queue(newRoutes.Select(r => r.GetDestinations.Count));
+	var breaks = new Queue(newRoutes.Select(r => r.ClientsCount));
 
 	var newRandomKeys = new List<RandomKey>();
 	var endRoute = false;
@@ -946,11 +951,11 @@ public static Solution UpdateRandomKeys(Solution s);
 	return s;
 }
 \end{lstlisting}
-%\end{minipage}
+\end{minipage}
 
-\subsection{Secuencia de Aplicación de las Heuristicas}
+\subsection{Secuencia de aplicación de las búsquedas locales}
 
-Todas las heuristicas mencionadas, implementan el interfaz:
+En todas las búsquedas locales mencionadas se implementa la interfaz:
 
 \begin{lstlisting}
 public interface ILocalSearchHeuristic
@@ -959,13 +964,13 @@ public interface ILocalSearchHeuristic
 }
 \end{lstlisting}
 
-Esto lo hice así de modo de poder inicializar el vector de heuristicas a aplicar en la creación del algoritmo BRKGA. Luego al momento de aplicar las búsquedas locales, llama en orden de inserción de tal vector y ejecuta su metodo ApplyHeuristic. Así se pueden testear multiples ordenes distintos de búsquedas locales con un simple modificación del parametro de entrada del constructor del BRKGA. El orden en que las heuristicas se aplican es muy relevante. Por ejemplo, si la última heuristica que aplicamos es Swap o 2-Opt, luego la distancias disminuídas de las rutas no sería aprobechado por ninguna cliente.
+Esto lo hice así de para poder inicializar el vector de búsquedas a aplicar en la creación del algoritmo BRKGA. Luego al momento de aplicar las búsquedas locales, a cada elemento del vector de búsquedas locales, se llama al método \textit{ApplyHeuristic}. Así se pueden probar múltiples ordenes distintos de búsquedas locales con una simple modificación del parámetro de entrada del constructor del BRKGA. El orden en que las búsquedas se aplican es muy relevante. Por ejemplo, si la última búsqueda que aplicamos es \textit{Swap} o \textit{2-Opt}, luego la distancias ahorradas de las rutas modificadas no sería aprovechada por ninguna cliente.
 
 \bigskip
 
 Configuraciones: 
 \begin{itemize}
-  \item \textbf{Comun a todas}: MI.200;MNC.50;PS.150;EP.0,3;MP.0,1;EGC.70;TOP.2
+  \item \textbf{Común a todas}: MI.200;MNC.50;PS.150;EP.0,3;MP.0,1;EGC.70;TOP.2
   \item \textbf{C = 1}: HEU.IROS;D.G
   \item \textbf{C = 2}: HEU.SIORSOR;D.G
   \item \textbf{C = 3}: HEU.SIORSOR;D.S
@@ -974,7 +979,7 @@ Configuraciones:
   \item \textbf{C = 6}: HEU.SOISOIR;D.G
 \end{itemize}
 
-Recordando los codigos de HUE: 
+Recordando los códigos de HUE: 
 \begin{itemize}
   \item \textbf{I}: Insert (Cliente no visitado)
   \item \textbf{R}: Replace (Cliente no visitado por uno visitado)
@@ -984,14 +989,14 @@ Recordando los codigos de HUE:
 
 \bigskip
 
-Genere soluciones para las mismas seis instancias diversas, varian en la configuración solamente el orden de las búsquedas locales y el decodificador obteniendo los siguientes resultados:
+Genere soluciones para las mismas seis instancias anteriores, en la configuración varía solamente el orden de las búsquedas locales y el decodificador. Se obteniendo los siguientes resultados:
 
 \bigskip
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
 \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $t_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{f}$ & $BTP_{max}$ \\
+$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $t_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
 \hline
 p2.2.k & 21 & 2 & 22.50 & 1 & 10 & 4724 & 275 & 260 & 267 & 0.97 & 275  \\
 p2.2.k & 21 & 2 & 22.50 & 2 & 10 & 5136 & 275 & 260 & 268 & 0.97 & 275  \\
@@ -1039,14 +1044,18 @@ Observaciones de estos resultados:
 
 \bigskip
 
-Claramente el peor orden de heuristicas locales es IROS (Insert, Replace, 2-Opt, Swap). Esto es por lo que explicamos anteriormente, Insert y Replace intentan agregar mas clientes o intercambiar clientes mas rentables mejorando el beneficio de la ruta. Mientras que 2-Opt y Swap hacen un reordenamiento de la secuencia en que se visitan los clientes seleccionados, luego minimizan la distancia recorrida de una ruta. Al primero los de beneficio y luego los de distancia, no se utiliza la distancia ahorrada.
+Claramente el peor orden de búsquedas locales es IROS (\textit{Insert}, \textit{Replace}, \textit{2-Opt}, \textit{Swap}). Esto es por lo que explicamos anteriormente, \textit{Insert} y \textit{Replace} intentan agregar mas clientes o intercambiar por clientes mas rentables mejorando el beneficio de la ruta. Mientras que \textit{2-Opt} y \textit{Swap} hacen un reordenamiento de la secuencia en que se visitan los clientes seleccionados, luego minimizan la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que decrementan la distancia recorrida, no hacemos uso de la distancia ahorrada.
 
 \bigskip
 
-Luego el mejor orden segun estos resultados, fue SIORSOR. Notar que repito heuristicas en este orden, esto en una primera impresión parece redundante pero no lo es. Por ejemplo, la primera vez que se aplica 2-opt se hace luego de un Insert que utiliza toda la distancia disponible. Y la segunda vez que se aplica el 2-opt es luego de un Swap que modifico rutas de forma tal que quiza disminuyo la distancia recorrida.
+Luego el mejor orden según estos resultados, fue SIORSOR. Notar que repito búsquedas en esta secuencia, en una primera impresión parece redundante pero no lo es. Por ejemplo, la primera vez que se aplica \textit{2-Opt} se hace luego de un \textit{Insert} que utiliza toda la distancia disponible y la segunda vez que se aplica el \textit{2-Opt} es posterior de un \textit{Swap}.
 
 \bigskip
 
-Sobre $T_{avg}$, notar entre la configuración 2 y 3 el tiempo puede llegar a ser más del doble y la única diferencia es que se uso el decodificador simple vs el goloso. Esto lo logra con un $i_f$ prácticamente igual en todas las intancias. Lo mismo podemos observar entre la configuración 4 y 5. Por lo tanto, habiendo agregado las heuristicas de búsqueda local, el decodificador goloso no mejora el beneficio final y el decodificador simple reduce el tiempo de ejecución. Por este motivo para los resultados finales utilicé el decodificar simple.
+Sobre $T_{avg}$, notar entre la configuración 2 y 3 el tiempo puede llegar a ser más del doble y la única diferencia es que se uso el decodificador simple versus el goloso. Esto lo logra con un $i_eAvg$ prácticamente igual en todas las instancias. Lo mismo podemos observar entre la configuración 4 y 5. Por lo tanto, habiendo agregado las búsquedas locales, el decodificador goloso no mejora el beneficio final y el decodificador simple reduce el tiempo de ejecución. Por este motivo para los resultados finales utilicé el decodificar simple.
+
+\bigskip
+
+Estos resultados me parecieron muy buenos ya que en dos de las seis instancias se llega a la mejor solución conocida y en los resultados de las otras cuatro instancias son competitivos con los trabajos previos de la literatura. Por eso decidí correr mi algoritmo para el resto de las instancias del benchmarck.
 
 
