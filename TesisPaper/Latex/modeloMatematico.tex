@@ -1,1 +1,10 @@
-\chapter{Modelo Matematico}
+\chapter{Modelo Matemático}
+
+Dado un grafo completo $G=(V,E)$ donde $V=\{1,...,n\}$ es el conjunto de vértices y $E=\{(i,j)|i,j \in V\}$ es el conjunto de ejes. Cada vértice $i$ en $V$ tiene un beneficio $r_i$. El punto de inicio es el vértice 1, el punto de fin es el vértice $n$ y $r_1=r_n=0$. Todo eje $(i,j)$ en $E$, tiene un costo no negativo $c_{ij}$ asociado, donde $c_{ij}$ es la distancia entre $i$ y $j$. El TOP consiste en encontrar $m$ caminos que comiencen en el vértice 1 y terminen en el vértice $n$ de forma tal que beneficio total de los vértices visitados sea maximizado. Cada vértice debe ser visitado a lo sumo una sola vez. Para cada vehículo, el tiempo total que toma en visitar los vértices no puede superar un limite pre-especificado $T_max$. En el presente modelo matemático se asume que hay una proporcionalidad directa entre la distancia recorrida de un vehículo y el tiempo consumido por el vehículo. Luego no hay diferencia en considerar $T_max$ como una distancia o un tiempo. Para evitar conflictos el valor es considerado como el valor de distancia máxima.
+
+\bigskip
+
+La formulación para TOP donde el punto de inicio y fin son el mismo ha sido presentado por Tang H. y Miller-Hooks E. \cite{TangMillerHooks}. Tal formulación puede ser extendida al caso donde el punto de inicio y fin pueden ser diferentes. A continuación, la formulación matemática de TOP presentada por Ke L., Archetti C. y Feng Z. \cite{KeArchettiFeng}.
+
+\bigskip
+
