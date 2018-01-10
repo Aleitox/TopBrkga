@@ -16,26 +16,34 @@ Sea $y_{ik} = 1 (i = 1,...,m)$ si el eje $(i,j)$ es visitado por el vehículo $k
 max \sum_{i=2}^{n-1} \sum_{k=1}^{m} r_i y_{ik}
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:modelo2}
 sujeto \ a \ \sum_{j=2}^{n} \sum_{k=1}^{m} x_{1jk} = \sum_{i=1}^{n-1} \sum_{k=1}^{m} x_{ink} = m
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:modelo3}
 \sum_{i<j} x_{ijk} \sum_{i>j} x_{jik} = 2y_{jk} \quad (i =2,...,n-1)
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:modelo4}
 \sum_{k=1}^{m} y_{ik} \leq 1 \quad (i =2,...,n-1)
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:modelo5}
 \sum_{i=1}^{n-1} \sum_{j>i} c_{ij}x_{ijk} \leq T_{max} \quad (k=1,...,m)
 \end{equation}
 
-\begin{equation}
+\begin{equation} \label{eq:modelo6}
 \sum_{i,j\in U \ i<j} x_{ijk} \leq |U|-1 \quad (U \subset V \setminus \{1,n\} ; 2 \leq |U| \leq n-2; k=1,...,m)
 \end{equation}
 
+\begin{equation} \label{eq:modelo7}
+x_{ijk} \in \{0,1\} \quad (1 \leq i < j \leq n; k=1,...,m)
+\end{equation}
 
+\begin{equation} \label{eq:modelo8}
+y_{1k} = y_{nk} = 1, \quad y_{ik} \in \{0,1\} \quad (i = 2,...,n-1; k=1,...,m)
+\end{equation}
+
+Donde la restricción \ref{eq:modelo2} asegura que todo vehículo comienza en el vértice 1 y termina en el vértice $n$. La restricción \ref{eq:modelo3} asegura la conectividad de cada camino. La restricción \ref{eq:modelo4} asegura que cada vértices (excepto el 1 y el $n$) deben ser visitados a los sumo una vez, y la restricción \ref{eq:modelo5} describe la limitación de distancia. La restricción \ref{eq:modelo6} asegura que los sub-caminos están prohibidos. La restricción \ref{eq:modelo7} y \ref{eq:modelo8} establecen el requerimiento integral en cada variable.
 
 
