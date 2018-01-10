@@ -1,10 +1,41 @@
 \chapter{Modelo Matemático}
 
+La formulación para TOP donde el punto de inicio y fin son el mismo ha sido presentado por Tang H. y Miller-Hooks E. \cite{TangMillerHooks}. Tal formulación puede ser extendida al caso donde el punto de inicio y fin pueden ser diferentes. A continuación, la formulación matemática de TOP presentada por Ke L., Archetti C. y Feng Z. \cite{KeArchettiFeng}.
+
+\bigskip
+
 Dado un grafo completo $G=(V,E)$ donde $V=\{1,...,n\}$ es el conjunto de vértices y $E=\{(i,j)|i,j \in V\}$ es el conjunto de ejes. Cada vértice $i$ en $V$ tiene un beneficio $r_i$. El punto de inicio es el vértice 1, el punto de fin es el vértice $n$ y $r_1=r_n=0$. Todo eje $(i,j)$ en $E$, tiene un costo no negativo $c_{ij}$ asociado, donde $c_{ij}$ es la distancia entre $i$ y $j$. El TOP consiste en encontrar $m$ caminos que comiencen en el vértice 1 y terminen en el vértice $n$ de forma tal que beneficio total de los vértices visitados sea maximizado. Cada vértice debe ser visitado a lo sumo una sola vez. Para cada vehículo, el tiempo total que toma en visitar los vértices no puede superar un limite pre-especificado $T_max$. En el presente modelo matemático se asume que hay una proporcionalidad directa entre la distancia recorrida de un vehículo y el tiempo consumido por el vehículo. Luego no hay diferencia en considerar $T_max$ como una distancia o un tiempo. Para evitar conflictos el valor es considerado como el valor de distancia máxima.
 
 \bigskip
 
-La formulación para TOP donde el punto de inicio y fin son el mismo ha sido presentado por Tang H. y Miller-Hooks E. \cite{TangMillerHooks}. Tal formulación puede ser extendida al caso donde el punto de inicio y fin pueden ser diferentes. A continuación, la formulación matemática de TOP presentada por Ke L., Archetti C. y Feng Z. \cite{KeArchettiFeng}.
+Sea $y_{ik} = 1 (i = 1,...,m)$ si el eje $(i,j)$ es visitado por el vehículo $k$, sino $y_{ik} = 0$. Sea $x_{ijk} = 1 (i,j = 1,...,n; k=1,...,m)$ si el eje $(i,j)$ es visitado por el vehículo $k$, sino $x_{ijk} = 0$. Como $c_{ij}=c_{ji}$ solo $x_{ijk}(i<j)$ se define. Sea $U$ un subconjunto de $V$. Luego TOP puede ser descrito de la siguiente manera:
 
 \bigskip
+
+\begin{equation}
+max \sum_{i=2}^{n-1} \sum_{k=1}^{m} r_i y_{ik}
+\end{equation}
+
+\begin{equation}
+sujeto \ a \ \sum_{j=2}^{n} \sum_{k=1}^{m} x_{1jk} = \sum_{i=1}^{n-1} \sum_{k=1}^{m} x_{ink} = m
+\end{equation}
+
+\begin{equation}
+\sum_{i<j} x_{ijk} \sum_{i>j} x_{jik} = 2y_{jk} \quad (i =2,...,n-1)
+\end{equation}
+
+\begin{equation}
+\sum_{k=1}^{m} y_{ik} \leq 1 \quad (i =2,...,n-1)
+\end{equation}
+
+\begin{equation}
+\sum_{i=1}^{n-1} \sum_{j>i} c_{ij}x_{ijk} \leq T_{max} \quad (k=1,...,m)
+\end{equation}
+
+\begin{equation}
+\sum_{i,j\in U \ i<j} x_{ijk} \leq |U|-1 \quad (U \subset V \setminus \{1,n\} ; 2 \leq |U| \leq n-2; k=1,...,m)
+\end{equation}
+
+
+
 
