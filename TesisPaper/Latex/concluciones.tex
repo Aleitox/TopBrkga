@@ -6,7 +6,7 @@ El \textit{Team Orienteering Problem} combina la decisión de qué clientes sele
 
 \bigskip
 
-Los resultados obtenidos son muy buenos, con al menos un tercio de los resultados llegaron a la solución optima de la instancia testeada. El resto obtuvo un $i_eMax$ en el intervalo [0.95, 0.99], salvo por algunas excepciones. Ahora, si considero el resultado obtenido por el BRKGA puro, los resultados no son lo suficientemente buenos para instancias grandes del problema, llegando a tener un $i_eMax$ aproximado de $0.5$. Quizá por como funciona el \textit{crossover} en TOP, las soluciones hijas terminan siendo muy diferentes de su padres. Si ese fuera el caso, el BRKGA solo puede llegar a buenas soluciones con la ayuda de otras metaheurísticas como es en este caso.
+Los resultados obtenidos son muy buenos, con al menos un tercio de los resultados llegaron a la solución optima de la instancia testeada. El resto obtuvo un $i_{eMax}$ en el intervalo [0.95, 0.99], salvo por algunas excepciones. Ahora, si considero el resultado obtenido por el BRKGA puro, los resultados no son lo suficientemente buenos para instancias grandes del problema, llegando a tener un $i_{eMax}$ aproximado de $0.5$. Quizá por como funciona el \textit{crossover} en TOP, las soluciones hijas terminan siendo muy diferentes de su padres. Si ese fuera el caso, el BRKGA solo puede llegar a buenas soluciones con la ayuda de otras metaheurísticas como es en este caso.
 
 \bigskip
 
@@ -30,7 +30,7 @@ El segundo punto por el que intentaría mejorar los resultados del BRKGA es modi
 
 \bigskip
 
-Sobre trabajos futuros relacionados con las búsquedas locales, se podría implementar la búsqueda \textit{Move}', para mover un cliente visitado de una ruta hacia otra, acumulando mayor distancia libre en una sola ruta. También se podría \textit{Replace} que actualmente cambia a un cliente visitado por otro no visitado si incrementa el beneficio total. La optimización sería buscar un \textit{Replace} que no necesariamente sea de uno por uno. Podría ser el caso que hayan dos cliente no visitados cuyo beneficio total supere el de un cliente visitado, pero el beneficio de cada uno por separado, sea menor que el visitado. En este escenario el \textit{Replace} actual no efectuá el cambio. También se podría implementar alguna heurística local tabú de modo de salir de mínimos locales.
+Sobre trabajos futuros relacionados con las búsquedas locales, se podría implementar la búsqueda \textit{Move}, para mover un cliente visitado de una ruta hacia otra, acumulando mayor distancia libre en una sola ruta. También se podría \textit{Replace} que actualmente cambia a un cliente visitado por otro no visitado si incrementa el beneficio total. La optimización sería buscar un \textit{Replace} que no necesariamente sea de uno por uno. Podría ser el caso que hayan dos cliente no visitados cuyo beneficio total supere el de un cliente visitado, pero el beneficio de cada uno por separado, sea menor que el visitado. En este escenario el \textit{Replace} actual no efectuá el cambio. También se podría implementar alguna heurística local tabú de modo de salir de mínimos locales.
 
 \bigskip
 
