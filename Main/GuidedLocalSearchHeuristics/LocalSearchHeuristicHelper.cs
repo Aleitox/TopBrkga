@@ -8,6 +8,14 @@ namespace Main.GuidedLocalSearchHeuristics
 {
     public static class LocalSearchHeuristicHelper
     {
+        public static void ApplyHeuristics(List<ILocalSearchHeuristic> heuristics, ref Main.BrkgaTop.EncodedSolution encodedSolution)
+        {
+            foreach (var heuristic in heuristics)
+                heuristic.ApplyHeuristic(ref encodedSolution);
+
+            encodedSolution = BrkgaTop.Encoders.Encoder.UpdateEncodedSolution(encodedSolution, encodedSolution.GetSolution.GetCurrentRoutes);
+        }
+
         public static PreInsertAnalisis AnalizeInsert(Model.Solution solution, Model.Vehicle vehicle, Destination destination)
         {
             var currentDistanceCost = vehicle.Route.GetDistance();

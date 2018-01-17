@@ -52,9 +52,6 @@ namespace Main.Brkga
             //    SolutionRepository.SaveSolution(encodedSolution.GetSolution);
             //}
 
-            // No quiero intentar mejorar cuando no configure heuristicas locales
-            if (ProblemManager.Heuristics.Count > 0)
-                LastImprovementTry(ref encodedSolution);
             encodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
 
             EncodedSolution = encodedSolution;

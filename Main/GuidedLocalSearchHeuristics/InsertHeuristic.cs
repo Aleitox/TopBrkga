@@ -36,8 +36,6 @@ namespace Main.GuidedLocalSearchHeuristics
                 }
                 unvistedDestinations = unvistedDestinations.Where(ud => insertedDestinations.All(id => id.Id != ud.Id)).ToList();
             }
-
-            encodedSolution = Encoder.UpdateEncodedSolution(encodedSolution, solution.GetCurrentRoutes);
         }
     }
 }

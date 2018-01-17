@@ -26,9 +26,11 @@ namespace Main.Brkga
 
         int MinNoChanges { get; set; }
 
+        int GenerationNumber { get; set; }
+
         List<EncodedSolution> HistoricalEncodedSolutions { get; set; }
 
-        List<ILocalSearchHeuristic> Heuristics { get; set; }
+        List<ILocalSearchHeuristic> HeuristicsShort { get; set; }
     }
 
     public class ProblemManager : IProblemManager
@@ -36,25 +38,44 @@ namespace Main.Brkga
         public ProblemManager(IPopulationGenerator populationGenerator, bool logPopulation = false, int minIterations = 100, int minNoChanges = 10)
         {
             PopulationGenerator = populationGenerator;
-            Heuristics = new List<ILocalSearchHeuristic>();
+            HeuristicsShort = new List<ILocalSearchHeuristic>();
             ApplyHeuristicsToTop = 0;
             LogPopulation = logPopulation;
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinNoChanges = minNoChanges;
             LastProfits = new Queue<double>();
+            GenerationNumber = 0;
         }
 
         public ProblemManager(IPopulationGenerator populationGenerator, List<ILocalSearchHeuristic> heuristics, int applyHeuristicsToTop, bool logPopulation = false, int minIterations = 100, int minNoChanges = 10)
         {
             PopulationGenerator = populationGenerator;
-            Heuristics = heuristics;
+            HeuristicsShort = heuristics;
             ApplyHeuristicsToTop = applyHeuristicsToTop;
             LogPopulation = logPopulation;
             MinIterations = minIterations;
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinNoChanges = minNoChanges;
             LastProfits = new Queue<double>();
+            HeuristicsLong = new List<ILocalSearchHeuristic>()
+            {
+                new SwapHeuristic(),
+                new InsertHeuristic(),
+                new SwapHeuristic(),
+                new TwoZeroPtSwap(),
+                new ReplaceHeuristic(),
+                new TwoZeroPtSwap(),
+                new SwapHeuristic(),
+                new TwoZeroPtSwap(),
+                new InsertHeuristic(),
+                new ReplaceHeuristic(),
+                new SwapHeuristic(),
+                new InsertHeuristic(),
+                new SwapHeuristic(),
+                new TwoZeroPtSwap(),
+                new ReplaceHeuristic()
+            };
         }
 
         public bool StoppingRuleFulfilled
@@ -84,7 +105,9 @@ namespace Main.Brkga
 
         public Queue<double> LastProfits { get; set; }
 
-        public List<ILocalSearchHeuristic> Heuristics { get; set; }
+        public List<ILocalSearchHeuristic> HeuristicsShort { get; set; }
+
+        public List<ILocalSearchHeuristic> HeuristicsLong { get; set; }        
 
         public int ApplyHeuristicsToTop { get; set; }
 
@@ -109,19 +132,28 @@ namespace Main.Brkga
 
         public void ApplyLocalHeuristics()
         {
-            var bestSolutions = Population.GetOrderByMostProfitable().Where(es => !es.EnhancedByLocalHeuristics).Take(ApplyHeuristicsToTop).ToList();
+            var orderedSolutions = Population.GetOrderByMostProfitable();
+            var bestSolutions = orderedSolutions.Where(es => !es.EnhancedByLocalHeuristics).Take(ApplyHeuristicsToTop).ToList();
             for (int index = 0; index < bestSolutions.Count; index++)
             {
                 var topSolution = bestSolutions[index];
-                foreach (var heuristic in Heuristics)
-                    heuristic.ApplyHeuristic(ref topSolution);
+                LocalSearchHeuristicHelper.ApplyHeuristics(HeuristicsShort, ref topSolution);
                 topSolution.EnhancedByLocalHeuristics = true;
             }
+            if (GenerationNumber >= 10)
+            {
+                var bestSolution = orderedSolutions.First();
+                LocalSearchHeuristicHelper.ApplyHeuristics(HeuristicsLong, ref bestSolution);
+                GenerationNumber = 1;
+            }
+
         }
 
         public void EvolvePopulation()
         {
             Population = PopulationGenerator.Evolve(Population);
+
+            GenerationNumber++;
 
             ApplyLocalHeuristics();
 
@@ -138,5 +170,18 @@ namespace Main.Brkga
         public bool LogPopulation { get; set; }
 
         public int MinIterations { get; set; }
+
+        public int GenerationNumber
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+
+            set
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

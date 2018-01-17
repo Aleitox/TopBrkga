@@ -27,8 +27,6 @@ namespace Main.GuidedLocalSearchHeuristics
                 if(changed)
                     unvisited = solution.GetCurrentUnvistedDestination;
             }
-
-            encodedSolution = Encoder.UpdateEncodedSolution(encodedSolution, solution.GetCurrentRoutes);
         }
 
         private bool ReplaceIfEnabled(Solution solution, Vehicle vehicle, List<Destination> unvisited)

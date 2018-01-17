@@ -30,8 +30,6 @@ namespace Main.GuidedLocalSearchHeuristics
 
                 index++;
             }
-
-            encodedSolution = Encoder.UpdateEncodedSolution(encodedSolution, solution.GetCurrentRoutes);
         }
 
         private bool Do2OptSwap(Vehicle vehicle)

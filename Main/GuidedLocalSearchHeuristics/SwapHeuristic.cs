@@ -17,9 +17,7 @@ namespace Main.GuidedLocalSearchHeuristics
             {
                 // TODO: Test que se modifican en la solucion final
                 SwapDestinationsBetween(solution.VehicleFleet.GetRoute(combination.Item1), solution.VehicleFleet.GetRoute(combination.Item2));
-            }
-
-            encodedSolution = Encoder.UpdateEncodedSolution(encodedSolution, solution.GetCurrentRoutes);
+            }            
         }
 
         // TODO: Alternativa sin Banns
