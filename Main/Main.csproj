@@ -113,6 +113,7 @@
     <Compile Include="Model\BrkgaConfiguration.cs" />
     <Compile Include="Model\Coordinate.cs" />
     <Compile Include="Model\Destination.cs" />
+    <Compile Include="Model\DestinationAt.cs" />
     <Compile Include="Model\Map.cs" />
     <Compile Include="Model\Solution.cs" />
     <Compile Include="Model\ProblemResourceProvider.cs" />
