@@ -9,6 +9,7 @@ namespace Main.GuidedLocalSearchHeuristics
 {
     public class ReplaceHeuristic : ILocalSearchHeuristic
     {
+        public bool SuperReplace { get; set; }
         // Necesito: 
         // Los que estan afuera (ordenados por que tan copados son)
         // Los que estan adentro (ordenados por que tan copados son)
@@ -42,8 +43,11 @@ namespace Main.GuidedLocalSearchHeuristics
                 vehicle.Route.AddDestinationAt(destination, analizedInsertion.BestInsertPosition);
                 if (!analizedInsertion.CanBeInserted)
                 {
-                    var removedDestination = LocalSearchHeuristicHelper.RemoveWorstOrDefault(vehicle, destination);
-                    changed = changed || removedDestination.Id != destination.Id;
+                    var destinationAt = new DestinationAt(destination, analizedInsertion.BestInsertPosition);
+                    var justChange = SuperReplace ?
+                        LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt) :
+                        LocalSearchHeuristicHelper.RemoveWorstOrDefault(vehicle, destinationAt);
+                    changed = changed || justChange;
                 }
                 else
                     changed = true;

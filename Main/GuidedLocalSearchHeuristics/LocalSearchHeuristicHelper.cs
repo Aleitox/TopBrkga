@@ -51,18 +51,58 @@ namespace Main.GuidedLocalSearchHeuristics
             return preInsertAnalisis;
         }
 
+        // TODO Test IMPORTANTE
+        public static bool RemoveWorstTeamOrDefault(Vehicle vehicle, DestinationAt defaultDestinationAt)
+        {
+            var toRemove = new List<Destination>();
+
+            var setOfDestinationAts = new List<SetOfDestinationAt>();
+
+            for (var index = 0; index < vehicle.Route.RouteLenght(); index++)
+            {
+                var destination = vehicle.Route.GetDestinationAt(index);
+                if (destination.Profit >= defaultDestinationAt.Destination.Profit)
+                    continue;
+
+                var detinationAt = new DestinationAt(destination, index);
+
+                foreach (var setOfDestinationAt in setOfDestinationAts)
+                {
+                    if (setOfDestinationAt.AcumProfit + destination.Profit < defaultDestinationAt.Destination.Profit)
+                    {
+                        var clone = SetOfDestinationAt.Clone(setOfDestinationAt);
+                        clone.AddDestinationAt(detinationAt);
+                        setOfDestinationAts.Add(clone);
+                    }
+                }
+
+                setOfDestinationAts.Add(new SetOfDestinationAt(detinationAt));
+            }
+
+            var validForRemoval = setOfDestinationAts.Where(x => vehicle.Route.GetDistanceWithout(x.DestinationsAt.Select(y => y.At).ToList()) <= vehicle.MaxDistance);
+
+            var bestOption = new SetOfDestinationAt(defaultDestinationAt);
+
+            foreach (var setOfDestinationAt in validForRemoval)
+                if (setOfDestinationAt.AcumProfit < bestOption.AcumProfit)
+                    bestOption = setOfDestinationAt;
+
+            return bestOption.DestinationsAt.Count != 1 || bestOption.DestinationsAt.First().Destination.Id != defaultDestinationAt.Destination.Id;
+        }
+
         // TODO Test
-        public static Destination RemoveWorstOrDefault(Vehicle vehicle, Destination defaultDestination)
+        // public static SetOfDestinationAt RemoveWorstTeamOrDefault(Vehicle vehicle, DestinationAt defaultDestinationAt)
+        public static bool RemoveWorstOrDefault(Vehicle vehicle, DestinationAt defaultDestinationAt)
         {
             var destinationsNeighbors = vehicle.Route.GetAllDestinationNeighbors();
 
             decimal maxDistanceSaved = 0;
             var currentProfitToLose = 0;
-            var destinationIdToRemove = defaultDestination.Id;
+            var destinationIdToRemove = defaultDestinationAt.Destination.Id;
 
             foreach (var destinationNeighbors in destinationsNeighbors)
             {
-                if (destinationNeighbors.Destination.Profit > defaultDestination.Profit)
+                if (destinationNeighbors.Destination.Profit > defaultDestinationAt.Destination.Profit)
                     continue;
 
                 var distanceSaved =
@@ -81,7 +121,7 @@ namespace Main.GuidedLocalSearchHeuristics
             var destinationRemoved = destinationsNeighbors.First(x => x.Destination.Id == destinationIdToRemove).Destination;
             vehicle.Route.RemoveDestination(destinationRemoved);
 
-            return destinationRemoved;
+            return destinationRemoved.Id != defaultDestinationAt.Destination.Id;
         }
 
 

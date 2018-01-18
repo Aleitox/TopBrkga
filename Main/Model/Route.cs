@@ -67,6 +67,22 @@ namespace Main.Model
             return distance;
         }
 
+        // TODO test
+        public decimal GetDistanceWithout(List<int> list)
+        {
+            if(list.Max(x => x) > Destinations.Count)
+                throw new Exception("Error en GetDistanceWithout");
+
+            decimal distance = 0;
+            var iterator = new DestinationIterator(this, list);
+
+            do
+                distance += iterator.Current.GetDistanceTo(iterator.GetNext());
+            while (iterator.MoveIterator());
+
+            return 0;
+        }
+
         public decimal GetDistanceWithoutFinalReturn()
         {
             if (Destinations.Count == 0)
@@ -128,7 +144,7 @@ namespace Main.Model
                     routeString += " -> ";
             }
             return routeString;
-        }
+        }        
 
         public bool IsEquivalentTo(Route anotherRoute)
         {
@@ -270,6 +286,51 @@ namespace Main.Model
             var tmp = Destinations[a];
             Destinations[a] = Destinations[b];
             Destinations[b] = tmp;
+        }
+    }
+
+    public class DestinationIterator
+    {
+        private Route Route { get; set; }
+
+        private List<int> Forbidden { get; set; }
+
+        public DestinationIterator(Route route, List<int> forbidden)
+        {
+            Route = route;
+            Forbidden = forbidden;
+            CurrentAt = -1;
+        }
+
+        public Destination Current { get; set; }
+
+        public int CurrentAt { get; set; }
+
+        public bool MoveIterator()
+        {
+            if (Current.Id == Route.EndingPoint.Id)
+                return false;
+
+            CurrentAt++;
+            while (Forbidden.Any(x => x == CurrentAt))
+                CurrentAt++;
+
+            if (CurrentAt < Route.GetDestinations.Count)
+                Current = Route.GetDestinationAt(CurrentAt);
+            else
+                Current = Route.EndingPoint;
+
+            return true;
+        }
+
+        public Destination GetNext()
+        {
+            var currentCopy = CurrentAt;
+            currentCopy++;
+            while(Forbidden.Any(x => x == CurrentAt))
+                currentCopy++;
+
+            return Route.GetDestinationAt(currentCopy);
         }
     }
 }
