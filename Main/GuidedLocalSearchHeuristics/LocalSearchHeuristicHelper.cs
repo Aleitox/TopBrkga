@@ -88,6 +88,9 @@ namespace Main.GuidedLocalSearchHeuristics
                 if (setOfDestinationAt.AcumProfit < bestOption.AcumProfit)
                     bestOption = setOfDestinationAt;
 
+            foreach (var dest in bestOption.DestinationsAt)
+                vehicle.Route.RemoveDestination(dest.Destination);
+
             return bestOption.DestinationsAt.Count != 1 || bestOption.DestinationsAt.First().Destination.Id != defaultDestinationAt.Destination.Id;
         }
 

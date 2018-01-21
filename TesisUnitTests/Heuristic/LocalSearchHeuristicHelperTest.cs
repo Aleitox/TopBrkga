@@ -17,7 +17,7 @@ namespace TesisUnitTests.Heuristic
             var segundoBorrado = new Destination(3, 2, new Coordinate(3, 5), "segundo borrado", 0);
             var terceroBorrado = new Destination(4, 1, new Coordinate(3, 7), "tercero borrado", 0);
             var agregado = new Destination(5, 10, new Coordinate(-3, 6), "agregado", 0);
-            var unltimoMayorProfit = new Destination(0, 11, new Coordinate(0, 11), "ultimo nunca considerado", 0);
+            var unltimoMayorProfit = new Destination(6, 11, new Coordinate(0, 11), "ultimo nunca considerado", 0);
             var end = new Destination(1, 0, new Coordinate(0, 12), "End", 0);
 
             var route = new Route(start, end);
@@ -34,6 +34,14 @@ namespace TesisUnitTests.Heuristic
             var destinationAt = new DestinationAt(agregado, position);
 
             var algo = LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt);
+
+            Assert.AreEqual(true, algo);
+            Assert.AreEqual(24, vehicle.Route.GetProfit());
+            Assert.AreEqual(3, vehicle.Route.GetDestinations.Count);
+            Assert.AreEqual(2, vehicle.Route.GetDestinationAt(0).Id);
+            Assert.AreEqual(5, vehicle.Route.GetDestinationAt(1).Id);
+            Assert.AreEqual(6, vehicle.Route.GetDestinationAt(2).Id);
+
         }
 
         [TestMethod]
