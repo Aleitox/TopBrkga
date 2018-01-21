@@ -9,6 +9,15 @@ namespace Main.GuidedLocalSearchHeuristics
 {
     public class ReplaceHeuristic : ILocalSearchHeuristic
     {
+        public static ReplaceHeuristic GetSuper()
+        {
+            return new ReplaceHeuristic() { SuperReplace = true };
+        }
+        public static ReplaceHeuristic GetNormal()
+        {
+            return new ReplaceHeuristic() { SuperReplace = false };
+        }
+
         public bool SuperReplace { get; set; }
         // Necesito: 
         // Los que estan afuera (ordenados por que tan copados son)

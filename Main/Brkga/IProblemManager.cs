@@ -64,17 +64,17 @@ namespace Main.Brkga
                 new InsertHeuristic(),
                 new SwapHeuristic(),
                 new TwoZeroPtSwap(),
-                new ReplaceHeuristic(),
+                ReplaceHeuristic.GetSuper(),
                 new TwoZeroPtSwap(),
                 new SwapHeuristic(),
                 new TwoZeroPtSwap(),
                 new InsertHeuristic(),
-                new ReplaceHeuristic(),
+                ReplaceHeuristic.GetNormal(),
                 new SwapHeuristic(),
                 new InsertHeuristic(),
                 new SwapHeuristic(),
                 new TwoZeroPtSwap(),
-                new ReplaceHeuristic()
+                ReplaceHeuristic.GetSuper()
             };
         }
 
@@ -171,17 +171,6 @@ namespace Main.Brkga
 
         public int MinIterations { get; set; }
 
-        public int GenerationNumber
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
+        public int GenerationNumber { get; set; }
     }
 }
