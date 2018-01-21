@@ -4,6 +4,7 @@ using Main.Helpers;
 using Main.Model;
 using System;
 
+
 namespace Main.GuidedLocalSearchHeuristics
 {
     public static class LocalSearchHeuristicHelper
@@ -65,17 +66,17 @@ namespace Main.GuidedLocalSearchHeuristics
                     continue;
 
                 var detinationAt = new DestinationAt(destination, index);
-
+                var temp = new List<SetOfDestinationAt>();
                 foreach (var setOfDestinationAt in setOfDestinationAts)
                 {
                     if (setOfDestinationAt.AcumProfit + destination.Profit < defaultDestinationAt.Destination.Profit)
                     {
                         var clone = SetOfDestinationAt.Clone(setOfDestinationAt);
                         clone.AddDestinationAt(detinationAt);
-                        setOfDestinationAts.Add(clone);
+                        temp.Add(clone);
                     }
                 }
-
+                setOfDestinationAts.AddRange(temp);
                 setOfDestinationAts.Add(new SetOfDestinationAt(detinationAt));
             }
 

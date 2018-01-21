@@ -70,7 +70,7 @@ namespace Main.Model
         // TODO test
         public decimal GetDistanceWithout(List<int> list)
         {
-            if(list.Max(x => x) > Destinations.Count)
+            if(list.Any() && list.Max(x => x) > Destinations.Count)
                 throw new Exception("Error en GetDistanceWithout");
 
             decimal distance = 0;
@@ -80,7 +80,7 @@ namespace Main.Model
                 distance += iterator.Current.GetDistanceTo(iterator.GetNext());
             while (iterator.MoveIterator());
 
-            return 0;
+            return distance;
         }
 
         public decimal GetDistanceWithoutFinalReturn()
@@ -300,6 +300,7 @@ namespace Main.Model
             Route = route;
             Forbidden = forbidden;
             CurrentAt = -1;
+            Current = route.StartingPoint;
         }
 
         public Destination Current { get; set; }
@@ -327,10 +328,13 @@ namespace Main.Model
         {
             var currentCopy = CurrentAt;
             currentCopy++;
-            while(Forbidden.Any(x => x == CurrentAt))
+            while(Forbidden.Any(x => x == currentCopy))
                 currentCopy++;
 
-            return Route.GetDestinationAt(currentCopy);
+            if (currentCopy < Route.GetDestinations.Count)
+                return Route.GetDestinationAt(currentCopy);
+
+            return Current = Route.EndingPoint;
         }
     }
 }

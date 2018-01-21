@@ -67,6 +67,7 @@
     <Compile Include="Heuristic\ReplaceTest.cs" />
     <Compile Include="Heuristic\TwoZeroPtSwapTest.cs" />
     <Compile Include="Heuristic\TestImproveSolutions.cs" />
+    <Compile Include="Heuristic\LocalSearchHeuristicHelperTest.cs" />
     <Compile Include="TestFileIO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="LoadIntancesTest.cs" />
