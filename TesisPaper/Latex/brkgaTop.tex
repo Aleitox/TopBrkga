@@ -814,7 +814,7 @@ private bool Do2OptSwap(Vehicle vehicle)
 
 Básicamente a cada vehículo le aplica el \textit{2-opt}. El método \textit{Do2OptSwap} primero obtiene una lista de las permutaciones posibles. Luego por cada permutación intenta hacer un \textit{swap} dentro de la ruta. Si el \textit{swap} se realiza, vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el \textit{swap} solo sucede cuando la nueva distancia es estrictamente menor, el bucle siempre termina ya que una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un orden de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
 
-\subsection{Replace}
+\subsection{Replace Simple}
 
 Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta. Del mismo modo que la heuristica insert, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos.
 
@@ -861,7 +861,19 @@ private bool Replace(Solution solution, Vehicle vehicle)
 
 \bigskip
 
-El \textit{replace} es muy similar al \textit{insert} y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Por lo tanto ahora se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario remueve de la ruta el peor destino, que en el peor de los casos es el mismo cliente que se acaba de insertar. Cualquier otro cliente que se remueva de la ruta significará que se efectuó un \textit{replace} y aumento el beneficio total de la ruta. \textit{Replace} tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. 
+El \textit{Replace Simple} es muy similar al \textit{Insert} y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Después de insertarlo se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario debe quitar un cliente. Para esto, crea un conjunto de clientes tales que cada uno de ellos tiene un beneficio menor o igual al del cliente insertado. Dentro de este conjunto se selecciona al cliente que al quitarlo de la ruta del vehículo, minimice la distancia de la ruta resultante. Como el cliente insertado pertenece al conjunto del cual se removerá un cliente, en el peor de los casos se removió el mismo cliente que se insertó, lo que significa que no se incremento el beneficio ni se disminuyo la distancia de la ruta. Cualquier otro cliente que se remueva de la ruta significará que se efectuó un \textit{replace} y aumento el beneficio total de la ruta ó, muy de vez en cuando, el beneficio no aumento pero se disminuyo la distancia de la ruta. El \textit{Replace Simple} tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. Llamé a esta búsqueda \textit{Replace Simple} por que no considera el caso donde se puede reemplazar un clientes visitado por varios clientes no visitados. Ademas, por mas que busca incrementar el beneficio de la ruta, en el momento de seleccionar uno de varios candidatos a ser removido, remueve aquel que disminuya en mayor medida la distancia de la ruta resultante.
+
+\subsection{Replace Multiple}
+
+El \textit{Replace Multiple} se diferencia del \textit{Replace Simple} en dos aspectos. El primer diferencia es que permite reemplazar varios clientes visitados por un cliente no visitado. La segunda diferencia es que dentro de todas sus opciones para reemplazar, selecciona aquella que maximice el beneficio. El \textit{Replace Multiple} tiene una complejidad algorítmica mayor al \textit{Replace Simple} ya que explora todas las opciones que explora el \textit{Replace Simple} y sus combinaciones. La segunda diferencia la agregue con el objetivo de diferenciar, aún más, el conjunto de soluciones exploradas por cada \textit{Replace}.
+
+\bigskip
+
+Al momento de seleccionar los clientes a remover, el \textit{Replace Multiple} crea un conjunto de conjuntos de clientes donde la sumatoria de beneficios de cada conjunto de clientes es menor o igual al beneficio del cliente insertado. Luego elimina los conjuntos de clientes que al eliminarlos del recorrido, la distancia de la ruta resultante sigue siendo mayor a la distancia máxima permitida. Dentro de los conjuntos restantes, se selecciona aquel de menor beneficio total. Nuevamente, en el peor de los casos se remueve al cliente insertado.
+
+\bigskip
+
+El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Su complejidad aumenta bastante ya que el conjunto de conjuntos de clientes en el peor de los casos es de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta. Sería el tamaño del conjunto de partes de clientes visitados restando el conjunto vacío. De todos modos es difícil que se de este caso, ya que para que suceda el beneficio del cliente insertado debe ser mayor o igual a la sumatoria de los beneficios del resto de los clientes en la ruta.
 
 \subsection{Encoder}
 
