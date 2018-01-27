@@ -14,8 +14,9 @@ namespace Main.Factory
 {
     public class PaperConfigsFactory
     {
-        public static void SimpleDecoderRun(List<Instance> instances, int fase, int sampleSize)
+        public static List<Model.Solution> SimpleDecoderRun(List<Instance> instances, int fase, int sampleSize)
         {
+            var generatedSolutions = new List<Model.Solution>();
             var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
 
             var solutionName = "Decoder Simple Alone";
@@ -33,9 +34,11 @@ namespace Main.Factory
                 {
                     s = decoder.Decode(randomKeys);
                     s.Fase = fase;
+                    generatedSolutions.Add(s);
                     solutionRepository.SaveSolution(s);
                 }
             }
+            return generatedSolutions;
         }
 
         public static List<List<RandomKey>> CreateRandomKeyVector(IProblemDecoder decoder, int amount)
@@ -51,8 +54,9 @@ namespace Main.Factory
             return randomKeysList;
         }
 
-        public static void GreedyDecoderRun(List<Instance> instances, int fase, int sampleSize)
+        public static List<Model.Solution> GreedyDecoderRun(List<Instance> instances, int fase, int sampleSize)
         {
+            var generatedSolutions = new List<Model.Solution>();
             var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
 
             var solutionName = "Decoder Greedy Alone";
@@ -70,9 +74,11 @@ namespace Main.Factory
                 {
                     s = decoder.Decode(randomKeys);
                     s.Fase = fase;
+                    generatedSolutions.Add(s);
                     solutionRepository.SaveSolution(s);
                 }
             }
+            return generatedSolutions;
         }
 
         public static List<BrkgaConfiguration> Get6Configs()
@@ -247,7 +253,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic() },
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), ReplaceHeuristic.GetNormal(), ReplaceHeuristic.GetSuper() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Simple,
                 Fase = 7
@@ -266,7 +272,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic()},
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), ReplaceHeuristic.GetNormal(), ReplaceHeuristic.GetSuper() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Greedy,
                 Fase = 7
@@ -285,7 +291,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new ReplaceHeuristic() },
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new InsertHeuristic(), ReplaceHeuristic.GetNormal(), ReplaceHeuristic.GetSuper() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Greedy,
                 Fase = 7
@@ -304,7 +310,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic() },
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), ReplaceHeuristic.GetNormal(), new SwapHeuristic(), new TwoZeroPtSwap(), ReplaceHeuristic.GetSuper() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Greedy,
                 Fase = 7
@@ -323,7 +329,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic(), new SwapHeuristic(), new TwoZeroPtSwap(), new ReplaceHeuristic() },
+                Heuristics = new List<ILocalSearchHeuristic>() { new SwapHeuristic(), new InsertHeuristic(), new TwoZeroPtSwap(), ReplaceHeuristic.GetNormal(), new SwapHeuristic(), new TwoZeroPtSwap(), ReplaceHeuristic.GetSuper() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Simple,
                 Fase = 7
@@ -342,7 +348,7 @@ namespace Main.Factory
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
-                Heuristics = new List<ILocalSearchHeuristic>() { new InsertHeuristic(), new ReplaceHeuristic(), new TwoZeroPtSwap(), new SwapHeuristic() },
+                Heuristics = new List<ILocalSearchHeuristic>() { new InsertHeuristic(), ReplaceHeuristic.GetNormal(), ReplaceHeuristic.GetSuper(), new TwoZeroPtSwap(), new SwapHeuristic() },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Greedy,
                 Fase = 7

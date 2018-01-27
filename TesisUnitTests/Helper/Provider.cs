@@ -22,6 +22,7 @@ namespace TesisUnitTests.Helper
 
         public static List<int> GetSelectedInstancesForTesting()
         {
+            //return new List<int>() { 776 };
             return new List<int>() { 628, 407, 400, 776, 721, 532 };
         }
 

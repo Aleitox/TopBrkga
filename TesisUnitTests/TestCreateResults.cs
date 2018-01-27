@@ -82,13 +82,17 @@ namespace TesisUnitTests
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
 
             var configs = PaperConfigsFactory.Get5Configs();
+            foreach (var config in configs)
+            {
+                config.Fase = 10;
+            }
             var instances = Provider.GetSelectedInstancesForTesting();
 
             foreach (var intance in instances)
             {
                 foreach (var config in configs)
                 {
-                    for (var index = 0; index < 8; index++)
+                    for (var index = 0; index < 10; index++)
                     {
                         var instance = instanceRepository.GetById(intance);
                         var brkga = BrkgaFactory.Get(instance, config);

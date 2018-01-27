@@ -44,14 +44,6 @@ namespace Main.Brkga
 
             var encodedSolution = ProblemManager.Population.GetMostProfitableSolution();
 
-            //var juan = ProblemManager.HistoricalEncodedSolutions;
-
-            // TODO: Para salvar todas las cadenas hay que hacer que la misma solucion no pase de generacion en generacion, sino una copia
-            //foreach (var encodedSolution in ProblemManager.HistoricalEncodedSolutions)
-            //{
-            //    SolutionRepository.SaveSolution(encodedSolution.GetSolution);
-            //}
-
             encodedSolution.GetSolution.TimeElapsedInMilliseconds = timeElapsed;
 
             EncodedSolution = encodedSolution;
@@ -61,33 +53,6 @@ namespace Main.Brkga
             solution.ProfitEvolution = string.Join(";", ProblemManager.HistoricalEncodedSolutions.Select(s => s.GetSolution.GetCurrentProfit.ToString()).ToList());
 
             SolutionRepository.SaveSolution(solution);
-        }
-
-        private void LastImprovementTry(ref EncodedSolution encodedSolution)
-        {
-            var heuristics = new List<ILocalSearchHeuristic>()
-            {
-                new SwapHeuristic(),
-                new InsertHeuristic(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                new ReplaceHeuristic(),
-                new TwoZeroPtSwap(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                new InsertHeuristic(),
-                new ReplaceHeuristic(),
-                new SwapHeuristic(),
-                new InsertHeuristic(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                new ReplaceHeuristic()
-            };
-
-            foreach (var heuristic in heuristics)
-            {
-                heuristic.ApplyHeuristic(ref encodedSolution);
-            }
         }
     }
 }

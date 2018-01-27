@@ -18,6 +18,8 @@ namespace Main.Brkga
         Population Evolve(Population population);
 
         int PopulationSize { get; set; }
+
+        EncodedSolution GenerateEncodedSolution(List<EncodedSolution> encodedSolutions);
     }
 
     public class PopulationGenerator : IPopulationGenerator
@@ -148,7 +150,8 @@ namespace Main.Brkga
                 var childSolution = Mate(GetRandomItem(elitePopulation), GetRandomItem(nonElitePopulation));
                 if (evolvedPopulation.EncodedProblems.Any(x => x.IsEquivalenteTo(childSolution)))
                 {
-                    evolvedPopulation.EncodedProblems.Add(GenerateEncodedSolution(evolvedPopulation.EncodedProblems));
+                    var mutant = GenerateEncodedSolution(evolvedPopulation.EncodedProblems);
+                    evolvedPopulation.EncodedProblems.Add(mutant);
                     randoms++;
                 }
                 else

@@ -95,6 +95,25 @@ namespace Main.Repositories
             return solution;
         }
 
+        private Model.Solution CreateNewSolutionInvert(Solution entitySolution)
+        {
+            var solution = new Model.Solution();
+            solution.InstanceId = entitySolution.InstanceId;
+            solution.Name = entitySolution.Name;
+            solution.Generation = entitySolution.Generation;
+            solution.FatherId = entitySolution.FatherId;
+            solution.MotherId = entitySolution.MotherId;
+            solution.Mutant = entitySolution.Mutant;
+            solution.BestInGeneration = entitySolution.BestInGeneration;
+            solution.BestOfAll = entitySolution.BestOfAll;
+            solution.TimeElapsedInMilliseconds = entitySolution.TimeElapsedInMilliseconds.HasValue ? entitySolution.TimeElapsedInMilliseconds.Value : 0;
+            solution.Fase = entitySolution.Fase;
+            solution.CreationDate = DateTime.Now;
+            solution.Run = entitySolution.Run;
+            solution.ProfitEvolution = entitySolution.ProfitEvolution;
+            return solution;
+        }
+
         private bool ValidateModelSolution(Model.Solution modelSolution)
         {
             return modelSolution.InstanceId != 0;

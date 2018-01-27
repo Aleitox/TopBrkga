@@ -14,9 +14,9 @@ namespace Main.BrkgaTop
             RandomKeys = randomKeys;
             EnhancedByLocalHeuristics = false;
         }
-
+        
         public IProblemDecoder ProblemDecoder { get; set; }
-
+        
         public List<RandomKey> RandomKeys { get; protected set; }
 
         public bool EnhancedByLocalHeuristics { get; set; }
@@ -38,7 +38,7 @@ namespace Main.BrkgaTop
 
         private string pseudoHash;
 
-        private string GetPseudoHash()
+        public string GetPseudoHash()
         {
             if (string.IsNullOrEmpty(pseudoHash))
                 pseudoHash = string.Join("@", GetOrderedRandomKeys().Select(k => k.PositionIndex.ToString(CultureInfo.InvariantCulture)));

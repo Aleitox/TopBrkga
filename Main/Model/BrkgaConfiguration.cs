@@ -7,6 +7,11 @@ namespace Main.Model
 {
     public class BrkgaConfiguration
     {
+        public BrkgaConfiguration()
+        {
+            Heuristics = new List<ILocalSearchHeuristic>();
+            HeuristicsLong = new List<ILocalSearchHeuristic>();
+        }
         public string Description { get; set; }
 
         public int MinIterations { get; set; }
@@ -22,6 +27,8 @@ namespace Main.Model
         public int EliteGenChance { get; set; }
 
         public List<ILocalSearchHeuristic> Heuristics { get; set; }
+
+        public List<ILocalSearchHeuristic> HeuristicsLong { get; set; }
 
         public int ApplyHeuristicsToTop { get; set; }
 
@@ -51,7 +58,7 @@ namespace Main.Model
             descriptions.Add(heu);
             var top = string.Format("TOP{0}{1}", innerSeparator, ApplyHeuristicsToTop);
             descriptions.Add(top);
-            var dt = string.Format("MI{0}{1}", innerSeparator, GetDecoderType());
+            var dt = string.Format("DT{0}{1}", innerSeparator, GetDecoderType());
             descriptions.Add(dt);
             Description = string.Join(outterSeparator, descriptions);
         }
@@ -80,7 +87,12 @@ namespace Main.Model
                 else if (heuristic is InsertHeuristic)
                     heuristicCodes += "I";
                 else if (heuristic is ReplaceHeuristic)
-                    heuristicCodes += "R";
+                {
+                    if(((ReplaceHeuristic)heuristic).SuperReplace)
+                        heuristicCodes += "Rm";
+                    else
+                        heuristicCodes += "Rs";
+                }
                 else
                     throw new Exception("Missing heuristic type");
             }

@@ -20,7 +20,7 @@ namespace Main.Factory
             else
                 throw new System.Exception("Decoder type not contemplated");
             var populationGenerator = new PopulationGenerator(problemDecoder, problemResourceProvider.GetAmountOfNonProfitDestinations(), config.PopulationSize, config.ElitePercentage, config.MutantPercentage, config.EliteGenChance);
-            var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.ApplyHeuristicsToTop, false, config.MinIterations, config.MinNoChanges);
+            var problemManager = new ProblemManager(populationGenerator, config.Heuristics, config.HeuristicsLong, config.ApplyHeuristicsToTop, false, config.MinIterations, config.MinNoChanges);
             var brkga = new Brkga.Brkga(problemManager);
             brkga.Fase = config.Fase;
             return brkga;

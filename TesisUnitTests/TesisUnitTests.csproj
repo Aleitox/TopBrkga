@@ -61,6 +61,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="FinalResults\Resultados.cs" />
+    <Compile Include="FinalResults\UltimosResultadosFactory.cs" />
     <Compile Include="Helper\Provider.cs" />
     <Compile Include="Heuristic\InsertTest.cs" />
     <Compile Include="Heuristic\SwapTest.cs" />
