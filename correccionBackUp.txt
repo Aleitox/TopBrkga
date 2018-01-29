@@ -1,0 +1,653 @@
+
+Cosas Universales:
+
+
+	1. Todos los algoritmos estan en ingles e italic.
+	2. Siempre que hablo de TOP o OP, decir EL OP, EL TOP
+	3. Unificar a singular primera person. Yo hice.
+	4. Caption al pie de figura
+	5. El codigo siempre va en ingles y en italic (Client, RandomKey, etc)
+
+
+
+Abstract:
+
+1)
+En el Orienteering Problem (OP), se da un conjunto de nodos, cada uno
+
+Quitar nodos, quiza reformular.
+
+2)
+determinar una ruta, limitadA en su longitud, que visitE a
+
+3)
+la siguiente manera. Dado n no 
+Cambiar el . o remorfular
+
+4)
+
+nodos, iniciando en EL nodo1 y finalizando en EL nodon ,
+
+5)
+Tsiligirides [22] se refirió a este problema como Generalized  Traveling Salesman Problem (GTSP) 
+
+6) Resolver EL TOP implica
+
+7) sumatoria de LOS beneficios
+
+8) aL OP como un caso especial
+
+9)un orden para cada ruta y ade
+
+el orden en que se visitan los nodos y ade
+
+10) En esta tesis, se propone
+En esta tesis propongo...
+ 
+11) padres utilizadoS siemp
+ 
+12)de soluciones válidas del problema. El BRKGA es una variante del Random Key Genetic
+Algorithm (RKGA). El BRKGA se diferencia del RKGA en el proceso de apareamiento,
+en BRKGA uno de los padres utilizado siempre pertenece al subconjunto de las mejores
+soluciones de la población y este padre tiene mayor probabilidad de trasmitir sus genes a
+la solución hija.
+
+13)
+Algorithm (BRKGA) y busquedas locales para resolver EL TOP
+
+14)
+e vectores de clave aleatoria, quiza ENTEROS?
+
+15) se utilizan para -> utilice para 
+
+16)
+Los experimentos computacionales se realizan en instancias estándar.
+Los experimentos computacionales los realice en instancias estándar.  
+
+17)
+Luego, estos
+Los
+
+18) Actualizar los trabajos previos con los nuevos
+s se compararon con los resultados obtenidos por
+ 
+19) Mis resultados  son muy buenos y competitivos en la mayorı́a de las instancias. 
+
+Introduccion:
+
+1) Orienteering es un deporte al air
+La orientación es un deporte al air
+
+2) libre usualmente jugado
+libre normalmente jugado
+
+3) de control como LE sea posible 
+
+4) el objetivo de la orientación
+el objetivo de este deporte
+
+5) Un competidor tiene que seleccionar un  subconjunto de puntos de control para visitar que maximizarán la puntuación total sujeto  a la restricción de tiempo
+Por lo tanto cada competidor debe seleccionar un subconjunto de puntos de control a visitar que maximicen la puntuación total.
+
+6) Esto se conoce como EL Orienteering Problem y se denota por OP.
+
+7) Este problema se conoce como Orienteering Problem (OP).
+
+8) El equipo de orientación extiende la versión de un solo competidor a un equipo formado por varios competidores (digamos 2, 3 o 4 miembros). Todos los competidores comienza en e l mismo punto y cada miembro del equipo intenta visitar tantos puntos de control como sea posible dentro de un lı́mite de tiempo prescrito, terminando en el punto final.
+
+9) Se llama Team Orienteering Problem y lo denotan por TOP.
+Este problema se conoce como Team Orienteering Problem (TOP).
+
+10) El OP es NP-Completo com
+
+11) A modo DE maximizar
+
+12) Sabı́an  por experiencia previa que visitar tod
+
+13) Notar que este requisito de selección d... (sacar Notar que)
+
+14) Reformular desde:
+Para la generación y comparación de
+Hasta: En el capı́tulo 2  
+
+15) ción. Comenzando por los decoder util
+ción, comenzando por los decoder util
+
+
+Revision bibliogrfica
+1) problemas. En este capı́tulo voy a referenciar varias de la publicaciones que referenciaron,  y otras trabajos que encontré relacionados con TOP.
+cambiar por:
+problemas. En este capı́tulo se sintetizan varias publicaciones y trabajos previos que encontré relacionados con TOP.
+
+2) introducido POR Butt y Cavali
+
+3) las distancias de ir y volver por esos nodos. Este problema fue introducido con el nombre Multiple Tour  Maximum Collection Problem.
+
+4) EstA es la primer
+
+5) más ampliamente estudió caso de un
+más ampliamente estudiado caso de un  
+
+6) Butt y Cavalier llamaron al problema Multiple Tour  Maximum Collection Problem, que posteriormente fue nombrado TOP.
+
+7) Una heurı́stica de construcción más sofisticada se...
+Los primeros que utilizaron el nombre TOP para referenciar el problema, fueron Chao, Golden y Wasil (CGW) [ref] para resaltar la conexión con el más ampliamente estudiado caso de un solo vehículo (OP). En su trabajo utlizaron una heurı́stica de construcción más sofisticada donde la solución inicial se ref...
+
+8) El primer algoritmo exacto para TOP fue propuesto
+
+9) Gracias a este nuevo algoritmo pudieron resolver instancias con hasta 100 clientes potenciales
+
+10) Luego, se aplicaron varias metaheurı́stic
+En otros trabajos Se aplicaron varias metaheurı́stic
+
+11) Reformular:
+Luego, se aplicaron varias metaheurı́sticas al TOP, partiendo del algoritmo de Tabu
+
+12) lece los parámetros tabu a una pequ
+poner acento a tabú
+
+13) (validas e invalidas)
+poner acentos
+
+14) Note  que en iteraciones selectas, la s 
+En iteraciones selectas la s 
+
+15) (el estado tabu puede anularse si la mejor solución tabu es m
+acento
+
+16) ueñas y regrese al Pas
+ueñas y regresA al Pas
+
+17) Dependiendo del tamaño actual del vecindario y la calidad de la solución, se reestablece el parámetro del tamaño del vecindario en etapas grandes o pequeñas y se regresa al Paso A o al B
+
+18) Como señala Golden et al. [15] el AMP funciona de forma similar a
+
+19) superando las propuestas publicadas hasta el momento.
+
+20) do y un algoritmo
+do y DE un algoritmo  
+
+21) vecindario utilizado para la búsqueda tabú.
+vecindario utilizado para la Tabu Search?????.
+
+22) Un punto clave en ACO es construir soluciones candidatas, Ke et al. proponen cuatro métodos: los  métodos secuencial, determinista-concurrente, aleatorio-concurrente y simultáneo.
+
+23) luego la mejoran con una combinación de heuristicas de
+luego la mejoran con una combinación de
+
+24) Tales heuristicas como Swap, Replace, Move, Insert y 2-Opt.
+Las busquedas locales utilizadas son: Swap, Replace, Move, Insert y 2-Opt.  
+
+25) para resolver TOP. Su algoritmo a gran
+para resolver EL TOP. Su algoritmo a gran
+
+26) aron un Memetic Algorithm (MA) para resolver TOP. L
+aron un Memetic Algorithm (MA) para resolver EL TOP. L
+
+27) 
+Dang et al. [11] proponen un Particle Swarm  Optimization based Memetic Algorithm (PSOMA) para resolver TOP. Su algoritmo PSO-
+
+28)
+restricciones de la instancia deL TOP.
+
+29)
+soluciones de alta calidad para EL TOP.
+
+30) Su último componente vendrı́a a ser el algoritmo
+Su último componente ES el algoritmo  
+
+31) asegurándose que los cromosomas (soluciones) sean validas respecto
+asegurándose que los cromosomas sean validos respecto
+
+32) Sus resultados fueron razonablemente buenos, pero no superiores
+Sus resultados fueron buenos, pero no superiores  
+
+33) , por este motivo no los compare con los de este  trabajo.
+. Por este motivo no compa
+
+33) mosomas originales. Sus resultados fueron razonablemente buenos, pero no superiores a  los de Dang et al. [11] y Bouly et al. [5], por este motivo no los compare con los de este  trabajo.
+mosomas originales. Los resultados obtenidos por este trabajo fueron buenos, pero no superiores a los de Dang et al. [11] y Bouly et al. [5]. Es por esto que no utilice los resutados de Ferreira et al. para comprar con mis resultados.
+
+34) Quiza podria hacer un parrafo explicando con cuales me quede para compara resultados.
+
+Modelo Matematico
+
+0) EL Top
+
+1) Tmax todo minuscula
+
+2) Luego no hay -> Por lo tanto
+
+3) cada v_ertices (excepto el 1 y el n) deben ser visitados a los sumo una vez 
+todo en singular
+
+BIASED RANDOM KEY GENETIC ALGORITHM
+
+1) Se hace una analog__a entre una soluci_on y un individuo en una poblaci_on
+Los GA hacen una analog__a entre una soluci_on y un individuo que pertenece a una poblaci_on
+
+2) on. Cada individuo es un cromosoma que codi
+on, donde cada individuo es un cromosoma que codi
+
+3) Cada gen puede tomar un valor, llamado alelo, de alg_un alfabeto. Los
+Cada gen, llamado alelo, toma un valor de alg_un alfabeto. Los
+
+4) Los cromosomas tienen asociado a ellos un nivel de condici
+Cada cromosoma tiene asociado un nivel...
+
+5) Nuevo parrafo
+Los algoritmos gen_eticos manejan un conjunto
+
+6) La primer fuente de individuos es el conjunto de soluciones elite, es decir las de mejor condici_on f__sica.
+La primer fuente de individuos es el conjunto de soluciones elite, es decir los individuos de mejor condici_on f__sica.
+
+7) La segunda fuente de individuos provienen del crossover (apareamiento). El crossover es el m_etodo por el cual se obtiene un nuevo individuo a partir de dos individuos de la generaci_on anterior.
+
+8) Ver como explicar que el conjunto es menor y por es mas probable de ser selec.
+Adem_as en el m_etodo de apareamiento, cuando los individuos son seleccionados para aparearse
+y producir descendencia, aunque los individuos sean seleccionados al azar, aquellos con
+mejor aptitud f__sica tienen mayor probabilidad de ser elegidos para generar descendientes
+y mayor probabilidad de transmitir sus genes a sus hijos.
+
+9) para el cual se puede calcular su valor objetivo o aptitud f__sica
+para el cual se calcula su valor objetivo o aptitud f__sica
+
+10) Los algoritmos RKGAs evolucionan
+Los algoritmos RKGA evolucionan
+
+11) de vectores de claves aleatorias sobre una serie de iteraciones
+
+12) _elite, es decir aquellos con los mejores valores de aptitud f__sica
+
+13) Se obtiene por un lado un peque~no grupo p_e de individuos de _elite. Estos son los individuos con los mejores valores de aptitud fisica.
+
+14) El segundo grupo se conforma por todos los individuos restantes,
+Por el otro lado se conforma por todos los individuos restantes,
+
+15) En los RKGAs, se generan individuos
+En los RKGAs se generan individuos
+
+16) Esto se hace generando una descendencia mediante el proceso de crossover
+Esto se hace creando una generacio mediante el proceso de crossover
+
+17) crossover, donde los padres son elegidos al
+
+18) implementar el apareamiento en BRKGAs
+sacar la S
+
+19) alelos es de un individuo de elite, el segundo vector
+alelos es de un individuo de elite y el segundo vector
+
+20) de reales aleatorio del mismo
+de reales aleatorioS del mismo
+
+21) utilizando un vector de NUMEROS reales aleatorio del mismo tama~no que los vectores de alelos
+
+22) Los NUMEROS reales aleatorios toman un valor real en el intervalo
+
+23) requieren que exista un objeto codicador para actualizar el vector de NUMEROS enteros ALEATORIOS de la soluci_on mejorada
+
+24) un algoritmo capaZ de convertir una soluci
+
+25)
+
+
+ALGORITMO BRKGA CON B_USQUEDA LOCAL PARA TOP
+
+1) DESARROLLO ALGORITMO BRKGA CON B_USQUEDA LOCAL PARA EL TOP
+
+2) En el presente cap__tulo DESCRIBIRE en detalle la soluci_on IMPLEMENTE para el Team Orienteering Problem
+
+3) Primero el decodicador, que como mencionamos en el cap__tulo BRKGA tiene la tarea de convertir un arreglo de enteros aleatorios en una soluci_on v_alida del problema.
+
+mencionamos -> mencione
+
+4) convertir un arreglo de enteros aleatorios
+convertir un arreglo de numeros enteros aleatorios
+
+5) TODO: Agregar mencion de resultados de BDM
+
+6) se mostrar_an en detalle los resultados
+
+7) En este cap__tulo mostrare los resultados parciales
+
+8) cree un __ndice
+creé un __ndice
+
+9) Esto se hace comparando el benecio de mi soluci_on encontrada con el benecio de la mejor soluci_on PREVIAMENTE PUBLICADA para la misma instancia del problema
+
+10) Quitar: Se utilizaron los resultados de los trabajos previos mencionados para crear el __ndice de efectividad.
+
+11) TODO: Agregar prot de resultados de BDM
+
+12) Si 0;90 < ie < 1, luego la soluci_on encontrada no es tan buena como la mejor pero la considero competitiva.
+Cuanto mas cercano a 1 es ie, mas competitivo
+
+13) cual implemente el desarrollo.
+cual implementé el desarrollo.
+
+14) representa. Consideré que no aportaba
+
+15) Tomé dos peque~nas
+
+16) cuyas descripci_ones pueden
+
+17) observarse en la siguiente tabla
+Ponerle camption descriptivo a la tabla
+
+18) clientes más punto de partida y fín de recorrido
+
+19) la ruta de cada veh__culos de la instancia
+la ruta de cada veh__culo de la instancia
+
+20) explicado en detalle m_as adelante (ver secci_on
+Falta la referencia a la seccion
+
+21) TODO: Agregar menci_on de resultados de BDM arriba
+
+22) respetando tMax, su distancia m_axima de recorrido
+respetando tMax.
+
+23) Mover:
+Propuse dos decodicadores, uno al cual llamo Decodicador Simple y otro que llam_e Decodicador Goloso. Ambos decodicadores tienen sus ventajas y desventajas
+
+24) clientes y un vector de numeros enteros aleatorios
+
+25) de tama~no n
+del mismo tama~no n
+
+26) omo podemos ver en a continuaci_on.
+omo podemos ver a continuaci_on.:
+
+27) El prop_osito de ClientId es mapear un RandomKey con un Cliente
+El prop_osito de ClientId es mapear un RandomKey con un Client.
+
+28) de Clients en el mapa del problema
+
+29) con el cual mapeó.
+
+5.1.2. Decodicador simple
+
+1) cu el último cliente agregado a la ruta
+
+2) ci el cliente que se intentará agregar a la ruta de v
+
+3) creé un m_etodo llamado
+
+4)Una vez que terminé de implementar el decodi cador simple, analicé el rendimiento
+
+5) mi algoritmo BRKGA si utiliza el decodicador
+mi algoritmo BRKGA cuando se utiliza el decodicador
+
+6) Para realizar ESTE an_alisis creé 200 vectores
+
+7) Luego se calcul_o el benecio m_aximo, promedio, m__nimo y el __ndice de efectividad promedio.
+Despues calculé
+
+8) Esto se repiti_o para las seis instancias del benchmark seleccionadas anteriormente
+Esto se realizó para las seis instancias del benchmark seleccionadas anteriormente
+agregar eferencia a la tabla con las instancias.
+
+9) En la practica nunca se llega recorrer todos los clientes ya que cambia
+En la práctica nunca se llega A visitar a todos los clientes ya que cambia
+Reformular
+En la practica nunca se llega recorrer todos los clientes ya que cambia de
+veh__culo en cuanto encontr_o un cliente que no logro insertar en su ruta. Por lo tanto en
+la practica nunca llega al orden de complejidad mencionado.
+
+10) Un problema que tiene este decodicar es en la existencia de un cliente inalcanzable, es decir si existe c cliente tal que:
+Reformular
+
+11)mas barata ya que reducimos el tama~no
+más barata ya que reducimos el tama~no
+
+12)a un cliente que no pudo agregar a la ruta de un veh__culo
+a un cliente que no puede agregar a la ruta de un veh__culo
+
+13) hasta que no hay mas clientes que intentar
+hasta que no hay más clientes con los cuales intentar.
+
+14) intenta solamente con los clientes no asignados a los veh__culos
+intenta con los clientes no asignados a los veh__culos
+
+15) el vector de enteros aleatorios
+el vector de numeros enteros aleatorios
+
+16) método decode es usado tantas veces a lo
+borrar que este
+
+El método decode es usado tantas veces a lo largo de la ejecucion del BRKGA que este peque~no aumento en su complejidad algor__tmica tiene un impacto visible en el tiempo de ejecuci_on total.
+
+17) Una observacion que puedo hacer sobre el
+sacar de menor importancia
+
+18) ya no tenemos los clientes de forma
+ya no tenemos los A clientes de forma
+
+19) primer veh__culo al no poder incluir el cliente 5
+primer veh__culo al no poder incluir AL cliente 5
+
+20) encambio intenta manteniendo el orden con el resto de los clientes a_un no visitados y logra insertar al cliente 8.
+
+21) De un modo simlilar, sucede con
+De un modo similar, sucede con
+
+22) De un modo simlilar, sucede con la segunda ruta al no poder incluir al cliente 4. (Conitnuar explicando)
+
+23) Del mismo modo que hice con el decodicador simple, le hice el mismo an_alisis de rendimiento al decodicador goloso. Genere
+Del mismo modo que hice con el decodicador simple, hice el mismo an_alisis de rendimiento para el decodicador goloso. Generé
+
+24) una de las mismas seis instancias de problemas y el decodicador goloso creo 200 soluciones
+una de las mismas seis instancias y el decodicador goloso creó 200 soluciones
+
+25) validas para cada uno de seis los problemas:
+válidas para cada uno de las seis instancias:
+
+26) Todos los resultados promedio, m__nimo y m_aximos mejoran considerablemente
+Todos los resultados promedio, m__nimo y m_aximo mejoran considerablemente respecto de los resultados obtenidos con el decodificador simple (referencia a esa tabla).
+
+5.2.1
+conguraciones del BRKGA, se creo un objeto
+conguraciones del BRKGA, creé un objeto
+
+
+2) Este objeto es esencial para tunear el implemen
+Este objeto es esencial para ajustar mi implemen
+
+3) ganaba mucho tiempo al testear
+gané mucho tiempo al testear
+
+4) 
+Al centralizar todas las variables que podr__an impactar en resultado final, ganaba mucho tiempo al testear variaciones de mi implementaci_on. Adem_as, al estar centralizada toda la informaci_on variable se obtiene una lectura veloz del BRKGA que se est_a usando.
+
+Al centralizar todas las variables que podr__an impactar en resultado final, gané mucho tiempo probando  variaciones de mi implementaci_on y obtuve una rapida comprension del BRKGA que se est_aba testeando .
+
+5) En otras palabras incrementamos nuestra capacidad
+En otras, palabras incrementé mi capacidad
+
+6) A continuaci_on el objeto Conguration y sus propiedades
+sacar la oracion y el pseudocdigo
+
+5.2.2
+
+1) Ver que hacer con objeto Conguraci_on
+Tomar una decision y unificar
+
+2) ser seteado con el método SetDescription
+3) de el resto de las propiedades.
+del resto de las propiedades.
+
+4) Valor entero denota el tama~no de la poblaci_on.
+Valor entero que denota el tama~no de la poblaci_on.
+
+5) probabilidad que tiene el alelo del padre elite, en transmitirse a su descendiente
+probabilidad que tiene el alelo del padre de elite para transmitirse al individuo resultante del crossover.
+
+6) Heuristics:
+Agregar la nueva heuristica Replace Multiple
+
+7) Su desarrollo sera explicado mas adelante en otra secci_on.
+Su desarrollo será explicado en la seccion REF
+
+8) y lo concatena creando un string intercalando con un separador.
+y lo concatena intercalando con un separador, creando un string.
+
+9) Este conjunto de vectores se lo pasa como argumento al decodicador, quien genere un individuo por cada vector de enteros aleatorios.
+Despues el decodificador convierte el conjunto anterior en un conjunto de invididuos.
+
+10) En un principio la condici_on de parada era simple
+En una primera instancia de mi implemenntacion la condici_on de parada era simple
+
+11) sacar: seteado en el objeto Congurations
+
+12) Luego de analizar las _ultimas generaciones de la soluci_on y ver que era frecuente que la mejor soluci_on se hab__a generado recientemente, agregue una condici_on de corte adicional.
+
+13) Al observar que la mejor solucion de la población final 
+Luego de analizar
+las _ultimas generaciones de la soluci_on y ver que era frecuente que la mejor soluci_on
+se hab__a generado recientemente, agregue una condici_on de corte adicional.
+
+REFORMULAR
+
+14) Los mejores pasan a ser parte de la poblaci_on de elite y el resto de la poblaci_on no-elite.
+Los mejores individuos pasan a ser parte de la poblaci_on de elite y el resto de la poblaci_on no-elite.
+
+15) Con el fin de mostrar lo simple que es la generaci_on de un nuevo vector de RandomKeys, presento
+el pseudoc_odigo del GenerateSolution que al nal termina llamando al m_etodo Decode de alguno de los decodi cador descrito anteriormente (puede se
+
+REFORMULAR
+
+16) iguales tiene un costo muy bajo
+iguales tiene un costo temporal muy bajo
+
+17) cuyo orden de clientes que genera sea el mismo
+
+18) Luego no es necesario comparar las soluciones, nos es su ciente comparando el hash de cada soluciones y esto se puede hacer en O(1).
+
+Chamullar un poco mas. Explicar como seria la comparacion larga de dos soluciones
+
+Luego no es necesario comparar las soluciones, con comparar el hash de entre ambas soluciones es suficiente y esto se puede hacer en O(1).
+
+19) no es mas que una concatenaci
+no es más que una concatenaci
+
+
+20)
+El hash de una soluci_on, se calcula una sola vez cuando se construye la soluci_on a partir de su vector de RandomKeys y no es mas que una concatenaci_on de los ClientId de cada RandomKey en el vector ordenados por la propiedad Key, intercalados con un separador.
+
+El hash de una soluci_on, se construye a partir de su vector RandomKeys y es la concatenaci_on del ClientId de cada RandomKey en el vector RandomKeys ordenados por la propiedad Key, intercalados con un separador.
+
+Reformular un poco mas
+
+21) La figura ?? muestra
+
+22) correspondiente.Es
+correspondiente. Es
+
+23) genera una soluci_on mutante y continúa el apareamiento
+
+24) repetida, porque consider_e que la probabilidad
+repetida porque la probabilidad
+
+25) Luego tome esta decisi_on para optimizar el apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generaci_on.
+Tome esta decisi_on para disminuir el tiempo de la ejecucion del apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generaci_on.
+
+26) sin vericar que la existencia de
+sin vericar la existencia de
+
+27) DadA una poblaci_on de soluciones no repetidas, la probabilidad de de generar una soluci_on existente al evolucionar la poblaci_on, es baja
+
+Dada una poblaci_on de soluciones no repetidas, la probabilidad de generar una soluci_on existente al evolucionar la poblaci_on, es baja
+
+28) A_un as__, una vez que sucede, la probabilidad de generar otra m_as aumenta considerablemente
+Aun asi, una vez que se genera una solucion ya existente en la poblacion, la probabilidad de que se genere otra copia mas aumenta considerablemente. Esto se debe a que bajo la diversidad dentro de la poblacion.
+
+29) Esto genera un efecto "bola de nieve" donde cada nueva generaci_
+
+30) Incluso he llegado al caso donde toda una poblaci_on constitu__a de una _unica soluci_on excepto por las soluciones mutantes
+He llegado a obtener una poblaci_on que constitu__a de una _unica soluci_on excepto por las soluciones mutantes.
+
+31) luego reduc__a fuertemente la frecuencia con la que
+como concencuencia reducia la frecuencia
+
+32) Adem_as si uno tiene varios individuos iguales en una soluci_on, el algoritmo se vuelve menos eciente ya que repite trabajo en donde obtiene los mismos resultados.
+
+Ademas, al existir varios individuos iguales en una poblacion, el algoritmo se vuelve menos efciente ya que repite trabajo obteniendo los mismos resultados
+
+33) Entonces el costo total de validar
+Entonces el costo TEMPORAL total de validar
+
+34) trabajar con m_ultiples soluciones repetidas
+trabajar con m_ultiples individuos repetidos
+
+5.2.6.
+
+1) REFORMULAR. No mencionar lo de primer version y esa frul 
+La primer versi_on del BRKGA para TOP no inclu__
+
+2) Esto se reeja en la instancia p2.3.k
+Esto se reeja en la instancia p2.3.g
+
+3) REFORMULAR
+Una observaci_on que quiero
+destacar de estos resultados es sobre el ieAvg de la instancia p7.2.e. Notar que tiene tantos
+nodos como p7.4.t y sin embargo tiene un ieAvg ampliamente mayor. Esto seguramente
+sea por la diferencia en tMax, es 50 en vez de 100 reduciendo la combinatoria de soluciones
+posibles.
+
+4) estos resultados digo que la conguraci_on b
+estos resultados observo que la conguraci_on b
+
+5) M__nima cantidad de iteraciones, m__nima
+minima con minuscula
+
+6) Si impactan en el tiempo en que analiza el algoritmo
+Encambio, las configuraciones si...
+
+7) Como no estaba del todo conforme con los resultados, decid__ agregar algunas b_usquedas locales para mejorar algunas soluciones entre cada iteraci_on.
+
+REFORMULAR para que pueda ser un parrafo independiente
+
+BUsquedas Locales
+
+1) estas b_usquedas algunas de las mejores
+estas b_usquedas a algunas de las mejores
+
+2) hubiesen aplicado las b_usquedas locales en una generaci_on anterior, se aplican a la siguiente mejor
+
+3) obtuve de el trabajo
+obtuve del trabajo
+
+4) trabajos previos de la literatura
+quiza citar algunos
+
+5) benecio recolectado y la soluci_on resultante es valida
+benecio recolectado y la soluci_on resultante es válida
+
+6) ning_un cliente es visitado más de una vez y la cantidad de veh__culos se respeta.
+
+7) El cálculo de COG tiene una complejidad
+
+8) No es tan costoso, de todos modos como no quiero realizar c_alculos innecesarios, el COG
+Para no realizar c_alculos innecesarios, el COG
+
+5.3.2. Swap
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

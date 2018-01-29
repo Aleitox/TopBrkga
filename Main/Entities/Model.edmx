@@ -34,6 +34,26 @@
           <Property Name="TMH" Type="int" />
           <Property Name="CGH" Type="int" />
         </EntityType>
+        <EntityType Name="ExternalSolutionsBDM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InstanceId" Type="int" />
+          <Property Name="InstanceName" Type="nvarchar" MaxLength="150" />
+          <Property Name="ACOseqZmed" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ACOseqZbest" Type="int" />
+          <Property Name="VNSslowZworst" Type="int" />
+          <Property Name="VNSslowZbest" Type="int" />
+          <Property Name="POPworst" Type="int" />
+          <Property Name="POPbest" Type="int" />
+          <Property Name="MAzWorst" Type="int" />
+          <Property Name="MAzMed" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="MAzBest" Type="int" />
+          <Property Name="PBest" Type="int" />
+          <Property Name="Best" Type="int" />
+          <Property Name="UB" Type="int" />
+        </EntityType>
         <EntityType Name="Instances">
           <Key>
             <PropertyRef Name="Id" />
@@ -45,6 +65,16 @@
           <Property Name="DestiniesCount" Type="int" Nullable="false" />
           <Property Name="Vehicles" Type="int" Nullable="false" />
           <Property Name="TMax" Type="decimal" Precision="10" Scale="2" Nullable="false" />
+        </EntityType>
+        <EntityType Name="OverallResults">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Metaheuristica" Type="nvarchar" MaxLength="150" />
+          <Property Name="DeltaZmin" Type="int" />
+          <Property Name="DeltaZMax" Type="int" />
+          <Property Name="DeltaZ" Type="int" />
         </EntityType>
         <EntityType Name="Solutions">
           <Key>
@@ -149,7 +179,9 @@
         <EntityContainer Name="TOPModelStoreContainer">
           <EntitySet Name="Destinies" EntityType="Self.Destinies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExternalSolutions" EntityType="Self.ExternalSolutions" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ExternalSolutionsBDM" EntityType="Self.ExternalSolutionsBDM" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Instances" EntityType="Self.Instances" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="OverallResults" EntityType="Self.OverallResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Solutions" EntityType="Self.Solutions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Vehicles" EntityType="Self.Vehicles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="VehiclesDestinies" EntityType="Self.VehiclesDestinies" Schema="dbo" store:Type="Tables" />
@@ -205,6 +237,8 @@
             <End Role="Vehicle" EntitySet="Vehicles" />
           </AssociationSet>
           <EntitySet Name="ExternalSolutions" EntityType="TOPModel.ExternalSolution" />
+          <EntitySet Name="ExternalSolutionsBDMs" EntityType="TOPModel.ExternalSolutionsBDM" />
+          <EntitySet Name="OverallResults" EntityType="TOPModel.OverallResult" />
           </EntityContainer>
         <EntityType Name="VehiclesDestiny">
           <Key>
@@ -357,6 +391,36 @@
           <Property Name="TMH" Type="Int32" />
           <Property Name="CGH" Type="Int32" />
         </EntityType>
+        <EntityType Name="ExternalSolutionsBDM">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InstanceId" Type="Int32" />
+          <Property Name="InstanceName" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="ACOseqZmed" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ACOseqZbest" Type="Int32" />
+          <Property Name="VNSslowZworst" Type="Int32" />
+          <Property Name="VNSslowZbest" Type="Int32" />
+          <Property Name="POPworst" Type="Int32" />
+          <Property Name="POPbest" Type="Int32" />
+          <Property Name="MAzWorst" Type="Int32" />
+          <Property Name="MAzMed" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="MAzBest" Type="Int32" />
+          <Property Name="PBest" Type="Int32" />
+          <Property Name="Best" Type="Int32" />
+          <Property Name="UB" Type="Int32" />
+        </EntityType>
+        <EntityType Name="OverallResult">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Metaheuristica" Type="String" MaxLength="150" FixedLength="false" Unicode="true" />
+          <Property Name="DeltaZmin" Type="Int32" />
+          <Property Name="DeltaZMax" Type="Int32" />
+          <Property Name="DeltaZ" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -446,6 +510,38 @@
                 <ScalarProperty Name="AHS_Gen_Tabu_Penalty_Min" ColumnName="AHS_Gen_Tabu_Penalty_Min" />
                 <ScalarProperty Name="InstanceName" ColumnName="InstanceName" />
                 <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ExternalSolutionsBDMs">
+            <EntityTypeMapping TypeName="TOPModel.ExternalSolutionsBDM">
+              <MappingFragment StoreEntitySet="ExternalSolutionsBDM">
+                <ScalarProperty Name="UB" ColumnName="UB" />
+                <ScalarProperty Name="Best" ColumnName="Best" />
+                <ScalarProperty Name="PBest" ColumnName="PBest" />
+                <ScalarProperty Name="MAzBest" ColumnName="MAzBest" />
+                <ScalarProperty Name="MAzMed" ColumnName="MAzMed" />
+                <ScalarProperty Name="MAzWorst" ColumnName="MAzWorst" />
+                <ScalarProperty Name="POPbest" ColumnName="POPbest" />
+                <ScalarProperty Name="POPworst" ColumnName="POPworst" />
+                <ScalarProperty Name="VNSslowZbest" ColumnName="VNSslowZbest" />
+                <ScalarProperty Name="VNSslowZworst" ColumnName="VNSslowZworst" />
+                <ScalarProperty Name="ACOseqZbest" ColumnName="ACOseqZbest" />
+                <ScalarProperty Name="ACOseqZmed" ColumnName="ACOseqZmed" />
+                <ScalarProperty Name="InstanceName" ColumnName="InstanceName" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OverallResults">
+            <EntityTypeMapping TypeName="TOPModel.OverallResult">
+              <MappingFragment StoreEntitySet="OverallResults">
+                <ScalarProperty Name="DeltaZ" ColumnName="DeltaZ" />
+                <ScalarProperty Name="DeltaZMax" ColumnName="DeltaZMax" />
+                <ScalarProperty Name="DeltaZmin" ColumnName="DeltaZmin" />
+                <ScalarProperty Name="Metaheuristica" ColumnName="Metaheuristica" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

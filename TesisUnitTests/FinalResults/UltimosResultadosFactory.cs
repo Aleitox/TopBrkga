@@ -197,7 +197,7 @@ namespace TesisUnitTests.FinalResults
             configDecoSimple.DecoderType = DecoderEnum.Simple;
             configDecoSimple.SetDescription();
             var configDecoGreedy = GetBaseConfig(Get_SOSIRsSORm());
-            configDecoSimple.DecoderType = DecoderEnum.Greedy;
+            configDecoGreedy.DecoderType = DecoderEnum.Greedy;
             configDecoGreedy.SetDescription();
             return new List<BrkgaConfiguration>() {
                 configDecoSimple,

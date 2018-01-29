@@ -17,7 +17,7 @@ namespace TesisUnitTests.FinalResults
         {
             //Test_Local_Search_Order();
             //Test_Decos_With_Heuristics();
-            Test_Final_Results();
+            //Test_Final_Results();
         }
         
         public static void Test_Local_Search_Order()
@@ -45,8 +45,9 @@ namespace TesisUnitTests.FinalResults
                 }
             }            
         }
-        
-        public static void Test_Decos_With_Heuristics()
+
+        [TestMethod]
+        public void Test_Decos_With_Heuristics()
         {
             // 1. Para las 2 instancias mas grandes. Todo con deco simple. 5 configuraciones. 25 ejecuciones.
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
@@ -54,7 +55,7 @@ namespace TesisUnitTests.FinalResults
             var configs = UltimosResultadosFactory.GetConfigsWithDiferentDeco();
 
             foreach (var config in configs)
-                config.Fase = 1002;
+                config.Fase = 1011;
 
             var instances = new List<int>() { 628, 776 };
 
@@ -72,15 +73,23 @@ namespace TesisUnitTests.FinalResults
             }
         }
 
-        public static void Test_Final_Results()
+        [TestMethod]
+        public void Test_Final_Results()
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+            var exSolutionRepository = new ExternalSolutionsBdmRepository(TopEntitiesManager.GetContext());
+            var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
+
+
             var config = UltimosResultadosFactory.GetFinalResultsConfig();
-            config.Fase = 1010;
-            var instances = instanceRepository.GetAll().Where(x => x.Id == 776).ToList();
+            config.Fase = 1012;
+            var solutions = solutionRepository.GetAll().Where(s => s.Fase == config.Fase).ToList();
+            var exSolutions = exSolutionRepository.GetAll().ToList();
+            var instances = instanceRepository.GetAll().ToList().Where(i => exSolutions.Any(e => e.InstanceId == i.Id) && solutions.Where(s => s.InstanceId == i.Id).Count() < 3).ToList();
             foreach (var instance in instances)
             {
-                for (var index = 0; index < 3; index++)
+                while(solutionRepository.GetAll().Where(s => s.Fase == config.Fase && s.InstanceId == instance.Id).Count() < 3)
+                //for (var index = 0; index < 1; index++)
                 {
                     var brkga = BrkgaFactory.Get(instance, config);
                     brkga.Start();
