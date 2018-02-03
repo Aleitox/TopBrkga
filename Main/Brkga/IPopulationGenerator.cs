@@ -27,8 +27,12 @@ namespace Main.Brkga
         public PopulationGenerator(IProblemDecoder problemDecoder, int nonProfitDestinations, int populationSize = 100, decimal elitePercentage = 0, decimal mutantPercentage = 0, int eliteGenChance = 50)
         {
             ProblemDecoder = problemDecoder;
+            
             AmountOfDestinations = problemDecoder.Provider.GetAmountOfDestinations();
+            
+            AllowDuplicatesOnRandomCreation = problemDecoder.Provider.GetDestinations().Count() - 2 < 7;
             PopulationSize = populationSize;
+
             Generation = 0;
             NonProfitDestinations = nonProfitDestinations;
             ElitePercentage = elitePercentage == 0 ? 0.3m : elitePercentage;
@@ -54,6 +58,8 @@ namespace Main.Brkga
         public decimal ElitePercentage { get; set; }
 
         public decimal MutantPercentage { get; set; }
+
+        public bool AllowDuplicatesOnRandomCreation { get; set; }
 
         public int EliteSize {
             get
@@ -111,7 +117,7 @@ namespace Main.Brkga
             {
                 var randomVector = GenerateRandomVector(AmountOfDestinations, Random.Next(), NonProfitDestinations);
                 encodedSolution = new EncodedSolution(ProblemDecoder, randomVector);
-            } while (encodedSolutions.Any(ep => ep.IsEquivalenteTo(encodedSolution)));
+            } while (!AllowDuplicatesOnRandomCreation && encodedSolutions.Any(ep => ep.IsEquivalenteTo(encodedSolution)));
 
             return encodedSolution;
         }
@@ -190,6 +196,17 @@ namespace Main.Brkga
         private EncodedSolution GetRandomItem(List<EncodedSolution> elitePopulation)
         {
             return elitePopulation[Random.Next(elitePopulation.Count())];
+        }
+
+        public int Factorial(int number)
+        {
+            var result = 1;
+            while (number > 1)
+            {
+                result = result * number;
+                number--;
+            }
+            return result;
         }
     }
 }

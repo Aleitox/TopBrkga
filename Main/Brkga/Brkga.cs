@@ -32,6 +32,8 @@ namespace Main.Brkga
 
             timer.Start();
 
+            // TODO if destinos < 2 hacer una solucion a mano y ecuspirla sin entrar. Putos casos bordes
+
             ProblemManager.InitializePopulation();
 
             while (!ProblemManager.StoppingRuleFulfilled)

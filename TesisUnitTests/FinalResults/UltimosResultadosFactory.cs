@@ -110,23 +110,23 @@ namespace TesisUnitTests.FinalResults
         {
             var config = new BrkgaConfiguration()
             {
-                MinIterations = 400,
+                MinIterations = 250,
                 MinNoChanges = 100,
-                PopulationSize = 150,
+                PopulationSize = 100,
                 ElitePercentage = 0.3m,
                 MutantPercentage = 0.1m,
                 EliteGenChance = 70,
                 Heuristics = Get_SOSIRsSORm(),
                 HeuristicsLong = new List<ILocalSearchHeuristic>()
                 {
-                    new SwapHeuristic(),
                     new TwoZeroPtSwap(),
                     new SwapHeuristic(),
+                    new TwoZeroPtSwap(),
                     new InsertHeuristic(),
                     ReplaceHeuristic.GetSuper(),
-                    new TwoZeroPtSwap(),
                     new SwapHeuristic(),
                     new TwoZeroPtSwap(),
+                    new SwapHeuristic(),
                     new InsertHeuristic(),
                     ReplaceHeuristic.GetNormal(),
                     new SwapHeuristic(),

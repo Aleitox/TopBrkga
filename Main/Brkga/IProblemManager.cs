@@ -58,24 +58,7 @@ namespace Main.Brkga
             HistoricalEncodedSolutions = new List<EncodedSolution>();
             MinNoChanges = minNoChanges;
             LastProfits = new Queue<double>();
-            HeuristicsLong = new List<ILocalSearchHeuristic>()
-            {
-                new SwapHeuristic(),
-                new InsertHeuristic(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                ReplaceHeuristic.GetSuper(),
-                new TwoZeroPtSwap(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                new InsertHeuristic(),
-                ReplaceHeuristic.GetNormal(),
-                new SwapHeuristic(),
-                new InsertHeuristic(),
-                new SwapHeuristic(),
-                new TwoZeroPtSwap(),
-                ReplaceHeuristic.GetSuper()
-            };
+            HeuristicsLong = heuristicsLong;
         }
 
         public bool StoppingRuleFulfilled
@@ -143,11 +126,12 @@ namespace Main.Brkga
 
             if (GenerationNumber >= 10)
             {
-                var solutions = orderedSolutions.Take(3).ToList();
+                var solutions = orderedSolutions.Where(es => !es.SuperEnhancedByLocalHeuristics).Take(1).ToList();
                 for (int index = 0; index < solutions.Count(); index++)
                 {
                     var solution = solutions[index];
                     LocalSearchHeuristicHelper.ApplyHeuristics(HeuristicsLong, ref solution);
+                    solution.SuperEnhancedByLocalHeuristics = true;
                     GenerationNumber = 1;
                 }
             }               

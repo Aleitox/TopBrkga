@@ -13,6 +13,7 @@ namespace Main.BrkgaTop
             ProblemDecoder = problemDecoder;
             RandomKeys = randomKeys;
             EnhancedByLocalHeuristics = false;
+            SuperEnhancedByLocalHeuristics = false;
         }
         
         public IProblemDecoder ProblemDecoder { get; set; }
@@ -20,6 +21,8 @@ namespace Main.BrkgaTop
         public List<RandomKey> RandomKeys { get; protected set; }
 
         public bool EnhancedByLocalHeuristics { get; set; }
+
+        public bool SuperEnhancedByLocalHeuristics { get; set; }
 
         public void SetRandomKeys(List<RandomKey> randomKeys)
         {
@@ -59,7 +62,7 @@ namespace Main.BrkgaTop
 
         public override string ToString()
         {
-            return string.Format("{2} Profit:{0} Distance:{3} Hash:{1}", GetSolution.GetCurrentProfit, GetPseudoHash(), EnhancedByLocalHeuristics, GetSolution.PrintRouteDistances());
+            return string.Format("{2} {4} Profit:{0} Distance:{3} Hash:{1}", GetSolution.GetCurrentProfit, GetPseudoHash(), EnhancedByLocalHeuristics, GetSolution.PrintRouteDistances(), SuperEnhancedByLocalHeuristics);
         }
     }
 }
