@@ -1,7 +1,7 @@
 
 \chapter*{\tituloAbstractEs}
 
-\noindent En el \textit{Orienteering Problem} (OP), se da un conjunto de nodos, cada uno con un beneficio determinado. El objetivo es determinar una ruta, limitada en su longitud, que visite a algunos nodos maximizando la suma de los beneficios obtenidos. El OP se puede formular de la siguiente manera: dado $n$ nodos en el plano euclidiano, cada uno con un beneficio, donde $beneficio(nodo_i) \geq 0$ y $beneficio(nodo_1) = beneficio(nodo_n) = 0$, se debe encontrar una ruta de beneficio máximo a través de estos nodos, iniciando en el $nodo_1$ y finalizando en el $nodo_n$, de longitud no mayor que $d_{max}$. Tsiligirides \cite{Tsiligirides} se refirió a este problema como \textit{Generalized Traveling Salesman Problem} (GTSP).
+\noindent En el \textit{Orienteering Problem} (OP), se da un conjunto de nodos, cada uno con un beneficio determinado. El objetivo es determinar una ruta, limitada en su longitud, que visite a algunos nodos maximizando la suma de los beneficios obtenidos. El OP se puede formular de la siguiente manera: dado $n$ nodos en el plano euclidiano cada uno con un beneficio, donde $beneficio(nodo_i) \geq 0$ y $beneficio(nodo_1) = beneficio(nodo_n) = 0$, se debe encontrar una ruta de beneficio máximo a través de estos nodos, iniciando en el $nodo_1$ y finalizando en el $nodo_n$, de longitud no mayor que $d_{max}$. En el artículo \textit{Heuristic Methods Applied to Orienteering} de Tsiligirides \cite{Tsiligirides} se llama a este problema como \textit{Generalized Traveling Salesman Problem} (GTSP).
 
 \bigskip
 
@@ -9,11 +9,11 @@ El \textit{Team Orienteering Problem} (TOP) es la generalización al caso de mú
 
 \bigskip
 
-En esta tesis propongo una combinación del \textit{Biased Random Key Genetic Algorithm} (BRKGA) y de búsquedas locales para resolver el TOP. El BRKGA es un algoritmo genético cuya población inicial es generada utilizando un decodificador que convierte un conjunto de vectores de números enteros aleatorios, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). Estos algoritmos se diferencian en el proceso de apareamiento, mientras que en el RKGA los padres son elegidos al azar entre todos los individuos de la población, en el BRKGA uno de los padres utilizado siempre pertenece al subconjunto de los mejores individuos de la población y este padre tiene mayor probabilidad de trasmitir sus genes a la solución hija.
+En esta tesis propongo una combinación del \textit{Biased Random Key Genetic Algorithm} (BRKGA) y de búsquedas locales para resolver el TOP. El BRKGA es un algoritmo genético cuya población inicial es generada utilizando un decodificador que convierte un conjunto de vectores de números enteros aleatorios, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). Estos algoritmos se diferencian en el proceso de apareamiento (\textit{crossover}), mientras que en el RKGA los padres son elegidos al azar entre todos los individuos de la población, en el BRKGA uno de los padres siempre pertenece al subconjunto de los mejores individuos de la población y este padre tiene mayor probabilidad de trasmitir sus genes al individuo resultante del proceso de apareamiento.
 
 \bigskip
 
-En mi algoritmo, en cada nueva generación, la mejor solución se mejora con varias búsquedas locales. Dada una solución $s$, un algoritmo de búsqueda local básicamente busca mejores soluciones en la vecindad de $s$. La solución $s'$ en la vecindad de $s$, es mejor que $s$ si el beneficio total recolectado por $s'$ es mayor al de $s$ o si sus beneficios recolectados son iguales y la distancia recorrida por las rutas de $s'$ es menor a la de $s$. En este trabajo implementé los algoritmos de búsqueda local: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
+En mi algoritmo, en cada nueva generación, la mejor solución se mejora con algunas búsquedas locales. Dada una solución $s$, un algoritmo de búsqueda local básicamente busca mejores soluciones en la vecindad de $s$. La solución $s'$ en la vecindad de $s$, es mejor que $s$ si el beneficio total recolectado por $s'$ es mayor al de $s$ o si sus beneficios recolectados son iguales y la distancia recorrida por las rutas de $s'$ es menor a la de $s$. En este trabajo implementé los algoritmos de búsqueda local: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
 
 \bigskip
 
