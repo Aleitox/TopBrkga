@@ -1,34 +1,23 @@
 
-\chapter{Algoritmo BRKGA con búsqueda local para TOP}
+\chapter{Desarrollo del algoritmo BRKGA con búsqueda local para el TOP}
 
-En el presente capítulo describiremos en detalle la solución implementada para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencionamos en el capítulo BRKGA tiene la tarea de convertir un arreglo de enteros aleatorios en una solución válida del problema. Luego el algoritmo BRKGA, cuya implementación puede hacerse con total independencia del problema a resolver. Por último las búsquedas locales aplicadas en cada nueva generación a los mejores individuo de la población. 
-
-\bigskip
-
-TODO: Agregar mencion de resultados de BDM
-
-En el capítulo \textit{Resultados} se mostrará en detalle los resultados obtenidos de la versión final de la implementación sobre el benchmark de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides}. Se compararon los resultados con los obtenidos de los trabajos previos de Chao et al. \cite{ChaoGoldenWasil} (CGW), de Archetti et al. \cite{ArchettiHertzSperanza} (AHS) y los de Tang and E. Miller-Hooks \cite{TangMillerHooks} (TMH).
+En el presente capítulo describiré en detalle la solución que implementé para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencioné en el capítulo BRKGA tiene la tarea de convertir un vector de números reales aleatorios en una solución válida del problema. El siguiente módulo sería el algoritmo BRKGA, cuya implementación podría hacerse con total independencia del problema a resolver. Por último las búsquedas locales aplicadas en cada nueva generación a los mejores individuos de la población. 
 
 \bigskip
 
-En este capítulo mostré los resultados parciales obtenidos a lo largo del desarrollo de la implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida cree un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución para el la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el índice de efectividad. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
+En este capítulo mostré los resultados parciales obtenidos a lo largo del desarrollo de mi implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida creé un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución previamente publicada para la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el $i_e$. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
 
 \bigskip
 
 Se seleccionó un subconjunto del benchmark de instancias de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides} para medir el progreso de mi desarrollo. Las seis instancias seleccionadas varían en cantidad de clientes y vehículos, esto es importante para que el análisis del rendimiento sea lo más objetivo posible. Luego de obtener una solución para cada una de estas instancias, se calcula el $i_e$ que definí de la siguiente manera:
 
-TODO: Agregar profit de resultados de BDM
-
 \begin{equation}
-bestProfit(i) = max(profit(CGW(i)), profit(AHS(i)), profit(TMH(i))) \label{eq:bestProfit}
-\end{equation}
-\begin{equation}
-i_e(imp_{v.xyz},i) = profit(imp_{v.xyz}(i)) / bestProfit(i) \label{eq:efectividad}
+i_e(brkga_{v.x},ins_n) = benefit(brkga_{v.x}(ins_n)) / bestBenefitFor(ins_n) \label{eq:iefectividad}
 \end{equation}
 
 \bigskip
 
-De la primera ecuación \eqref{eq:bestProfit} obtenemos el mejor beneficio de entre los trabajos previos seleccionados para la instancia $i$. Luego en la función \eqref{eq:efectividad} calculo que tan efectiva es la versión $xyz$ de mi implementación para la instancia $i$. Esto se hace dividiendo el beneficio obtenido de mi implementación sobre el mejor beneficio calculado previamente. Luego analizar el rendimiento de $i_e$ es muy sencillo. Si $i_e = 1$, la solución encontrada es tan buena como la mejor solución encontrada hasta el momento. Si $0.90 < i_e < 1$, luego la solución encontrada no es tan buena como la mejor pero la considero competitiva.
+En la función \eqref{eq:iefectividad} $brkga_{v.x}$ representa la versión $x$ de mi $brkga$, $ins_n$ representa la n-ésima instancia del benchmark de problemas y $bestBenefitFor(ins_n)$ representa el mejor beneficio obtenido para la misma instancia en los trabajos previamente publicados. Analizar el rendimiento de mi implementación utilizando el $i_e$ es muy sencillo. Si $i_e = 1$ para $ins_n$, entonces la solución encontrada es tan buena como la mejor solución encontrada hasta el momento, lo que significa que mi implementación es óptima para la instancia $ins_n$. Cuanto más cercano a 1 es $i_e$, más competitiva es mi implentación frente a los trabajos previos. Lamentablemente no existe instancia en el benchmark de problemas tal que mi implementación haya obtenido un resultado mayor al mejor beneficio obtenido para la misma instancia en algún trabajo previo, por lo tanto $i_e \leq 1$.
 
 \bigskip
 
