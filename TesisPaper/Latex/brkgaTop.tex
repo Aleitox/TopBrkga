@@ -21,17 +21,19 @@ En la función \eqref{eq:iefectividad} $brkga_{v.x}$ representa la versión $x$ 
 
 \bigskip
 
-Se explicará en detalle el funcionamiento de los módulos que componen la implementación, incluyendo su pseudocódigo y los resultados parciales obtenidos luego de implementar tal módulo. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implemente el desarrollo. El objetivo del pseudocódigo es ilustrar el comportamiento del método que representa, tal método es implementado con ciertas variaciones que no viene al caso describir. Considere que no aportaba a su descripción las lineas de código relacionadas con: medición de tiempo, monitoreo de estados, testing, manejo de excepciones, persistencia de resultados, etc. 
+Se explicará en detalle el funcionamiento de los módulos que componen la implementación, incluyendo su pseudocódigo y los resultados parciales obtenidos luego de implementar tal módulo. El pseudocódigo utilizado sigue la sintaxis de c\#, el lenguaje en el cual implementé el desarrollo. El objetivo del pseudocódigo es facilitar el entendimiento del funcionamiento de los algoritmos que describiré.
 
 
 \bigskip
 
-Para la valuación de $i_e$ se eligieron seis instancias del benchmark \cite{IntancesChaoTsiligirides} de modo que fueran variadas entre sí. Tome dos pequeñas, dos medianas y dos grandes, cuyas descripción pueden observarse en la siguiente tabla:
+Para la valuación de $i_e$ elegí seis instancias del benchmark bien diversas entre sí. Tomé dos pequeñas, dos medianas y dos grandes, cuyas descripciones pueden observarse en la tabla \ref{tab:instanciasDiversas}.
 
+\begin{table}
 \begin{center}
-\begin{tabular}{ |c|c|c|c|c| } 
- \hline
-Autor & Instancia & Nodos & Vehículos & tMax \\
+\begin{tabular}
+{ |c|c|c|c|c| } 
+\hline
+Autor & Instancia & Nodos & Vehículos & $d_{max}$ \\
 \hline
 Tsiligirides & p2.2.k & 21 & 2 & 22.50 \\
 Tsiligirides & p2.3.g & 21 & 3 & 10.70 \\
@@ -39,9 +41,12 @@ Tsiligirides & p3.4.p & 33 & 4 & 22.50 \\
 Chao & p5.3.x & 66 & 3 & 40.00 \\
 Chao & p7.2.e & 102 & 2 & 50.00 \\
 Chao & p7.4.t & 102 & 4 & 100.00 \\
- \hline
+\hline
 \end{tabular}
 \end{center}
+\caption{Instancias seleccionadas para el monitoreo del progreso del desarrollo.}
+\label{tab:instanciasDiversas}
+\end{table}
 
 
 \bigskip
@@ -51,7 +56,7 @@ Las tablas donde mostraré el $i_e$ y el beneficio de los resultados parciales t
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|c| } 
  \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eMax}$ & $i_{eAvg}$ & $BTP_{max}$ \\
+Instancia & N/V/D & Config & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eMax}$ & $i_{eAvg}$ & Best \\
 \hline
 \end{tabular}
 \end{center}
@@ -60,38 +65,33 @@ $I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ &
 
 Descripciones:
 \begin{itemize}
-	\item \textbf{$I$}: Nombre de la instancia.
-	\item \textbf{$\#N$}: Cantidad de nodos (clientes mas punto de partida y fin de recorrido) de la instancia.
-	\item \textbf{$\#V$}: Cantidad de vehículos de la instancia.
-	\item \textbf{$tMax$}: Distancia máxima de la ruta de cada vehículos de la instancia.
-	\item \textbf{$C$}: Configuración general del BRKGA. Es un código que sintetiza la configuración básica global, explicado en detalle más adelante (ver sección \label{sec:descrCongif}).
-	\item \textbf{$\#S$}: Cantidad de soluciones de las cuales se sacaron los datos.
-	\item \textbf{$T_{avg}$}: Tiempo promedio en milisegundos de la ejecución total de la implementación.
-	\item \textbf{$B_{max}$}: Beneficio máximo de las \#S soluciones generadas.
-	\item \textbf{$B_{min}$}: Beneficio mínimo de las \#S soluciones generadas.
-	\item \textbf{$B_{avg}$}: Beneficio promedio de las \#S soluciones generadas.
-	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. Utilizado en los resultados finales. Utilizo mi mejor beneficio obtenido para una instancia \eqref{eq:efectividad}.
-	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. Utilizado en los resultados parciales. Utilizo el promedio de los beneficios obtenidos para una misma instancia \eqref{eq:efectividad}.
-	\item \textbf{$BTP_{max}$}: Beneficio de Trabajos Previos máximo para la misma instancia. Los trabajos previos son: CGW \cite{ChaoGoldenWasil}, AHS \cite{ArchettiHertzSperanza} y TMH \cite{TangMillerHooks}.
+	\item \textbf{$Instancia$}: Nombre de la instancia utilizada.
+	\item \textbf{$N/V/D$}: Cantidad de \textbf{N}odos / Cantidad de \textbf{V}ehículos / \textbf{D}istancia máxima de la ruta del vehículo.
+	\item \textbf{$Config$}: La configuración utilizada de mi BRKGA al ejecutar la prueba. Es un código que sintetiza la configuración global del algoritmo, explicado en detalle más adelante (ver sección \ref{sec:config}).
+	\item \textbf{$T_{avg}$}: El \textbf{T}iempo promedio en milisegundos de la ejecución del algoritmo para la instancia mencionada.
+	\item \textbf{$B_{max}$}: El \textbf{B}eneficio máximo que obtuve para la instancia mencionada.
+	\item \textbf{$B_{min}$}: El \textbf{B}eneficio mínimo que obtuve para la instancia mencionada.
+	\item \textbf{$B_{avg}$}: El \textbf{B}eneficio promedio que obtuve para la instancia mencionada.
+	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. Utiliza mi beneficio máximo obtenido para la instancia mencionada.
+	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. Utiliza mi beneficio promedio obtenido para la instancia mencionada.
+	\item \textbf{$Best$}: Máximo beneficio obtenido por alguna trabajo previo sobre la misma instancia mencionada.
 \end{itemize}
-
-TODO: Agregar mención de resultados de BDM arriba
 
 \section{Decodificador}
 
-El decodificador debe generar una solución valida del problema dado un vector aleatorio de enteros y conociendo la instancia del problema (vehículos disponibles, clientes, tmax, etc). Con tal objetivo construye una solución valida asignando clientes a las rutas de los vehículos disponibles respetando \textit{tMax}, su distancia máxima de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Es el vector de enteros aleatorios quien determina el orden en el cual se tomarán los clientes para asignarlos a una ruta. Por lo tanto el vector tendrá una longitud equivalente a la cantidad de clientes del problema (nodos con beneficio mayor a cero).
+El decodificador debe generar una solución válida del problema dado un vector de claves aleatorios y conociendo la instancia del problema (vehículos disponibles, clientes, $d_{max}$, etc). Con tal objetivo construye una solución asignando clientes a las rutas de los vehículos disponibles respetando $d_{max}$. De acá en adelante llamaré clientes a todos los nodos que tienen un beneficio mayor a cero. Es decir, todos los nodos excepto el nodo de inicio y fin de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Tal orden es determinado por el el vector de claves aleatorias. Por lo tanto el vector tendrá una longitud equivalente a la cantidad de clientes del problema.
 
 \bigskip
 
-Propuse dos decodificadores, uno al cual llamo \textit{Decodificador Simple} y otro que llamé \textit{Decodificador Goloso}. Ambos decodificadores tienen sus ventajas y desventajas.
+Propuse dos decodificadores, uno al cual llamé \textit{Decodificador Simple} y al otro lo llamé \textit{Decodificador Goloso}. Ambos decodificadores tienen sus ventajas y desventajas.
 
-\subsection{Orden de los clientes a considerar}\label{sec:ordenDeco}
+\subsection{Orden en que los clientes se intentan agregar a las rutas.}\label{sec:ordenDeco}
 
-Dado una instancia de un problema con $n$ clientes y un vector de enteros aleatorio de tamaño $n$, un decodificador genera una solución valida de un problema. El vector, en mi implementación, es un vector de \textit{RandomKeys}. Un \textit{RandomKey} tiene dos propiedades, el entero aleatorio llamado \textit{Key} y otro entero llamado \textit{ClientId} como podemos ver en a continuación. 
+Como dije, dado una instancia de un problema con $n$ clientes y un vector de claves aleatorias del mismo tamaño $n$, un decodificador genera una solución valida de un problema. En mi implementación, modelé una clave aleatoria con el objeto \textit{RandomKey}. Un \textit{RandomKey} tiene dos propiedades, un entero aleatorio llamado \textit{Key} y otro entero llamado \textit{ClientId} que siempre toma el valor de un identificador de uno de los clientes de la instancia. Podemos ver el objeto \textit{RandomKey} en el pseudocódigo \ref{func:RandomKey}.
 
 \bigskip
 
-\begin{lstlisting} 
+\begin{lstlisting} [caption={Objeto \textit{RandomKey}.},label={func:RandomKey}]
 public class RandomKey
 {        
 	public int Key { get; private set; }
@@ -101,19 +101,22 @@ public class RandomKey
 
 \bigskip
 
-El propósito de $ClientId$ es mapear un \textit{RandomKey} con un \textit{Cliente}. Existe un vector de \textit{Clientes} en el Mapa del problema, a cada \textit{Cliente} se le asigna un identificador que es un numero entero en el intervalo $[1, \#Clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#Clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#Clientes]$. De esta forma cada \textit{RandomKey} siempre mapea con un solo \textit{Cliente}. Luego de mapear cada \textit{Cliente} con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual mapeo. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. Podemos ver esto sintetizado en una linea de pseudocódigo en \ref{lst:GetOrderedClients}. La figura \ref{fig:RandomKeysOrdenando} muestra como ordenamos un vector de \textit{RandomKeys}.
+El propósito de $ClientId$ es asociar un \textit{RandomKey} con un cliente. Existe un vector de clientes en el Mapa del problema, a cada cliente se le asigna un identificador que es un numero entero en el intervalo $[1, \#clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#clientes]$. De esta forma cada \textit{RandomKey} siempre se asocia con un solo cliente. Luego de asociar cada cliente con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual se asoció. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. El pseudocódigo \ref{func:GetOrderedClients} muestra como se obtienen los clientes ordenados dado un vector de \textit{RandomKeys}. En el figura \ref{fig:RandomKeysOrdenando} se puede observar un vector de \textit{RandomKeys} en su estado inicial y luego ordenado por su campo \textit{Key} mostrando el orden en que se tomarán los clientes.
 
 \bigskip
 
-\begin{lstlisting} [label={lst:GetOrderedClients}]
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Dada una lista de \textit{RandomKeys}, se obtienen los clientes ordenados.},label={func:GetOrderedClients}]
 public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 {        
-	return randomKeys.OrderBy(r => r.Key).Select(r => Map.Clients[r.ClientId]);
+	var orderedKeys = randomKeys.OrderBy(r => r.Key)
+	return orderedKeys.Select(r => Map.Clients[r.ClientId]);
 }
 \end{lstlisting}
+\end{minipage}
 
 \begin{figure}[h]
-	\caption{RandomKeys ordenando clientes}
+	\caption{Ejemplo de como el vector de \textit{RandomKeys} determina el orden de los clientes.}
 	\centering
 	\includegraphics[width=14cm]{RandomKeysOrdenando}
 	\label{fig:RandomKeysOrdenando}
@@ -305,7 +308,7 @@ public Solution RunBrkga(ProblemManager problemManager)
 
 El objeto \textit{ProblemManager} es el orquestrador del BRKGA, se setea con un objeto \textit{Configuración} y el objeto \textit{PopulationGenerator}. Tiene acceso de forma indirecta, a través de \textit{PopulationGenerator}, de toda la información del problema (vehículos, clientes, tMax, etc.).
 
-\subsection{Configuración}
+\subsection{Configuración} \label{sec:config}
 
 A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto \textit{Configuration} que setea todas las configuraciones que impactan en el resultado final del BRKGA. Este objeto es esencial para tunear el implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, ganaba mucho tiempo al testear variaciones de mi implementación. Además, al estar centralizada toda la información variable se obtiene una lectura veloz del BRKGA que se está usando. En otras palabras incrementamos nuestra capacidad de monitoreo y control del desarrollo. A continuación el objeto \textit{Configuration} y sus propiedades:
 
