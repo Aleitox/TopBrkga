@@ -124,11 +124,11 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 
 \subsection{Decodificador simple}
 
-El decodificador simple recibe como parámetro el vector de enteros aleatorios y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Estos se puede ver en detalle en el pseudocódigo \ref{lst:Decode}. 
+El decodificador simple recibe como parámetro el vector de \textit{RandomKeys} y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Estos se puede ver en detalle en el pseudocódigo \ref{func:decodeSimple}. 
 
 \bigskip
 
-\begin{lstlisting} [label={lst:Decode}]
+\begin{lstlisting} [caption={Función \textit{Decode} del decodificador simple }, label={func:decodeSimple}]
 public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 {
 	var clients = GetOrderedClients(randomKeys);
@@ -153,11 +153,16 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 }
 \end{lstlisting}
 
-Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $tMax$ la distancia máxima de $v$, $tAct$ la distancia actual de $v$, $f$ el destino final de la ruta, $c_u$ el ultimo cliente agregado a la ruta de $v$ y $c_i$ cliente a evaluar agregar a la ruta de $v$. Como podemos observar en el pseudocódigo \ref{lst:Decode}, cree un método llamado \textit{CanVisit} que retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario. El método \textit{CanVisit} modela la siguiente fórmula:
+Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $d_{max}$ la distancia máxima de $v$, $d_{act}$ la distancia actual de la ruta de $v$, $n_f$ el nodo final de la ruta, $c_u$ el último cliente agregado a la ruta de $v$ y $c_i$ cliente que se intenta agregar a la ruta de $v$. Si aún no se insertaron clientes en la ruta, $c_u = n_i$ donde $n_i$ representa el nodo inicial de la ruta. Como podemos observar en el pseudocódigo \ref{func:decodeSimple}, creé un método llamado \textit{CanVisit}, que modela la fórmula \ref{eq:canVisit}, que retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario
 
 \bigskip
 
-\( tAct\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, f)\, -\, distancia(c_u, f) \leq tMax\)
+\begin{mycapequ}[!ht]
+	\caption{Formula matemática que modela el método \textit{CanVisit}.}
+	\begin{equation} \label{eq:canVisit}
+	d_{act}\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, n_f)\, -\, distancia(c_u, n_f) \leq d_{max}
+	\end{equation}
+\end{mycapequ}
 
 \bigskip
 
