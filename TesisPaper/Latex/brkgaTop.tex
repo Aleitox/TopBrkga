@@ -393,8 +393,10 @@ Como mencioné, uno de los beneficios de tener todas las variables configurables
 
 El método \textit{SetDescription()} toma las tuplas de clave y valor del restos de las propiedades del objeto \textit{Configuración} y los concatena intercalados por un separador creando un \textit{string}. Podemos observar como lo hace en el pseudocódigo \ref{func:SetDescription}.
 
+\bigskip
+
 \begin{minipage}{\linewidth}
-\begin{lstlisting} [caption={Método que instancia la propiedad \textit{Description} del objeto \textit{Configuration}.}, label={func:SetDescription}]
+\begin{lstlisting} [caption={Método que instancia la propiedad \textit{Description}.}, label={func:SetDescription}]
 public void SetDescription()
 { 
 	var prop = Properties.Where(x => x.Name != "Description");
@@ -403,6 +405,8 @@ public void SetDescription()
 }
 \end{lstlisting}
 \end{minipage}
+
+\bigskip
 
 \begin{minipage}{\textwidth}
 Entonces leyendo la propiedad \textit{Description} podemos ver como esta configurado el BRKGA. Por ejemplo si dice: 
