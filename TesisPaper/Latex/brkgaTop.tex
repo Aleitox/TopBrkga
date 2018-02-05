@@ -308,16 +308,16 @@ Como podemos ver en la tabla \ref{tab:resultadosDecoGoloso}, todos los resultado
 
 \section{Biased Random Key Genetic Algorithms}
 
-En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir creamos una nueva generación de soluciones a partir de la generación anterior como se explicó en la sección BRKGA ~(ver sección~\ref{sec:brkga}).
+En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir se crea una nueva generación de soluciones a partir de la generación anterior como se explica en la sección BRKGA (ver sección~\ref{sec:brkga}).
 
 \bigskip
 
-A continuación muestro el pseudocódigo de una vista macro general del algoritmo BRKGA implementado:
+El pseudocódigo \ref{func:RunBrkga} muestra una vista macro general del algoritmo BRKGA implementado.
 
 \bigskip
 
-\begin{minipage}{\textwidth}
-\begin{lstlisting} 
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Función \textit{RunBrkga}, vista macro de mi implementación.}, label={func:RunBrkga}]
 public Solution RunBrkga(ProblemManager problemManager)
 {
     ProblemManager.InitializePopulation();
@@ -332,17 +332,17 @@ public Solution RunBrkga(ProblemManager problemManager)
 
 \bigskip
 
-El objeto \textit{ProblemManager} es el orquestrador del BRKGA, se setea con un objeto \textit{Configuración} y el objeto \textit{PopulationGenerator}. Tiene acceso de forma indirecta, a través de \textit{PopulationGenerator}, de toda la información del problema (vehículos, clientes, tMax, etc.).
+El objeto \textit{ProblemManager} es el orquestrador del BRKGA, se instancia con un objeto \textit{Configuración} y el objeto \textit{PopulationGenerator} como parámetros. Tiene acceso de forma indirecta a toda la información del problema (vehículos, clientes, tMax, etc.) a través del objeto \textit{PopulationGenerator}.
 
 \subsection{Configuración} \label{sec:config}
 
-A modo de poder testear distintas configuraciones del BRKGA, se creo un objeto \textit{Configuration} que setea todas las configuraciones que impactan en el resultado final del BRKGA. Este objeto es esencial para tunear el implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, ganaba mucho tiempo al testear variaciones de mi implementación. Además, al estar centralizada toda la información variable se obtiene una lectura veloz del BRKGA que se está usando. En otras palabras incrementamos nuestra capacidad de monitoreo y control del desarrollo. A continuación el objeto \textit{Configuration} y sus propiedades:
+A modo de poder probar distintas configuraciones del BRKGA, creé el objeto \textit{Configuration} que instancia todas las variables que pueden impactan en el resultado final del BRKGA. Este objeto es esencial para ajustar mi implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, gané mucho tiempo al probar variaciones de mi implementación. Además, al estar centralizada toda la información variable, se obtiene una lectura veloz del BRKGA que se estaba probando. En otras palabras incrementé mi capacidad de monitoreo y control del desarrollo. El pseudocódigo \ref{func:config} muestra todas las propiedades configurables del mi desarrollo.
 
 \bigskip
 
-\begin{minipage}{\textwidth}
-\begin{lstlisting}
-public class BrkgaConfiguration
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Objeto \textit{Configuración} donde se encuentran todas las variables importantes del BRKGA.}, label={func:config}]
+public class Configuration
 {
 	public string Description { get; }
 	public int MinIterations { get; set; }
@@ -350,11 +350,10 @@ public class BrkgaConfiguration
 	public int PopulationSize { get; set; }
 	public decimal ElitePercentage { get; set; }
 	public decimal MutantPercentage { get; set; }
-	public int EliteGenChance { get; set; }
-	public List<ILocalSearchHeuristic> Heuristics { get; set; }
-	public int ApplyHeuristicsToTop { get; set; }
-	public DecoderEnum DecoderType { get; set; }
-	
+	public decimal EliteGenChance { get; set; }
+	public List<ILocalSearch> LocalSearches { get; set; }
+	public int ApplyLocalSearchesToTop { get; set; }
+	public DecoderEnum DecoderType { get; set; }	
 	private void SetDescription();
 }
 \end{lstlisting}
@@ -363,24 +362,26 @@ public class BrkgaConfiguration
 \bigskip
 
 \subsection{Descripción y codificación de las propiedades del objeto configuración}\label{sec:descrCongif}
-Descripción de las propiedades del objeto Configuración:
+
+Como mencioné, uno de los beneficios de tener todas las variables configurables en un solo objeto es poder leer rápidamente que BRKGA estoy probando. Es que le agregue la propiedad \textit{Description} que se instancia automáticamente al instanciar el objeto \textit{Configuration}. Su valor es del tipo \textit{string} y codifica el valor del resto de las propiedades del objeto \textit{Configuration}. A continuación explico las propiedades del objeto Configuración:
 
 \begin{itemize}
-  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto. Su funcionalidad es poder identificar rápidamente la configuración global del BRKGA. Solo puede ser seteado con el metodo SetDescription() que utiliza la clave y el valor de el resto de las propiedades.
-  \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que debe completar el BRKGA para finalizar. 
-  \item \textbf{MinNoChanges}: Clave \textbf{MNC}. Valor entero utilizado en la función de corte. Cantidad de generaciones sin modificaciones del mejor beneficio necesario para cortar el algoritmo BRKGA.
-  \item \textbf{PopulationSize}: Clave \textbf{PS}. Valor entero denota el tamaño de la población.
-  \item \textbf{ElitePercentage}: Clave \textbf{EP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño de la población elite. 
-  \item \textbf{MutantPercentage}: Clave \textbf{MP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño mínimo de la población mutante. 
-  \item \textbf{EliteGenChance}: Clave \textbf{EGC}. Valor entero en el intervalo $(0, 100)$ que determina la probabilidad que tiene el alelo del padre elite, en transmitirse a su descendiente. 
-  \item \textbf{Heuristics}: Clave \textbf{HEU}. Secuencia de algoritmos de búsquedas locales que se le aplicaran a la mejor solución de cada generación, a la cual no se le hayan aplicado las búsquedas locales aún. Se implementaron cuatro búsquedas locales (Su desarrollo sera explicado mas adelante en otra sección.):
+  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto \textit{Configuration}. Codifica los valores del resto de las propiedades utilizando su clave y valor.
+  \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que deben completar para cortar el BRKGA. 
+  \item \textbf{MinNoChanges}: Clave \textbf{MNC}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones sin que aparezca una nueva mejor solución requerido para cortar el BRKGA.
+  \item \textbf{PopulationSize}: Clave \textbf{PS}. Valor entero que denota el tamaño de la población.
+  \item \textbf{ElitePercentage}: Clave \textbf{EP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño de la población elite. Es un porcentaje de la población total.
+  \item \textbf{MutantPercentage}: Clave \textbf{MP}. Valor decimal en el intervalo $(0, 1)$ que determina el tamaño mínimo de la población mutante. Es un porcentaje de la población total.
+  \item \textbf{EliteGenChance}: Clave \textbf{EGC}. Valor decimal en el intervalo $(0, 1)$ que determina la probabilidad que tiene el alelo del padre de elite para transmitirse al individuo resultante del crossover.
+  \item \textbf{LocalSearches}: Clave \textbf{LS}. Secuencia de algoritmos de búsquedas locales que se le aplicaran a la mejor solución de cada generación:
 	\begin{itemize}
 		\item \textbf{Swap}: Valor \textbf{S}.
 		\item \textbf{Insert}: Valor \textbf{I}.
 		\item \textbf{2-Opt}: Valor \textbf{O}.
-		\item \textbf{Replace}: Valor \textbf{R}.
+		\item \textbf{Replace Simple}: Valor \textbf{Rs}.
+		\item \textbf{Replace Multiple}: Valor \textbf{Rm}.
 	\end{itemize}  
-  \item \textbf{ApplyHeuristicsToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las búsquedas locales.
+  \item \textbf{ApplyLocalSearchesToTop}: Clave \textbf{TOP}. Valor entero que denota la cantidad de soluciones a las cuales se les aplicaran las búsquedas locales.
   \item \textbf{DecoderType}: Clave \textbf{D}. Es una enumeración que determina el decodificador que se va a utilizar.
 	\begin{itemize}
 		\item \textbf{Simple}: Valor \textbf{S}.
@@ -390,10 +391,10 @@ Descripción de las propiedades del objeto Configuración:
 
 \bigskip
 
-El método \textit{SetDescription()} toma las tuplas de clave y valor de todas las propiedades del objeto \textit{Configuración} excepto \textit{Description} y lo concatena creando un \textit{string} intercalando con un separador.
+El método \textit{SetDescription()} toma las tuplas de clave y valor del restos de las propiedades del objeto \textit{Configuración} y los concatena intercalados por un separador creando un \textit{string}. Podemos observar como lo hace en el pseudocódigo \ref{func:SetDescription}.
 
-\begin{minipage}{\textwidth}
-\begin{lstlisting} 
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Método que instancia la propiedad \textit{Description} del objeto \textit{Configuration}.}, label={func:SetDescription}]
 public void SetDescription()
 { 
 	var prop = Properties.Where(x => x.Name != "Description");
@@ -403,11 +404,10 @@ public void SetDescription()
 \end{lstlisting}
 \end{minipage}
 
-
 \begin{minipage}{\textwidth}
-Luego leyendo la propiedad \textit{Description} podemos ver como esta configurado el BRKGA.
+Entonces leyendo la propiedad \textit{Description} podemos ver como esta configurado el BRKGA. Por ejemplo si dice: 
 
-Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;D.G"
+\bigskip"MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.0,7;LS.ISRsORm;TOP.2;D.G"
 
 \begin{itemize}
   \item MinIterations: 200
@@ -415,9 +415,9 @@ Ej: "MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.70;HEU.ISIRT;TOP.2;D.G"
   \item PopulationSize: 100
   \item ElitePercentage: 0,3
   \item MutantPercentage: 0,1
-  \item EliteGenChance: 70
-  \item Heuristics: ISIRT. Que es la Secuencia Insert, Swap, Insert, Replace, 2-Opt.
-  \item ApplyHeuristicsToTop: 2
+  \item EliteGenChance: 0,7
+  \item LocalSearches: ISRsORm. Es la Secuencia: Insert, Swap, Replace Simple, 2-Opt y Replace Multiple.
+  \item ApplyLocalSearchesToTop: 2
   \item DecoderType: Decodificador Goloso
 \end{itemize}
 \end{minipage}
