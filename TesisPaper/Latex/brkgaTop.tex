@@ -26,7 +26,7 @@ Se explicará en detalle el funcionamiento de los módulos que componen la imple
 
 \bigskip
 
-Para la valuación de $i_e$ elegí seis instancias del benchmark bien diversas entre sí. Tomé dos pequeñas, dos medianas y dos grandes, cuyas descripciones pueden observarse en la tabla \ref{tab:instanciasDiversas}.
+Para la valuación de $i_e$ elegí seis instancias del benchmark bien diversas entre sí. Tomé dos pequeñas, dos medianas y dos grandes, cuyas descripciones pueden observarse en la tabla \ref{tab:instanciasDiversas}. Como mencioné en el abstract, el benchmark de instancias se compone de siete conjuntos. Dentro de cada set, todas las instancias contienen los mismo clientes. Esto significa que tiene las mismas coordenadas en el eje cartesiano y el mismo beneficio. Dentro de un set las instancias se diferencian entre si por la cantidad de vehículos que poseen y el $d_{max}$ de sus rutas. Esto es importante mencionarlo ya que ayuda a entender los resultados parciales que obtuve sobre las seis instancias seleccionadas. Los nombres de las instancias nos dan información sobre el conjunto del benchmarck al cual pertenecen y la cantidad de vehículos que tienen. Por ejemplo la instancia \textit{p2.3.g} tiene pertenece al conjunto número 2 del benchmark y tiene 3 vehículos. La instancia \textit{p2.2.k} también pertenece al conjunto número 2 del benchmark, lo que significa que tiene los mismos clientes que \textit{p2.3.g}.
 
 \begin{table}
 \begin{center}
@@ -122,13 +122,14 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 	\label{fig:RandomKeysOrdenando}
 \end{figure}
 
-\subsection{Decodificador simple}
+\subsection{Decodificador Simple}
 
 El decodificador simple recibe como parámetro el vector de \textit{RandomKeys} y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Estos se puede ver en detalle en el pseudocódigo \ref{func:decodeSimple}. 
 
 \bigskip
 
-\begin{lstlisting} [caption={Función \textit{Decode} del decodificador simple }, label={func:decodeSimple}]
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Función \textit{Decode} del decodificador simple.}, label={func:decodeSimple}]
 public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 {
 	var clients = GetOrderedClients(randomKeys);
@@ -152,6 +153,7 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 	return problem;
 }
 \end{lstlisting}
+\end{minipage}
 
 Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $d_{max}$ la distancia máxima de $v$, $d_{act}$ la distancia actual de la ruta de $v$, $n_f$ el nodo final de la ruta, $c_u$ el último cliente agregado a la ruta de $v$ y $c_i$ cliente que se intenta agregar a la ruta de $v$. Si aún no se insertaron clientes en la ruta, $c_u = n_i$ donde $n_i$ representa el nodo inicial de la ruta. Como podemos observar en el pseudocódigo \ref{func:decodeSimple}, creé un método llamado \textit{CanVisit}, que modela la fórmula \ref{eq:canVisit}, que retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario
 
@@ -166,35 +168,41 @@ Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera s
 
 \bigskip
 
-Una vez que termine de implementar el decodificador simple, analice el rendimiento de las soluciones generadas a partir de este decodificador. Hice este análisis para saber que tan buena sería la población inicial de mi algoritmo BRKGA si utiliza el decodificador simple. Para realizar el análisis cree 200 vectores $RandomKeys$ que el decodificador simple convirtió en 200 soluciones validas del problema. Luego se calculó el beneficio máximo, promedio, mínimo y el índice de efectividad promedio. Esto se repitió para las seis instancias del benchmark seleccionadas anteriormente. La siguiente tabla tiene los resultados obtenidos:
-
-\begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
-\hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
-\hline
-p2.2.k & 21 & 2 & 22.50 & 200 & 175 & 40 & 102 & 0.37 & 275  \\
-p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 45 & 83 & 0.57 & 145  \\
-p3.4.p & 33 & 4 & 22.50 & 200 & 270 & 90 & 170 & 0.30 & 560  \\
-p5.3.x & 66 & 3 & 40.00 & 200 & 405 & 195 & 295 & 0.19 & 1555  \\
-p7.2.e & 102 & 2 & 50.00 & 200 & 98 & 8 & 39 & 0.13 & 290  \\
-p7.4.t & 102 & 4 & 100.00 & 200 & 221 & 40 & 116 & 0.11 & 1077  \\
-\hline
-\end{tabular}
-\end{center}
-
-En estos resultados podemos observar que para instancias pequeñas los resultados son mejores. Notar como $i_{eAvg}$ disminuye a medida que la instancia tiene mayor numero de clientes ($\#N$).
-
-\subsection{Características y debilidades del decodificador simple}
-
-Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la practica nunca se llega recorrer todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logro insertar en su ruta. Por lo tanto en la practica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
+Una vez que terminé de implementar el decodificador simple, analicé el rendimiento de las soluciones generadas a partir de este decodificador. Hice este análisis para saber que tan buena sería la población inicial de mi algoritmo BRKGA cuando se utiliza el decodificador simple. Para realizar este análisis creé 200 vectores de $RandomKeys$ que el decodificador simple convirtió en 200 soluciones válidas del problema. Sobre estas 200 soluciones calculé el beneficio máximo, promedio y mínimo, y sus índices de efectividad promedio y máximo. Esto se realizó para cada una de las seis instancias del benchmark seleccionadas anteriormente \ref{tab:instanciasDiversas}. Podemos observar los resultados en la tabla \ref{tab:resultadosDecoSimple}.
 
 \bigskip
 
-Una característica menos relevante es el orden en que quedan los clientes asignados en los vehículos al ver el vector de \textit{RandomKeys}.  Sea $v$ el vector de clientes ordenados por un vector aleatorio de enteros. Existen $m+1$ indices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solución. En otras palabras, los clientes quedan agrupados por vehículo cuando los vemos en el vector ordenado. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p2.2.k & 21/2/22.50 & 40 & 102 & 175 & 0.37 & 0.64 & 275 \\
+p2.3.g & 21/3/10.70 & 45 & 83 & 140 & 0.57 & 0.97 & 145 \\
+p3.4.p & 33/4/22.50 & 90 & 170 & 270 & 0.30 & 0.48 & 560 \\
+p5.3.x & 66/3/40.00 & 195 & 295 & 405 & 0.19 & 0.26 & 1555 \\
+p7.2.e & 102/2/50.00 & 8 & 39 & 98 & 0.13 & 0.34 & 290 \\
+p7.4.t & 102/4/100.00 & 40 & 116 & 221 & 0.11 & 0.21 & 1077 \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Resultados de las 200 soluciones generadas por el decodificar simple.}
+\label{tab:resultadosDecoSimple}
+\end{table}
+
+En los resultados de la tabla \ref{tab:resultadosDecoSimple} vemos que para instancias pequeñas los resultados son mejores. En la instancia \textit{p2.3.g} una de las 200 soluciones quedo muy cercana a la mejor solucion conocida, obteniendo un $i_{eMax}=0.97$. Esta instancia tiene los mismos clientes que la instancia \textit{p2.2.k} pero como el $d_{max}$ de \textit{p2.3.g} es prácticamente la mitad que el de \textit{p2.2.k} luego la cantidad de combinaciones de rutas diferentes disminuye considerablemente. Es por eso que obtuve mejores resultados de \textit{p2.3.g}. Por otro lado podemos observar $i_{eAvg}$ disminuye a medida que la instancia tiene mayor numero de clientes. Los peores resultados los obtuvo la instancia \textit{p7.4.t}, la instancia de mayor cantidad de clientes y mayor $d_{max}$.
+
+\subsection{Características y debilidades del decodificador simple}
+
+Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la práctica nunca se llega a visitar a todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logro insertar en su ruta. Por lo tanto en la practica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
+
+\bigskip
+
+Una característica menos relevante es el orden en que quedan los clientes asignados en los vehículos al ver el vector de \textit{RandomKeys}.  Sea $v$ el vector de clientes ordenados por un vector de \textit{RandomKeys}. Existen $m+1$ índices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solución. En otras palabras, los clientes quedan agrupados por vehículo cuando los vemos en el vector ordenado. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
 
 \begin{figure}[h]
-	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de RandomKeys de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de tiempo, no intento agregar a los siguientes clientes.}
+	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de \textit{RandomKeys} de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de tiempo, no intento agregar a los siguientes clientes.}
 	\centering
 	\includegraphics[width=14cm]{DistribucionClientesDecoSimple}
 	\label{fig:DistribucionClientesDecoSimple}
@@ -202,28 +210,34 @@ Una característica menos relevante es el orden en que quedan los clientes asign
 
 \bigskip
 
-Un problema que tiene este decodificar es en la existencia de un cliente inalcanzable, es decir si existe $c$ cliente tal que:
+Un problema que tiene este decodificar es en la existencia de un cliente inalcanzable. Un cliente inalcanzable es aquel que no puede insertarse en una ruta aún cuando la ruta no contiene ningún otro cliente. En la función \ref{eq:inalcanzable} podemos distinguir cuando un cliente no se lo puede agregar en ninguna ruta.
 
 \bigskip
 
-\( distancia(i, c)\, +\, distancia(c, f)\, >\, tMax\)
+\begin{mycapequ}[!ht]
+	\caption{Función para evaluar si un cliente es inalcanzable.}
+	\begin{equation} \label{eq:inalcanzable}
+	distancia(n_i, c)\, +\, distancia(c, n_f)\, >\, d_{max}
+	\end{equation}
+\end{mycapequ}
 
 \bigskip
 
-Esto puede generar soluciones de la población donde existan vehículos con rutas vacías. Supongamos que existe un cliente inalcanzable y que es el primer cliente en ser considerado a agregar a la ruta de un vehículo, como el cliente es inalcanzable no entra en la ruta del primer vehículo luego se considera que el vehículo tiene la ruta completa y se pasa con el siguiente vehículo y así sucesivamente. La solución fácil a este problema es filtrando todos los clientes inalcanzables previo a la ejecución del BRKGA. Esta solución es la mejor y mas barata ya que reducimos el tamaño del problema antes de comenzar a resolverlo.
+Si utilizamos el decodificador simple y tenemos un cliente inalcanzable en el mapa, existe el escenario en el cual hay soluciones de la población donde todos los vehículos tienen sus rutas vacías. Supongamos que existe un cliente inalcanzable y que es el primer cliente que se intenta agregar en la ruta del primer vehículo. Como el cliente es inalcanzable no entra en la ruta, entonces se considera que el vehículo tiene la ruta completa y se pasa con el siguiente vehículo dejando su ruta vacía. Esto se repite con todos los vehículos ya que tienen el mismo valor de $d_{max}$. La solución óptima a este problema es filtrar todos los clientes inalcanzables previo a la ejecución del BRKGA utilizando un método que modele la función \ref{eq:inalcanzable}. Haciendo esto no solo evitamos el escenario de rutas vacías, también reducimos el tamaño del problema antes de comenzar a resolverlo. 
 
 \bigskip
 
-Otro problema que tiene este decodificador es que cambia de vehículo al primer intento fallido de expandir su ruta. Luego puede generar soluciones con rutas muy pequeñas, por este motivo implementé el \textit{Decodificador Goloso}.
+Como el decodificador simple cambia de vehículo al primer intento fallido de expandir su ruta, las soluciones que genera tienen rutas muy pequeñas. Seguramente existen algunos clientes que podrían insertarse a la ruta del vehículo actual. Es por este motivo implementé el \textit{Decodificador Goloso}.
 
 
 \subsection{Decodificador Goloso}
 
-El decodificador goloso en principio funciona igual que el decodificador simple hasta que llega a un cliente que no pudo agregar a la ruta de un vehículo. En este caso, en vez de pasar a trabajar con el siguiente vehículo disponible, intenta agregar al siguiente cliente y así sucesivamente hasta que no hay mas clientes que intentar. Luego al pasar al siguiente vehículo intenta solamente con los clientes no asignados a los vehículos anteriores y siempre respetando el orden de los clientes asignado por el vector de enteros aleatorios.
+El decodificador goloso en principio funciona igual que el decodificador simple hasta que llega a un cliente que no puede agregar a la ruta de un vehículo determinado. En este caso, en vez de pasar a trabajar con el siguiente vehículo disponible, intenta agregar al siguiente cliente y así sucesivamente hasta que no hay más clientes con los cuales intentar agregar al vehículo actual. Después, al pasar al siguiente vehículo intenta con los clientes no asignados a los vehículos anteriores y siempre respetando el orden de los clientes asignado por el vector de \textit{RandomKeys}. Podemos ver en detalle como implementé el método \textit{Decode} del decodificador goloso en el pseudocódigo \ref{func:decodeGoloso}.  
 
 \bigskip
 
-\begin{lstlisting} 
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Función \textit{Decode} del decodificador goloso. }, label={func:decodeGoloso}]
 public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 {
 	var clients = GetOrderedClients(randomKeys);
@@ -248,17 +262,18 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 	return problem;
 }
 \end{lstlisting}
+\end{minipage}
 
 \bigskip
 
-Con esta modificación su orden complejidad aumenta a $0(\#clientes * \#vehiculos)$. El metodo \textit{decode} es usado tantas veces que este a lo largo del BRKGA que este pequeño aumento en su complejidad algorítmica tiene un impacto visible en el tiempo de ejecución. Por otro lado, en promedio aumenta el beneficio de las soluciones generadas por el decodificador. Esa es la compensación que tenemos entre el decodificador simple y el goloso. 
+Como podemos observar en el pseudocódigo \ref{func:decodeGoloso}, su complejidad es $0(\#clientes * \#vehiculos)$. El método \textit{Decode} es usado tantas veces a lo largo del BRKGA que este pequeño aumento en su complejidad algorítmica tiene un impacto visible en el tiempo de ejecución total. Por otro lado, utilizar el decodificador goloso mejora el beneficio de las soluciones generadas respecto de las soluciones generadas por el decodificador simple. Esa es la compensación que tenemos entre el decodificador simple y el goloso.
 
 \bigskip
 
-Una observación de menor importancia que podemos hacer sobre el decodificador goloso es que al observar el vector ordenado de \textit{RandomKeys}, ya no tenemos los clientes de forma continua según su vehículo asignado como sucedía con el decodificador simple. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
+Otra característica que podemos mencionar sobre el decodificador goloso es que al observar el vector ordenado de \textit{RandomKeys}, ya no tenemos a los clientes de forma continua según su vehículo asignado como sucedía con el decodificador simple. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
 
 \begin{figure}[h]
-	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir el cliente 5, intenta en orden con el resto de los clientes aún no visitados y logra insertar el cliente 8. De un modo simlilar, sucede con la segunda ruta al no poder incluir al cliente 4.}
+	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir al cliente 5, en cambio intenta con el resto de los clientes aún no visitados manteniendo el orden y logra insertar al cliente 8. De un modo similar, sucede con la segunda ruta al no poder incluir al cliente 4. Con el cliente 8 no lo intenta por que esta asignado a la primer ruta. Intenta con éxito insertar al cliente 3 y por ultimo falla con el cliente 7. }
 	\centering
 	\includegraphics[width=14cm]{DistribucionClientesDecoGoloso}
 	\label{fig:DistribucionClientesDecoGoloso}
@@ -266,24 +281,30 @@ Una observación de menor importancia que podemos hacer sobre el decodificador g
 
 \bigskip
 
-Del mismo modo que hice con el decodificador simple, le hice el mismo análisis de rendimiento al decodificador goloso. Genere otros 200 vectores de \textit{RandomKeys} para cada una de las mismas seis instancias de problemas y el decodificador goloso creo 200 soluciones validas para cada uno de seis los problemas:
+Le hice un análisis de rendimiento al decodificador goloso del mismo modo que lo hice con el decodificador simple. Generé otros 200 vectores de \textit{RandomKeys} para cada una de las mismas seis instancias de problemas y el decodificador goloso creó 200 soluciones válidas.
 
+\begin{table}
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
 \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $\#S$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
+Instancia & N/V/D & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
 \hline
-p2.2.k & 21 & 2 & 22.50 & 200 & 260 & 95 & 164 & 0.60 & 275   \\
-p2.3.g & 21 & 3 & 10.70 & 200 & 140 & 95 & 122 & 0.84 & 145   \\
-p3.4.p & 33 & 4 & 22.50 & 200 & 410 & 180 & 288 & 0.51 & 560   \\
-p5.3.x & 66 & 3 & 40.00 & 200 & 525 & 305 & 412 & 0.26 & 1555   \\
-p7.2.e & 102 & 2 & 50.00 & 200 & 163 & 31 & 96 & 0.33 & 290   \\
-p7.4.t & 102 & 4 & 100.00 & 200 & 438 & 160 & 280 & 0.26 & 1077   \\
+p2.2.k & 21/2/22.50 & 95 & 164 & 260 & 0.60 & 0.95 & 275 \\
+p2.3.g & 21/3/10.70 & 95 & 122 & 140 & 0.84 & 0.97 & 145 \\
+p3.4.p & 33/4/22.50 & 180 & 288 & 410 & 0.51 & 0.73 & 560 \\
+p5.3.x & 66/3/40.00 & 305 & 412 & 525 & 0.26 & 0.34 & 1555 \\
+p7.2.e & 102/2/50.00 & 31 & 96 & 163 & 0.33 & 0.56 & 290 \\
+p7.4.t & 102/4/100.00 & 160 & 280 & 438 & 0.26 & 0.41 & 1077 \\
 \hline
 \end{tabular}
 \end{center}
+\caption{Resultados de las 200 soluciones generadas por el decodificar goloso.}
+\label{tab:resultadosDecoGoloso}
+\end{table}
 
-Todos los resultados promedio, mínimo y máximos mejoran considerablemente. Tal es así, que el $i_{eAvg}$ en algunos casos es mayor al doble de lo obtenido con en el decodificador simple. Por otro lado, se vuelve a observar como disminuye $i_{eAvg}$ a medida que crece el tamaño de la instancia del problema.
+\bigskip
+
+Como podemos ver en la tabla \ref{tab:resultadosDecoGoloso}, todos los resultados promedio, mínimo y máximos mejoran considerablemente respecto de los resultados obtenidos con el decodificador simple (tabla \ref{tab:resultadosDecoSimple}). Tal es así, que tanto el $i_{eAvg}$ como el $i_{eMax}$ en algunos casos es mayor al doble de lo obtenido con en el decodificador simple. También se vuelve a observar como disminuye $i_{eAvg}$ a medida que crece el tamaño de la instancia del problema.
 
 \section{Biased Random Key Genetic Algorithms}
 
