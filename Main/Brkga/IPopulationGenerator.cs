@@ -99,8 +99,7 @@ namespace Main.Brkga
         public Population Generate(int amountToGenerate)
         {
             var population = new Population();
-
-            var randomGenerator = new Random();
+            
             for (var index = 0; index < amountToGenerate; index++)
             {
                 var encodedSolution = GenerateEncodedSolution(population.EncodedProblems);

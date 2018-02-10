@@ -304,15 +304,11 @@ p7.4.t & 102/4/100.00 & 160 & 280 & 438 & 0.26 & 0.41 & 1077 \\
 
 \bigskip
 
-Como podemos ver en la tabla \ref{tab:resultadosDecoGoloso}, todos los resultados promedio, mínimo y máximos mejoran considerablemente respecto de los resultados obtenidos con el decodificador simple (tabla \ref{tab:resultadosDecoSimple}). Tal es así, que tanto el $i_{eAvg}$ como el $i_{eMax}$ en algunos casos es mayor al doble de lo obtenido con en el decodificador simple. También se vuelve a observar como disminuye $i_{eAvg}$ a medida que crece el tamaño de la instancia del problema.
+Como podemos ver en la tabla \ref{tab:resultadosDecoGoloso}, todos los resultados promedio, mínimo y máximo mejoran considerablemente respecto de los resultados obtenidos con el decodificador simple (tabla \ref{tab:resultadosDecoSimple}). Tal es así, que tanto el $i_{eAvg}$ como el $i_{eMax}$ en algunos casos es mayor al doble de lo obtenido con en el decodificador simple. También se vuelve a observar como disminuye $i_{eAvg}$ a medida que crece el tamaño de la instancia del problema.
 
 \section{Biased Random Key Genetic Algorithms}
 
-En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir se crea una nueva generación de soluciones a partir de la generación anterior como se explica en la sección BRKGA (ver sección~\ref{sec:brkga}).
-
-\bigskip
-
-El pseudocódigo \ref{func:RunBrkga} muestra una vista macro general del algoritmo BRKGA implementado.
+En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir se crea una nueva generación de soluciones a partir de la generación anterior como se explica en la sección BRKGA (ver sección~\ref{sec:brkga}). En el pseudocódigo \ref{func:RunBrkga} podemos ver un punto de vista macro del algoritmo BRKGA implementado.
 
 \bigskip
 
@@ -320,19 +316,15 @@ El pseudocódigo \ref{func:RunBrkga} muestra una vista macro general del algorit
 \begin{lstlisting} [caption={Función \textit{RunBrkga}, vista macro de mi implementación.}, label={func:RunBrkga}]
 public Solution RunBrkga(ProblemManager problemManager)
 {
-    ProblemManager.InitializePopulation();
+    var population = InitializePopulation();
 
-    while (!ProblemManager.StoppingRuleFulfilled())
-        ProblemManager.EvolvePopulation();
+    while (!StoppingRuleFulfilled(population))
+        EvolvePopulation(population);
 
-    return ProblemManager.Population.GetMostProfitableSolution();
+    return GetMostProfitableSolution(population);
 }
 \end{lstlisting}
 \end{minipage}
-
-\bigskip
-
-El objeto \textit{ProblemManager} es el orquestrador del BRKGA, se instancia con un objeto \textit{Configuración} y el objeto \textit{PopulationGenerator} como parámetros. Tiene acceso de forma indirecta a toda la información del problema (vehículos, clientes, tMax, etc.) a través del objeto \textit{PopulationGenerator}.
 
 \subsection{Configuración} \label{sec:config}
 
@@ -428,16 +420,49 @@ Entonces leyendo la propiedad \textit{Description} podemos ver como esta configu
 
 \subsection{Inicialización de la Población}
 
-Utilizando \textit{PopulationSize} del objeto \textit{Configuration} seteo el tamaña de la población. Luego para generar la población inicial se generaran \textit{PopulationSize} vectores de enteros aleatorios de tamaño $\#clientes$ de la instancia del problema. Este conjunto de vectores se lo pasa como argumento al decodificador, quien genere un individuo por cada vector de enteros aleatorios.
+Utilizando \textit{PopulationSize} del objeto \textit{Configuration} defino el tamaño de la población. Como el decodificador genera un individuo a partir de un vector de \textit{RandomKeys}, entonces para inicializar la población primero se generan una cantidad de vectores de \textit{RandomKeys} igual al valor de \textit{PopulationSize}. Estos vectores de \textit{RandomKeys} tendrán un tamaño igual a la cantidad de clientes alcanzables de la instancia del problema. El vector de \textit{RandomKeys} es el parámetro que recibe el decodificador como podemos ver en el pseudocódigo \ref{func:InitializePopulation}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Genereción de la población inicial.}, label={func:InitializePopulation}]
+public Population InitializePopulation()
+{ 
+	var population = new Population();
+	while (population.Length < PopulationSize)
+	{
+		var randomKeys = GenerateRandomKey(Clients)
+		population.Add(Decoder.Decode(randomKeys));
+	}
+}
+\end{lstlisting}
+\end{minipage}
+
+El el pseudocódigo \ref{func:GenerateRandomKey} podemos ver como se genera un vector de \textit{RandomKeys}. Es muy sencillo, por cada cliente se crea un \textit{RandomKey} y se valida que no existan dos \textit{RandomKeys} con mismo valor en su campo \textit{Key}.
+
+\begin{minipage}{\linewidth}
+\begin{lstlisting} [caption={Genereción de un vector de \textit{RandomKeys}.}, label={func:GenerateRandomKey}]
+public List<RandomKey> GenerateRandomKey(List<Client> clients)
+{
+	var randomKeys = new List<RandomKey>();
+	foreach (var client in clients)
+	{
+		var nextRandom = RandomGenerator.Next(0, 1000);
+		while (randomKeys.Any(r => r.Key == nextRandom))
+			nextRandom++;
+		randomKeys.Add(new RandomKey(nextRandom, client.Id));
+	}
+	return randomVector;
+}
+\end{lstlisting}
+\end{minipage}
 
 \subsection{Condición de parada}
 
-En un principio la condición de parada era simple, el bucle terminaba cuando iteraba una \textit{MinIterations} veces, seteado en el objeto \textit{Configurations}. Es decir que el bucle principal cortaba luego de evolucionar la población $MinIerations$ veces. Luego de analizar las últimas generaciones de la solución y ver que era frecuente que la mejor solución se había generado recientemente, agregue una condición de corte adicional. Ahora, para cortar ademas de la condición anterior, el beneficio de la mejor solución no debería haberse modificado durante las últimas \textit{MinNoChanges} generaciones. Es decir durante las últimas \textit{MinNoChanges} generaciones no debe haber aparecido una nueva mejor solución. \textit{MinNoChanges} es un entero que se setea en el objeto \textit{Configurations}.
+En una primera instancia de mi implementación la condición de parada era simple, el bucle terminaba cuando iteraba \textit{MinIterations} veces. Es decir que el bucle principal cortaba luego de evolucionar la población \textit{MinIterations} veces. Después de analizar varias ejecuciones noté que frecuentemente la mejor solución de la población se había generado en las ultimas evoluciones, por lo tanto agregue una condición de corte adicional: la mejor solución no debe haberse modificado durante las últimas \textit{MinNoChanges} generaciones. Podemos ver ambas condiciones de parada en el pseudocódigo \ref{func:GenerateRandomKey}.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} 
+\begin{lstlisting} [caption={Condición de parada del BRKGA.}, label={func:GenerateRandomKey}]
 public bool StoppingRuleFulfilled()
 { 
     return GenerationNum >= MinIterations && NoChanges();
@@ -450,9 +475,11 @@ private bool NoChanges()
 \end{lstlisting}
 \end{minipage}
 
+El \textit{LastProfits} del pseudocódigo \ref{func:GenerateRandomKey}, es una cola de tamaño \textit{MinNoChanges} que contiene los beneficios de las mejores soluciones de las ultimas generaciones. Si todos son iguales al beneficio de la mejor solución actual significa que no hubo cambios en las últimas \textit{MinNoChanges} generaciones.
+
 \subsection{Evolución de la población}
 
-Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Pasan a la nueva generación todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA ~(ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. A continuación el pseudocódigo de la evolución de la población.
+Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Pasan a la nueva generación todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA (ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. A continuación el pseudocódigo de la evolución de la población.
 
 \bigskip
 
