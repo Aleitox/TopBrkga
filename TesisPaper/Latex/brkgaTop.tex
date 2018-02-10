@@ -418,39 +418,17 @@ Entonces leyendo la propiedad \textit{Description} podemos ver como esta configu
 \end{itemize}
 \end{minipage}
 
-\subsection{Inicialización de la Población}
+\subsection{Inicialización de la Población}\label{subsec:InitializePopulation}
 
-Utilizando \textit{PopulationSize} del objeto \textit{Configuration} defino el tamaño de la población. Como el decodificador genera un individuo a partir de un vector de \textit{RandomKeys}, entonces para inicializar la población primero se generan una cantidad de vectores de \textit{RandomKeys} igual al valor de \textit{PopulationSize}. Estos vectores de \textit{RandomKeys} tendrán un tamaño igual a la cantidad de clientes alcanzables de la instancia del problema. El vector de \textit{RandomKeys} es el parámetro que recibe el decodificador como podemos ver en el pseudocódigo \ref{func:InitializePopulation}.
+La población inicial se crea llamando al método \textit{AddMutants} explicado mas adelante. La inicialización de la población utiliza el mismo método que para crear soluciones mutantes ya que en ambos casos se requiere soluciones generadas al azar. Podemos ver el pseudocódigo \ref{func:InitializePopulation} como el método \textit{InitializePopulation} no es más que un llamado a \textit{AddMutants} con \textit{PopulationSize} como único parámetro que especifica cuantos individuos deben ser creados.
 
 \begin{minipage}{\linewidth}
 \begin{lstlisting} [caption={Genereción de la población inicial.}, label={func:InitializePopulation}]
 public Population InitializePopulation()
 { 
 	var population = new Population();
-	while (population.Length < PopulationSize)
-	{
-		var randomKeys = GenerateRandomKey(Clients)
-		population.Add(Decoder.Decode(randomKeys));
-	}
-}
-\end{lstlisting}
-\end{minipage}
-
-El el pseudocódigo \ref{func:GenerateRandomKey} podemos ver como se genera un vector de \textit{RandomKeys}. Es muy sencillo, por cada cliente se crea un \textit{RandomKey} y se valida que no existan dos \textit{RandomKeys} con mismo valor en su campo \textit{Key}.
-
-\begin{minipage}{\linewidth}
-\begin{lstlisting} [caption={Genereción de un vector de \textit{RandomKeys}.}, label={func:GenerateRandomKey}]
-public List<RandomKey> GenerateRandomKey(List<Client> clients)
-{
-	var randomKeys = new List<RandomKey>();
-	foreach (var client in clients)
-	{
-		var nextRandom = RandomGenerator.Next(0, 1000);
-		while (randomKeys.Any(r => r.Key == nextRandom))
-			nextRandom++;
-		randomKeys.Add(new RandomKey(nextRandom, client.Id));
-	}
-	return randomVector;
+	population.AddMutants(PopulationSize);
+	return population;
 }
 \end{lstlisting}
 \end{minipage}
@@ -479,43 +457,49 @@ El \textit{LastProfits} del pseudocódigo \ref{func:GenerateRandomKey}, es una c
 
 \subsection{Evolución de la población}
 
-Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Pasan a la nueva generación todos los individuos de la población de elite y se agregan los de la población mutante. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA (ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. A continuación el pseudocódigo de la evolución de la población.
+Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA (ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. De ser idéntica a otra solución, se genera una solución aleatoria del mismo modo que se generaron los mutantes. En el pseudocódigo \ref{func:Evolve} podemos ver como evoluciona una población.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Evolución de la población.}, label={func:Evolve}]
 public Population Evolve(Population population)
 {
-    var ordPopulation = population.GetOrderByMostProfitable();
-    var elites = ordPopulation.Take(EliteSize);
-    var nonElites = ordPopulation.Skip(EliteSize).Take(NonEliteSize);
-    var mutatants = Generate(MutatansSize);
-    var evolvedPopulation = new pop(elites, mutatants);
-    while (evolvedPopulation.Size() < PopulationSize)
-    {
-	var anElite = GetRandomItem(elites);
-	var aNoneElite = GetRandomItem(nonElites);
-      var childSolution = Mate(anElite, aNoneElite);
-	if (evolvedPopulation.Any(x => x.Equals(childSolution)))
-		evolvedPopulation.Add(GenerateSolution());
-      else
-		evolvedPopulation.Add(childSolution);
-    }
-    return evolvedPopulation;
+	var ordPopulation = population.GetOrderByMostProfitable();
+	var elites = ordPopulation.Take(EliteSize);
+	var nonElites = ordPopulation.Skip(EliteSize).Take(NonEliteSize);
+	var evolvedPopulation = new Population(elites);
+	evolvedPopulation.AddMutants(MutatansSize);
+	while (evolvedPopulation.Size() < PopulationSize)
+	{
+		var anElite = GetRandomItem(elites);
+		var aNoneElite = GetRandomItem(nonElites);
+		var childSolution = Mate(anElite, aNoneElite);
+		if (evolvedPopulation.Any(x => x.Equals(childSolution)))
+			evolvedPopulation.AddMutants(1);
+		else
+			evolvedPopulation.Add(childSolution);
+	}
+	return evolvedPopulation;
 }
 \end{lstlisting}
 \end{minipage}
 
+\bigskip
+
+El proceso más importante de la evolución es el \textit{crossover}. En el pseudocódigo \ref{func:Mate} observamos el proceso de apareamiento como lo describí en la sección \ref{sec:brkga}. Se crea un vector de \textit{RandomKeys} a partir de los vectores de \textit{RandomKeys} de un individuo elite y otro no-elite. Se determina que alelos recibirá el individuo resultante a partir de un decimal aleatorio en el intervalo [0, 1] y su comparación con la propiedad \textit{EliteGenChance}.
+
+\bigskip
+
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Crossover de dos individuos.}, label={func:Mate}]
 private Solution Mate(Solution eliteP, Solution nonEliteP)
 {
 	var childRandomKeys = new List<RandomKey>();
 	for (var index = 0; index < eliteP.RandomKeys.Count; index ++)
 	{
 		int key = 0;
-		if(Random.Next(100) >= EliteGenChance)
+		if(Random.NextDecimal(0, 1) >= EliteGenChance)
 			key = eliteP.RandomKeys[index].Key;
 		else
 			key = nonEliteP.RandomKeys[index].Key;
@@ -529,22 +513,30 @@ private Solution Mate(Solution eliteP, Solution nonEliteP)
 
 \bigskip
 
-Como mencioné anteriormente, los individuos mutantes son individuos generados a partir de un vector de \textit{RandomKeys}, del mismo modo que la población inicial. Con el fin de mostrar lo simple que es la generación de un nuevo vector de \textit{RandomKeys}, presento el pseudocódigo del \textit{GenerateSolution} que al final termina llamando al método \textit{Decode} de alguno de los decodificador descrito anteriormente (puede ser cualquiera).
+Otro proceso muy importante de la evolución es la generación de los individuos mutantes. Cada uno es generado al azar a partir de un vector de \textit{RandomKeys}, del mismo modo que son generados los individuos de la población inicial como mencioné en \ref{subsec:InitializePopulation}. El pseudocódigo \ref{func:AddMutants} muestra como se crean los individuos mutante. El método \textit{AddMutants} toma como parámetro la cantidad de individuos que debe generar y por cada uno que debe generar crea un vector de \textit{RandomKeys}. Si la solución resultante del vector de \textit{RandomKeys} decodificado es igual a alguna de las soluciones existentes, deshace el vector de \textit{RandomKeys} y genera uno nuevo. En caso contrario agrega la solución a la población de soluciones.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
-private Solution GenerateSolution()()
+\begin{lstlisting} [caption={Crossover de dos individuos.}, label={func:AddMutants}]
+private void AddMutants(int amount)
 {
-	var randomKeys = new List<RandomKey>();
-	for(i = 0; i < ProblemInfo.Clients.Length; i++)
+	var solutions = new List<Solution>();
+	for(var j = 0; j < amount; j++)
 	{
-		var key = Random.Next(1000);
-		var randomKey = new RandomKey(key, index);
-		randomKeys.Add(randomKey)
-	}
-	return Decoder.Decode(randomKeys, ProblemInfo);
+		var randomKeys = new List<RandomKey>();
+		for(i = 0; i < ProblemInfo.Clients.Length; i++)
+		{
+			var key = Random.Next(1000);
+			var randomKey = new RandomKey(key, index);
+			randomKeys.Add(randomKey)
+		}		
+		var solution = Decoder.Decode(randomKeys, ProblemInfo);
+		if (Solutions.Any(x => x.Equals(solution)))
+			j--;
+		else
+			Solutions.Add(solution);
+	}	
 }
 \end{lstlisting}
 \end{minipage}
