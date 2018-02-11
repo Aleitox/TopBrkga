@@ -721,21 +721,23 @@ Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un 
 
 \subsection{Swap}
 
-El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas, respetando la restricción de distancia máxima por vehículo. Es decir dados $v_a$, $v_b$ vehículos y sus respectivas rutas $r_a$, $r_b$, se puede realizar un \textit{swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$, son validas las siguientes formulas:
+El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas. Es decir, dados $v_a$ y $v_b$ vehículos y sus respectivas rutas $r_a$ y $r_b$, se puede realizar un \textit{Swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$ son válidas las formulas \ref{eq:swap1}, \ref{eq:swap2} y \ref{eq:swap3}.
 
-\begin{equation*}
-r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist \nonumber
-\end{equation*}
-
-\begin{equation*}
+\begin{equation}\label{eq:swap1}
+r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist
+\end{equation} 
+\begin{equation}\label{eq:swap2}
 r_a'.Dist \leq v'_a.tMax
-\end{equation*}
-
-\begin{equation*}
+\end{equation} 
+\begin{equation}\label{eq:swap3}
 r_b'.Dist \leq v'_b.tMax
-\end{equation*}
+\end{equation} 
 
-Al aplicar esta búsqueda a una solución, para todo par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Por lo tanto, este método sera llamado $n * (n-1) / 2$, siendo $n$ la cantidad de rutas en la solución. \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, y si efectivamente conviene hacer un \textit{swap}, lo realiza. Luego continua probando si conviene intercambiar otro par de clientes entre las mismas rutas. De modo de no estar cambiando múltiples veces un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente, se lo agrega en una lista de clientes prohibidos para hacer intercambiar hasta que termine la ejecución actual de \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta, aumentando la probabilidad de encontrar algún cliente no visitado que se pueda insertar en alguna de las rutas modificadas.
+\bigskip
+
+TODO ACA. Agregar referencias a los pseudocodigos
+
+Al aplicar esta búsqueda a una solución, para todo par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, y si efectivamente conviene hacer un \textit{swap}, lo realiza. Luego continua probando si conviene intercambiar otro par de clientes entre las mismas rutas. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual de \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
 
 \bigskip
 
