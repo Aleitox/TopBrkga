@@ -664,52 +664,57 @@ Como podemos ver en los resultados de la tabla \ref{tab:resultadosBrkgaPuro}, se
 
 \section{Búsquedas Locales}
 
-Con el objetivo de optimizar los resultados obtenidos hasta el momento, implementé algunas búsquedas locales. La idea fue aplicar estas búsquedas a algunas de las mejores soluciones de cada generación. La cantidad de individuos a mejorar por generación es regida por el atributo \textit{ApplyLocalSearchesToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. Como mencioné en la revisión bibliográfica, existen algunos trabajos previos de la literatura que aplican búsquedas locales en su propuesta. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado. La solución resultante luego de aplicar las búsquedas siempre es válida. Es decir, se sigue respetando las restricción de la distancia máxima de la ruta de los vehículos y ningún cliente es visitado más de una vez. 
+Con el objetivo de optimizar los resultados obtenidos hasta el momento, implementé algunas búsquedas locales. La idea fue aplicar estas búsquedas a algunas de las mejores soluciones de cada generación. La cantidad de individuos a mejorar por generación es regida por el atributo \textit{ApplyLocalSearchesToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado. La solución resultante de aplicar las búsquedas siempre es válida. Es decir, la solución resultante respeta la distancia máxima de la ruta de los vehículos y ningún cliente es visitado más de una vez. 
 
-\subsection{Center of Gravity}
+\subsection{Centro de Gravedad}
 
-Para las búsquedas local \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes a considerar con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza es por su distancia al centro de gravedad (COG) de una ruta. A menor distancia, mayor prioridad tendrá el cliente. Implementé el calculo de COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada COG de una ruta se calcula con las siguientes formulas:
+Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza esta dado por su distancia al centro de gravedad (COG) de la ruta a la cual se le aplica el \textit{Insert} o el \textit{Replace}. Cuanto más cercano sea el cliente al COG de la ruta a optimizar, mayor prioridad tendrá el cliente. Implementé el cálculo del COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada del COG de una ruta se calcula como muestran las formulas \ref{eq:cogX} y \ref{eq:cogY}.
 
-\begin{equation}
-x_{cog} = (\sum_{\forall i \in ruta} x_i * B_i) / \sum_{\forall i \in ruta} B_i
-\end{equation}
+\begin{mycapequ}[!ht]
+	\caption{Coordenada X del COG de una ruta.}
+	\begin{equation} \label{eq:cogX}
+	x_{cog} = (\sum_{\forall i \in ruta} x_i * B_i) / \sum_{\forall i \in ruta} B_i
+	\end{equation}
+\end{mycapequ}
 
-\begin{equation}
-y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i
-\end{equation}
+\begin{mycapequ}[!ht]
+	\caption{Coordenada Y del COG de una ruta.}
+	\begin{equation} \label{eq:cogY}
+	y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i
+	\end{equation}
+\end{mycapequ}
 
 \bigskip
 
-Donde $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio.
-El calculo de COG tiene una complejidad de $O(ruta.Length)$. No es tan costoso, de todos modos como no quiero realizar cálculos innecesarios, el COG de una ruta solo se calcula cuando se necesita, es decir cuando la solución es seleccionada para ser mejorada. Se calcula una sola vez y cuando se modifica la ruta, actualizo el COG.
+Donde $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio. El cálculo del COG tiene una complejidad de $O(ruta.Length)$. Para no realizar cálculos innecesarios, el COG de una ruta solo se calcula cuando se necesita. Es decir, cuando la solución es seleccionada para ser mejorada. Se calcula una sola vez y cuando se modifica la ruta, se actualiza su COG.
 
 \bigskip
 
 Sea $r$ una ruta:
 
-\begin{equation}
-r.x_{cog} =  \frac{\sum_{\forall i \in ruta} x_i * B_i}{\sum_{\forall i \in ruta} B_i}  = \frac{r.x_{cog.num}}{r.x_{cog.den}}
+\begin{equation} \label{eq:cogNumDen}
+r.x_{cog} =  \frac{\sum_{\forall i \in r.ruta} x_i * B_i}{\sum_{\forall i \in r.ruta} B_i}  = \frac{r.x_{cog.num}}{r.x_{cog.den}}
 \end{equation}
 
 \bigskip
 
 Sea $r' = r.Remove(c_j)$ con $c_j$ cliente y $c_j \in r$:
 
-\begin{equation}
-r'.x_{cog} =  \frac{\sum_{\forall i \in ruta \wedge i \neq j} x_i * B_i}{\sum_{\forall i \in ruta \wedge i \neq j} B_i}  = \frac{r.x_{cog.num}-x_j*B_j}{r.x_{cog.den}-B_j}
+\begin{equation} \label{eq:cogRemove}
+r'.x_{cog} =  \frac{\sum_{\forall i \in r.ruta \wedge i \neq j} x_i * B_i}{\sum_{\forall i \in r.ruta \wedge i \neq j} B_i}  = \frac{r.x_{cog.num}-x_j*B_j}{r.x_{cog.den}-B_j}
 \end{equation}
 
 \bigskip
 
 Sea $r'' = r.Add(c_k)$ con $c_k$ cliente y $c_k \notin r$:
 
-\begin{equation}
-r'.x_{cog} =  \frac{(\sum_{\forall i \in ruta} x_i * B_i) + x_k * B_k}{(\sum_{\forall i \in ruta} B_i) + B_k}  = \frac{r.x_{cog.num}+x_k*B_k}{r.x_{cog.den}+B_k}
+\begin{equation} \label{eq:cogAdd}
+r'.x_{cog} =  \frac{(\sum_{\forall i \in r.ruta} x_i * B_i) + x_k * B_k}{(\sum_{\forall i \in r.ruta} B_i) + B_k}  = \frac{r.x_{cog.num}+x_k*B_k}{r.x_{cog.den}+B_k}
 \end{equation}
 
 \bigskip
 
-Luego actualizar el COG de una ruta al agregar ó remover un cliente tiene una complejidad de $O(1)$ si no perdemos los valores de $x_{cog.num}$ y $x_{cog.den}$ al calcular COG (Lo mismo aplica para la coordenada $y$).
+Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un cliente de una ruta, hay que remover del COG el impacto que tenía el cliente eliminado sobre el COG (Ídem cuando se inserta un cliente en la ruta). La actualizacion del COG puede implementarse con un complejidad de $O(1)$ si mantenemos los valores de $x_{cog.num}$ y $x_{cog.den}$ cuando calculamos el COG por primera vez como se observa en la formula \ref{eq:cogNumDen}. La formula \ref{eq:cogRemove} muestra como se actualiza el COG en $O(1)$ luego de remover un cliente utilizando los valores de $x_{cog.num}$ y $x_{cog.den}$. Ídem formula \ref{eq:cogAdd} para el caso en que se inserta un cliente.
 
 \bigskip
 
