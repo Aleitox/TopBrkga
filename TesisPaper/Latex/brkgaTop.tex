@@ -727,24 +727,21 @@ El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rut
 r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist
 \end{equation} 
 \begin{equation}\label{eq:swap2}
-r_a'.Dist \leq v'_a.tMax
+r_a'.Dist \leq v'_a.d_{max}
 \end{equation} 
 \begin{equation}\label{eq:swap3}
-r_b'.Dist \leq v'_b.tMax
+r_b'.Dist \leq v'_b.d_{max}
 \end{equation} 
 
 \bigskip
 
-TODO ACA. Agregar referencias a los pseudocodigos
-
-Al aplicar esta búsqueda a una solución, para todo par de rutas se ejecuta el método \textit{SwapDestinationsBetween}. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween} prueba cada cliente de la ruta $a$ con cada cliente de la ruta $b$, y si efectivamente conviene hacer un \textit{swap}, lo realiza. Luego continua probando si conviene intercambiar otro par de clientes entre las mismas rutas. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución de \textit{SwapDestinationsBetween}, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual de \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
+En el pseudocódigo \ref{func:ApplyHeuristicSwap} podemos ver que al aplicar esta búsqueda a una solución se ejecuta el método \textit{SwapDestinationsBetween} para todo par de rutas de la solución. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween}, que podemos observar en el pseudocódigo \ref{func:SwapDestinationsBetween}, prueba intercambiar cada cliente de la ruta $a$ con cada cliente de la ruta $b$ y si efectivamente conviene hacer un \textit{Swap}, lo realiza. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual del \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
-// Dentro de clase SwapHeuristic
-public void ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Swap}.}, label={func:ApplyHeuristicSwap}]
+public bool ApplyHeuristic(Solution solution)
 {
 	var changed = false;
 	var combinations = GetCombinationsFor(solution.Vehicles.Count);
@@ -754,14 +751,13 @@ public void ApplyHeuristic(Solution solution)
 		var v2 = solution.Vehicles[combination.Right];
 		changed = changed || SwapDestinationsBetween(v1, v2);
 	}
-	if(changed)
-		solution = Encoder.UpdateRandomKeys(solution);
+	return changed;
 }
 \end{lstlisting}
 \end{minipage}
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={El método \textit{SwapDestinationsBetween}, prueba intercambiar todos los clientes entre dos rutas.}, label={func:SwapDestinationsBetween}]
 public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 {
 	var changed = false;
@@ -798,14 +794,13 @@ O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
 
 \subsection{Insert}
 
-El objetivo de esta búsqueda local es encontrar una posición en alguna ruta para un cliente no visitado sin sobrepasar el limite de distancia máxima de la ruta. Básicamente para cada vehículo y cada cliente no visitado se busca en que posición se debe insertar el cliente de forma tal que minimice el incremento de distancia recorrida. Si la distancia resultante es menor a la distancia máxima del vehículo, se inserta el cliente en tal posición. En caso contrario, no se inserta y se prueba con el siguiente cliente no visitado. El orden en que se toman los clientes no visitados es según su distancia al COG de la ruta a optimizar, de forma ascendente.
+El objetivo de esta búsqueda local es encontrar una posición en alguna ruta para un cliente no visitado sin sobrepasar el limite de distancia máxima de la ruta. Básicamente para cada vehículo y cada cliente no visitado se busca en que posición se debe insertar el cliente de forma tal que minimice el incremento de distancia recorrida. Si la distancia resultante es menor a la distancia máxima del vehículo, se inserta al cliente en tal posición. En caso contrario, no se inserta y se prueba con el siguiente cliente no visitado. El orden en que se toman los clientes no visitados es según su distancia al COG de la ruta a optimizar, de forma ascendente.
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:ApplyHeuristicInsert}]
 // Dentro de clase InsertHeuristic
-public void ApplyHeuristic(Solution solution)
+public bool ApplyHeuristic(Solution solution)
 {
-	// Lista de los clientes no visitados
 	var changed = false;	
 	var uClients = solution.GetUnvistedClients;	
 	var vehicles = solution.Vehicles;
@@ -824,15 +819,14 @@ public void ApplyHeuristic(Solution solution)
 			}
 		}
 	}
-	if(changed)
-		solution = Encoder.UpdateRandomKeys(solution);
+	return changed;
 }
 \end{lstlisting}
 \end{minipage}
 
 \bigskip
 
-Como mencioné en la implementación de COG, solo se utiliza cuando es necesario, luego para cada vehículo lo primero que hace es activar el COG. Segundo, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} retorna un objeto que tiene seteado dos campos importantes. Un campo de tipo \textit{bool} que denota que el cliente puede ser insertado o no en el vehículo consultado. Y otro campo que tiene la posición donde se debe insertar, en caso de poder insertarse. En caso de poder insertar el cliente, se inserta y se actualiza el COG de la ruta, y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyHeuristic} de la clase \textit{InsertHeuristic} es: 
+Como vemos en el pseudocódigo \ref{func:ApplyHeuristicInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyHeuristic} del \textit{Insert} es: 
 
 \begin{equation*}
 0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
@@ -840,7 +834,7 @@ Como mencioné en la implementación de COG, solo se utiliza cuando es necesario
 
 \subsection{2-opt}
 
-El algoritmo \textit{2-opt} es un simple algoritmo de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un \textit{swap} de posiciones de dos clientes dentro de una misma ruta.
+El algoritmo \textit{2-opt} es un algoritmo simple de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un \textit{swap} de posiciones de dos clientes dentro de una misma ruta.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting}
