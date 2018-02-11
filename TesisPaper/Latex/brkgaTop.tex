@@ -798,7 +798,6 @@ El objetivo de esta búsqueda local es encontrar una posición en alguna ruta pa
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:ApplyHeuristicInsert}]
-// Dentro de clase InsertHeuristic
 public bool ApplyHeuristic(Solution solution)
 {
 	var changed = false;	
@@ -832,14 +831,13 @@ Como vemos en el pseudocódigo \ref{func:ApplyHeuristicInsert} al empezar la eje
 0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
 \end{equation*}
 
-\subsection{2-opt}
+\subsection{2-Opt}
 
-El algoritmo \textit{2-opt} es un algoritmo simple de búsqueda local propuesto por Croes \cite{Croes}. El fin es buscar un orden alternativo de los clientes visitados en una dentro de una misma ruta, de modo que disminuya la distancia recorrida de la misma. Es decir, un \textit{swap} de posiciones de dos clientes dentro de una misma ruta.
+El algoritmo \textit{2-Opt} es un algoritmo simple de búsqueda local propuesto por Croes \cite{Croes}. El objetivo es buscar un orden alternativo de los clientes visitados dentro de una misma ruta, de modo que disminuya la distancia recorrida por el vehículo. Es decir, un intercambio de posiciones entre dos clientes dentro de una misma ruta. Como podemos observar en el pseudocódigo \ref{func:ApplyHeuristicInsert} se aplica el método \textit{Do2OptSwap} a cada vehículo de la solución.
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
-// Dentro de clase 2-opt
-public void ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:ApplyHeuristicOptSwap}]
+public bool ApplyHeuristic(Solution solution)
 {
 	var index = 0;
 	var changed = false;	
@@ -850,29 +848,6 @@ public void ApplyHeuristic(Solution solution)
 		changed = changed || Do2OptSwap(vehicles[index]);
 		index++;
 	}
-	if(changed)
-		solution = Encoder.UpdateRandomKeys(solution);
-}
-\end{lstlisting}
-\end{minipage}
-
-\begin{minipage}{\textwidth}
-\begin{lstlisting}
-private bool Do2OptSwap(Vehicle vehicle)
-{
-	var changed = false;	
-	var combinations = GetCombinationsFor(vehicle.Route.GetDistance());
-	var index = 0;
-	while (index < combinations.Count)
-	{
-		var position1 = combinations[index].Item1 - 1;
-		var position2 = combinations[index].Item2 - 1;
-		var swaped = vehicle.Route.SwapIfImprovesDistance(position1, position2);
-		if (!swaped)
-			index++;
-		changed = true;
-		index = 0;
-	}
 	return changed;
 }
 \end{lstlisting}
@@ -880,29 +855,74 @@ private bool Do2OptSwap(Vehicle vehicle)
 
 \bigskip
 
-Básicamente a cada vehículo le aplica el \textit{2-opt}. El método \textit{Do2OptSwap} primero obtiene una lista de las permutaciones posibles. Luego por cada permutación intenta hacer un \textit{swap} dentro de la ruta. Si el \textit{swap} se realiza, vuelve a empezar desde el principio ya que ese cambio puede generar nuevos cambios. Como el \textit{swap} solo sucede cuando la nueva distancia es estrictamente menor, el bucle siempre termina ya que una ruta no puede estar mejorando infinitamente. Este algoritmo tiene un orden de complejidad $0(vehiculos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) ~ 0 (vehiculos * mediaClientesEnRuta^2 / 2)$.
+El método \textit{Do2OptSwap} primero obtiene una lista de las todas las posibles cambios que se pueden hacer dentro de una ruta. Después por cada combinación intenta hacer un intercambio de posiciones dentro de la ruta. El intercambio se realiza solo si al hacerlo la distancia recorrida disminuye. Si en efecto se realiza el reemplazo, el bucle vuelve a empezar desde el principio debido a que el cambio puede generar nuevos reemplazos. Como el reemplazo solo sucede cuando la distancia resultante es estrictamente menor a la distancia original, el bucle siempre termina ya que la distancia del recorrido de la ruta no se puede reducir indefinidamente. El pseudocódigo \ref{func:OptSwap} muestra como implementé el \textit{2-Opt}.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:OptSwap}]
+private bool Do2OptSwap(Vehicle vehicle)
+{
+	var changed = false;	
+	var combinations = GetCombinationsFor(vehicle.Route);
+	var index = 0;
+	while (index < combinations.Count)
+	{
+		var pos1 = combinations[index].Postion1;
+		var pos2 = combinations[index].Postion2;
+		var swaped = vehicle.Route.SwapIfImproves(pos1, pos2);
+		if (swaped)
+		{
+			changed = true;
+			index = 0;
+		}
+		else
+			index++;
+	}
+	return changed;
+}
+\end{lstlisting}
+\end{minipage}
+
+
+\begin{minipage}{\linewidth}
+Este algoritmo tiene un orden de complejidad:
+
+\begin{equation*}
+\begin{split}
+O(2Opt) &= O(veh\acute{i}culos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) \\
+            &= O(veh\acute{i}culos * mediaClientesEnRuta^2 / 2)
+\end{split}
+\end{equation*}
+\end{minipage}
+
+\bigskip
 
 \subsection{Replace Simple}
 
-Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por uno visitado de una ruta de modo que aumente el beneficio de la ruta. Del mismo modo que la heuristica insert, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos.
+Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por un cliente visitado de una ruta de forma tal que aumente el beneficio de la ruta. Del mismo modo que la búsqueda \textit{Insert}, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos. En el pseudocódigo \ref{func:ApplyHeuristicReplaceSimple} vemos que se aplica el \textit{Replace Simple} a cada vehículo de la solución.
+
+\bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
-// Dentro de la clase ReplaceHeuristicas
-public void ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Replace Simple}.}, label={func:ApplyHeuristicReplaceSimple}]
+public bool ApplyHeuristic(Solution solution)
 {	
 	var vehicles = solution.Vehicles;
 	var changed = false;	
 	foreach (var vehicle in vehicles)
 		changed = changed || Replace(solution, vehicle);
-	if(changed)
-		solution = Encoder.UpdateRandomKeys(solution);
+	return changed;
 }
 \end{lstlisting}
 \end{minipage}
 
+\bigskip
+
+El \textit{Replace Simple} es similar al \textit{Insert}. El \textit{Replace Simple} comienza analizando cual es la mejor posición para insertar el cliente no visitado y lo inserta sin verificar que el $d_{max}$ del vehículo haya sido superado. En caso de que la solución siga siendo válida continua con el siguiente cliente del mismo modo que lo hace el \textit{Insert}. El \textit{Replace Simple} se diferencia del \textit{Insert} en el caso en que la solución pase a ser inválida. En tal caso, se debe remover algún cliente de forma tal que se vuelva a respetar la restricción de la distancia máxima, $d_{max}$. Por lo tanto el \textit{Replace Simple} busca un cliente de menor beneficio que el insertado, tal que al removerlo la ruta vuelva a tener una distancia recorrida menor a $d_{max}$. En caso de no encontrar ninguno se remueve el cliente que se había insertado en un principio. Si existen múltiples clientes candidatos a removerse, se elige el que minimice el recorrido de la ruta. Elegí priorizar distancia sobre beneficio en el caso de múltiples candidatos a remover. Tomé tal decisión por que también implementé otro reemplazo enfocado puramente en mejorar el beneficio de la ruta. De este modo los vecindarios explorados por ambas búsquedas de reemplazo contienen menor cantidad de soluciones en común. Llamé a esta búsqueda \textit{Replace Simple} por que tiene una complejidad algorítmica menor que el otro reemplazo y cuando se efectuá un reemplazo siempre se remueve a lo sumo un cliente visitado. Podemos ver el pseudocódigo del \textit{Replace Simple} en la figura \ref{func:ReplaceSimple}.
+
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Método \textit{Replace Simple}.}, label={func:ReplaceSimple}]
 private bool Replace(Solution solution, Vehicle vehicle)
 {
 	var unvisited = solution.GetCurrentUnvistedDestination;
@@ -926,10 +946,6 @@ private bool Replace(Solution solution, Vehicle vehicle)
 }
 \end{lstlisting}
 \end{minipage}
-
-\bigskip
-
-El \textit{Replace Simple} es muy similar al \textit{Insert} y esto se refleja en el pseudocódigo. Ante un cliente no visitado, lo primero que hace es analizar si se puede insertar y cual es la mejor posición donde se puede insertar, llamando al método \textit{AnalizeInsert}. Luego sin siquiera verificar si realmente se puede insertar, lo inserta en la posición que menos incrementa la distancia de la ruta. Este es el único momento de toda la implementación donde puede existir una solución invalida. Después de insertarlo se fija si realmente se podía insertar. En caso afirmativo, continua con el siguiente cliente. En caso contrario debe quitar un cliente. Para esto, crea un conjunto de clientes tales que cada uno de ellos tiene un beneficio menor o igual al del cliente insertado. Dentro de este conjunto se selecciona al cliente que al quitarlo de la ruta del vehículo, minimice la distancia de la ruta resultante. Como el cliente insertado pertenece al conjunto del cual se removerá un cliente, en el peor de los casos se removió el mismo cliente que se insertó, lo que significa que no se incremento el beneficio ni se disminuyo la distancia de la ruta. Cualquier otro cliente que se remueva de la ruta significará que se efectuó un \textit{replace} y aumento el beneficio total de la ruta ó, muy de vez en cuando, el beneficio no aumento pero se disminuyo la distancia de la ruta. El \textit{Replace Simple} tiene una complejidad de $O(vehiculos * clientesNoVisitados * mediaClientesEnRuta * 2)$. Llamé a esta búsqueda \textit{Replace Simple} por que no considera el caso donde se puede reemplazar un clientes visitado por varios clientes no visitados. Ademas, por mas que busca incrementar el beneficio de la ruta, en el momento de seleccionar uno de varios candidatos a ser removido, remueve aquel que disminuya en mayor medida la distancia de la ruta resultante.
 
 \subsection{Replace Multiple}
 
