@@ -403,7 +403,7 @@ public void SetDescription()
 \begin{minipage}{\textwidth}
 Entonces leyendo la propiedad \textit{Description} podemos ver como esta configurado el BRKGA. Por ejemplo si dice: 
 
-\bigskip"MI.200;MNC.10;PZ.100;EP.0,3;MP.0,1;EGC.0,7;LS.ISRsORm;TOP.2;D.G"
+\bigskip"MI.200;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.0,7;LS.ISRsORm;TOP.2;D.G"
 
 \begin{itemize}
   \item MinIterations: 200
@@ -581,77 +581,90 @@ En una primera instancia se insertaban los individuos sin verificar la existenci
 
 \subsection{Resultados de la primer versión}
 
-La primer versión del BRKGA para TOP no incluía el objeto de configuración y permitía insertar soluciones repetidas en una misma generación. Los resultados que mostraré a continuación corresponden con una segunda versión que no admitía repetidos y existía el objeto configuración. Se utilizo una configuración estándar sin búsquedas locales aún: 
-\\ 'MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;HEU.;TOP.0;MI.G' (ver sección~\ref{sec:descrCongif}).
+Una vez que implementé el BRKGA puro (sin búsquedas locales), ejecuté la implementación diez veces para cada una de las seis instancias del benchmark previamente seleccionadas. Se pueden observar los resultados obtenidos en la tabla \ref{tab:resultadosBrkgaPuro}. Configuré el BRKGA de la siguiente manera: 
 
 \bigskip
 
+MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;LS.;TOP.0;D.G (ver sección \ref{sec:descrCongif}).
+
+\bigskip
+
+\begin{table}
 \begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c| } 
- \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c| } 
 \hline
-p2.2.k & 21 & 2 & 22.50 & 2977 & 260 & 240 & 249 & 0.91 & 275  \\
-p2.3.g & 21 & 3 & 10.70 & 1990 & 145 & 145 & 145 & 1.00 & 145  \\
-p3.4.p & 33 & 4 & 22.50 & 6482 & 450 & 430 & 438 & 0.78 & 560  \\
-p5.3.x & 66 & 3 & 40.00 & 17908 & 660 & 610 & 635 & 0.41 & 1555  \\
-p7.2.e & 102 & 2 & 50.00 & 8753 & 246 & 204 & 217 & 0.75 & 290  \\
-p7.4.t & 102 & 4 & 100.00 & 31532 & 513 & 458 & 481 & 0.45 & 1077  \\
+Instancia & N/V/D & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p2.2.k & 21/2/22.50 & 2977 & 240 & 249 & 260 & 0.91 & 0.95 & 275 \\
+p2.3.g & 21/3/10.70 & 1990 & 145 & 145 & 145 & 1.00 & 1.00 & 145 \\
+p3.4.p & 33/4/22.50 & 6482 & 430 & 438 & 450 & 0.78 & 0.80 & 560 \\
+p5.3.x & 66/3/40.00 & 17908 & 610 & 635 & 660 & 0.41 & 0.42 & 1555 \\
+p7.2.e & 102/2/50.00 & 8753 & 204 & 217 & 246 & 0.75 & 0.85 & 290 \\
+p7.4.t & 102/4/100.00 & 31532 & 458 & 481 & 513 & 0.45 & 0.48 & 1077 \\
 \hline
 \end{tabular}
 \end{center}
+\caption{Resultados de 10 ejecuciones del BRKGA puro sobre las seis instancias seleccionadas.}
+\label{tab:resultadosBrkgaPuro}
+\end{table}
 
 \bigskip
 
-De estos primeros resultados podemos ver que el BRKGA puro sin otras heurísticas funciona muy bien para instancias de testeo pequeñas esta versión funcionaba tan bien como Chao, Golden y Wasil \cite{ChaoGoldenWasil} (CGW), Tang y Miller-Hooks \cite{TangMillerHooks} (TMH) y Archetti, Hertz, Speranza \cite{ArchettiHertzSperanza} (AHS). Esto se refleja en la instancia \textit{p2.3.k} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_eAvg$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_eAvg$. Una observación que quiero destacar de estos resultados es sobre el $i_eAvg$ de la instancia \textit{p7.2.e}. Notar que tiene tantos nodos como \textit{p7.4.t} y sin embargo tiene un $i_eAvg$ ampliamente mayor. Esto seguramente sea por la diferencia en $tMax$, es 50 en vez de 100 reduciendo la combinatoria de soluciones posibles.
-
-
-\bigskip
-
-Como estos resultados no eran satisfactorios, tomé las dos instancias de este subconjunto con menor $i_{eAvg}$ y las utilice para testear distintas configuraciones. Probé múltiples variaciones del objeto configuración. A continuación el resultado de algunas de tales variaciones:
+De estos primeros resultados podemos ver que el BRKGA puro funciona muy bien para instancias de testeo pequeñas. Esto se refleja en la instancia \textit{p2.3.g} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_eAvg$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_eAvg$. Es interesante ver como en la instancia \textit{p7.2.e} se obtuvieron resultados mucho mejores que aquellos obtenidos en la instancia \textit{p7.2.t} considerando que ambas pertenecen al \textit{set} siete. Es decir, tienen el mismo mapa de clientes y difieren en la cantidad de vehículos y el $d_{max}$ de los vehículos. Claramente al aumentar la cantidad de vehículos y el $d_{max}$ de los vehículos, aumenta considerablemente la cantidad de solucione posibles.
 
 \bigskip
 
+Con el objetivo de encontrar la mejor configuración general del BRKGA, tomé las dos instancias con menor $i_{eAvg}$ de la tabla \ref{tab:resultadosBrkgaPuro} y las utilice para probar distintas configuraciones. Los resultados de estos experimento se pueden observar en la tabla \ref{tab:resultadosBrkgaPuroCincoConfig}.
 
+\bigskip
+
+\begin{table}
 \begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
- \hline
-$I$ & $\#N$ & $\#V$ & $tMax$ & $C$ & $\#S$ & $T_{avg}$ & $B_{max}$ & $B_{min}$ & $B_{avg}$ & $i_{eAvg}$ & $BTP_{max}$ \\
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|} 
 \hline
-p5.3.x & 66 & 3 & 40.00 & 1 & 10 & 60782 & 700 & 635 & 656 & 0.42 & 1555  \\
-p5.3.x & 66 & 3 & 40.00 & 2 & 10 & 23363 & 660 & 620 & 636 & 0.41 & 1555  \\
-p5.3.x & 66 & 3 & 40.00 & 3 & 10 & 22357 & 685 & 615 & 643 & 0.41 & 1555  \\
-p5.3.x & 66 & 3 & 40.00 & 4 & 10 & 7311 & 555 & 475 & 498 & 0.32 & 1555  \\
-p5.3.x & 66 & 3 & 40.00 & 5 & 10 & 54239 & 750 & 630 & 668 & 0.43 & 1555  \\
-p7.4.t & 102 & 4 & 100.00 & 1 & 10 & 143760 & 542 & 472 & 506 & 0.47 & 1077  \\
-p7.4.t & 102 & 4 & 100.00 & 2 & 10 & 42255 & 504 & 471 & 485 & 0.45 & 1077  \\
-p7.4.t & 102 & 4 & 100.00 & 3 & 10 & 45952 & 542 & 463 & 488 & 0.45 & 1077  \\
-p7.4.t & 102 & 4 & 100.00 & 4 & 10 & 11587 & 322 & 268 & 284 & 0.26 & 1077  \\
-p7.4.t & 102 & 4 & 100.00 & 5 & 10 & 96642 & 509 & 478 & 491 & 0.46 & 1077  \\
+Instancia & N/V/D & Config & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p5.3.x & 66/3/40.00 & 1 & 60782 & 635 & 656 & 700 & 0.42 & 0.45 & 1555  \\
+p5.3.x & 66/3/40.00 & 2 & 23363 & 620 & 636 & 660 & 0.41 & 0.42 & 1555  \\
+p5.3.x & 66/3/40.00 & 3 & 22357 & 615 & 643 & 685 & 0.41 & 0.44 & 1555  \\
+p5.3.x & 66/3/40.00 & 4 & 7311 & 475 & 498 & 555 & 0.32 & 0.36 & 1555  \\
+p5.3.x & 66/3/40.00 & 5 & 54239 & 630 & 668 & 750 & 0.43 & 0.48 & 1555  \\
+p7.4.t & 102/4/100.00 & 1 & 143760 & 472 & 506 & 542 & 0.47 & 0.50 & 1077  \\
+p7.4.t & 102/4/100.00 & 2 & 42255 & 471 & 485 & 504 & 0.45 & 0.47 & 1077  \\
+p7.4.t & 102/4/100.00 & 3 & 45952 & 463 & 488 & 542 & 0.45 & 0.50 & 1077  \\
+p7.4.t & 102/4/100.00 & 4 & 11587 & 268 & 284 & 322 & 0.26 & 0.30 & 1077  \\
+p7.4.t & 102/4/100.00 & 5 & 96642 & 478 & 491 & 509 & 0.46 & 0.47 & 1077  \\
 \hline
 \end{tabular}
 \end{center}
+\caption{Resultados de 10 ejecuciones del BRKGA puro sobre las seis instancias seleccionadas para cinco configuraciones generales diferentes.}
+\label{tab:resultadosBrkgaPuroCincoConfig}
+\end{table}
 
 \bigskip
 
 Configuraciones: 
 \begin{itemize}
-  \item \textbf{C = 1}: MI.100;MNC.100;PS.500;EP.0,30;MP.0,05;EGC.70;HEU.;TOP.0;D.G
-  \item \textbf{C = 2}: MI.150;MNC.30;PS.200;EP.0,25;MP.0,05;EGC.60;HEU.;TOP.0;D.G 
-  \item \textbf{C = 3}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;HEU.;TOP.0;D.G
-  \item \textbf{C = 4}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;HEU.;TOP.0;D.S
-  \item \textbf{C = 5}: MI.250;MNC.50;PS.250;EP.0,15;MP.0,05;EGC.50;HEU.;TOP.0;D.G 
+  \item \textbf{Config = 1}: MI.100;MNC.100;PS.500;EP.0,30;MP.0,05;EGC.70;LS.;TOP.0;D.G
+  \item \textbf{Config = 2}: MI.150;MNC.30;PS.200;EP.0,25;MP.0,05;EGC.60;LS.;TOP.0;D.G 
+  \item \textbf{Config = 3}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;LS.;TOP.0;D.G
+  \item \textbf{Config = 4}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;LS.;TOP.0;D.S
+  \item \textbf{Config = 5}: MI.250;MNC.50;PS.250;EP.0,15;MP.0,05;EGC.50;LS.;TOP.0;D.G 
 \end{itemize}
 
 \bigskip
 
-Como síntesis de estos resultados digo que la configuración básica poco influye en el beneficio final de la solución. En el caso de la instancia \textit{p5.3.x}, el $i_{eAvg}$ siempre se encuentra en el intervalo [0.41,0.43] y en en \textit{p7.4.t} el intervalo es [0.45,0.47]. Para ambas instancias hay una configuración que es claramente peor y es la configuración \textbf{C = 4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Luego claramente en esta versión del BRKGA el decodificador tiene gran impacto en el resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Mínima cantidad de iteraciones, mínima cantidad de iteraciones sin cambios, tamaño de la población, población elite, etc). Si impactan en el tiempo en que finaliza el algoritmo. Como no estaba del todo conforme con los resultados, decidí agregar algunas búsquedas locales para mejorar algunas soluciones entre cada iteración.
+Como síntesis de estos resultados observo que la configuración básica no tiene un fuerte impacto sobre el beneficio final de la ejecución. En el caso de la instancia \textit{p5.3.x}, el $i_{eAvg}$ siempre se encuentra en el intervalo [0.41,0.43] y en en \textit{p7.4.t} el intervalo es [0.45,0.47] siempre que se utiliza el decodificador simple. Para ambas instancias hay una configuración que es claramente peor y es la configuración \textbf{4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Por lo tanto en esta versión del BRKGA puro el decodificador tiene gran impacto en el resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Mínima cantidad de iteraciones, mínima cantidad de iteraciones sin cambios, tamaño de la población, población elite, etc). Si observamos los tiempos de ejecución, al comparar el $T_{avg}$ de la configuración \textbf{3} y \textbf{4} podemos ver que la configuración \textbf{3} es aproximadamente tres veces más lenta que la configuración \textbf{4} y solo difieren en el tipo de decodificador. Es muy claro que aunque el mejor beneficio obtenido con el decodificador simple es mucho menor, su tiempo de ejecución es mucho menor.
 
 \bigskip
 
-\section{Búsqueda local}
+Como podemos ver en los resultados de la tabla \ref{tab:resultadosBrkgaPuro}, se pueden mejorar bastante los beneficios obtenidos y los tiempos de ejecución son bastante rápidos. Por lo tanto hay lugar para agregar mejoras al algoritmo sacrificando tiempo de ejecución en búsqueda de mejores resultados.
 
-En pos de optimizar los resultados mencionados anteriormente se implementaron algunas búsquedas locales. La idea fue aplicar estas búsquedas algunas de las mejores soluciones de cada nueva generación. La cantidad de individuos a mejorar sería regida por el atributo \textit{ApplyHeuristicsToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite, y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. La idea de implementar búsquedas locales la obtuve de el trabajo \textit{A guided local search metaheuristic for the team orienteering problem.} de Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}, aunque es algo recurrente que encontré en varios trabajos previos de la literatura. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado y la solución resultante es valida. Es decir se siguen respetando las restricciones de distancia máxima por vehículo, ningún cliente es visitado mas de una ves y la cantidad de vehículos se respeta. 
+\bigskip
+
+\section{Búsquedas Locales}
+
+Con el objetivo de optimizar los resultados obtenidos hasta el momento, implementé algunas búsquedas locales. La idea fue aplicar estas búsquedas a algunas de las mejores soluciones de cada generación. La cantidad de individuos a mejorar por generación es regida por el atributo \textit{ApplyLocalSearchesToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. Como mencioné en la revisión bibliográfica, existen algunos trabajos previos de la literatura que aplican búsquedas locales en su propuesta. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado. La solución resultante luego de aplicar las búsquedas siempre es válida. Es decir, se sigue respetando las restricción de la distancia máxima de la ruta de los vehículos y ningún cliente es visitado más de una vez. 
 
 \subsection{Center of Gravity}
 
