@@ -543,16 +543,25 @@ private void AddMutants(int amount)
 
 \bigskip
 
-Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no necesitamos comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden que de los clientes que determinan sus vectores de \textit{RandomKeys}.
+Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no requiere comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden que de los clientes que determinan sus vectores de \textit{RandomKeys}. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(1)$ ya que simplemente es comparar dos \textit{strings}. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
 
-TODO ACA
+\bigskip
 
-Luego no es necesario comparar las soluciones, nos es suficiente comparando el hash de cada soluciones y esto se puede hacer en $O(1)$. El hash de una solución, se calcula una sola vez cuando se construye la solución a partir de su vector de \textit{RandomKeys} y no es mas que una concatenación de los \textit{ClientId} de cada \textit{RandomKey} en el vector ordenados por la propiedad \textit{Key}, intercalados con un separador. La figura \ref{fig:codificacionDeSolucionParteDos} muestra un \textit{RandomKeys} y su hash correspondiente.Es decir, es el orden en que el decodificador toma los clientes para asignarlos a una ruta. Luego, cada vez que se obtiene una solución durante el método de \textit{crossover}, si ya existe un individuo con el mismo hash, se genera una solución mutante y continua el apareamiento de otros dos individuos. Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta cuando ya sucedió una vez. Volver a intentar indefinidamente se traduce a un incremento del tiempo de ejecución. Luego tome esta decisión para optimizar el apareamiento y disminuir la cantidad de soluciones similares dentro de un mismo vecindario por generación.
+\begin{figure}[h]
+	\caption{Vector de \textit{RandomKeys} ordenado y su hash.}
+	\centering
+	\includegraphics[width=14cm]{RandomKeysHash}
+	\label{fig:RandomKeysHash}
+\end{figure}
+
+\bigskip
+
+Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque consideré que la probabilidad de volver a generar nuevamente una solución existente es alta cuando ya sucedió una vez. Tomé la decisión de reemplazar por un mutante la solución repetida para optimizar el tiempo de ejecución del apareamiento y disminuir la cantidad de soluciones dentro de un mismo vecindario por generación.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Generación del hash de una solución.}, label={func:GetHash}]
 private string pseudoHash;
 public string GetHash()
 {
@@ -568,7 +577,7 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar que la existencia de un individuo idéntico en la población. Dado una población de soluciones no repetidas, la probabilidad de de generar una solución existente al evolucionar la población, es baja. Aún así, una vez que sucede, la probabilidad de generar otra más aumenta considerablemente ya que ahora hay mas probabilidades de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto bola de nieve donde cada nueva generación tiene cada vez más individuos repetidos. Incluso he llegado al caso donde toda una población constituía de una única solución excepto por las soluciones mutantes. Esto reducía ampliamente la cantidad de soluciones diferentes exploradas, luego reducía fuertemente la frecuencia con la que una nueva mejor solución aparecía. Además si uno tiene varios individuos iguales en una solución, el algoritmo se vuelve menos eficiente ya que repite trabajo en donde obtiene los mismos resultados. Entonces el costo total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(PopulationSize * NonElitePopulationSize)$, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones repetidas.
+En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población, es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajo la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve mas lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
 
 \subsection{Resultados de la primer versión}
 
@@ -943,7 +952,7 @@ Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{R
     \caption{Este es el \textit{RandomKeys} corregido y su hash luego que la solución de la figura \ref{fig:codificacionDeSolucionUno} fue mejorada con una búsqueda local.}
     \centering
     \includegraphics[width=14cm]{codificacionDeSolucionParteDos}
-    \label{fig:codificacionDeSolucionDos}
+    \label{fig:codificacionDeSolucionParteDos}
 \end{figure} 
 
 
