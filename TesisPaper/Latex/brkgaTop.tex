@@ -937,7 +937,7 @@ private bool Replace(Solution solution, Vehicle vehicle)
 		var res = AnalizeInsert(solution, vehicle, client);
 		vehicle.AddDestinationAt(destination, res.BestInsertPosition);
 		if (!res.CanBeInserted)
-			changed = changed || RemoveWorstOrDefault(vehicle, client);
+			changed = changed || RemoveWorst(vehicle, client);
 		else
 			changed = true;
 	}
@@ -954,7 +954,7 @@ El método \textit{RemoveWorstOrDefault} recibe como parámetros el vehículo qu
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Selección del cliente a remover en el \textit{Replace Simple}.}, label={func:RemoveWorstOrDefault}]
-public static bool RemoveWorstOrDefault(Vehicle vehicle, Client inserted)
+public bool RemoveWorst(Vehicle vehicle, Client inserted)
 {
 	var toRemove = inserted;
 	var minDistance = vehicle.dMax;
@@ -999,6 +999,36 @@ Al momento de seleccionar los clientes a remover, el \textit{Replace Multiple} c
 \bigskip
 
 El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Su complejidad aumenta bastante ya que el conjunto de conjuntos de clientes en el peor de los casos es de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta. Sería el tamaño del conjunto de partes de clientes visitados restando el conjunto vacío. De todos modos es difícil que se de este caso, ya que para que suceda el beneficio del cliente insertado debe ser mayor o igual a la sumatoria de los beneficios del resto de los clientes en la ruta.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={\textit{RemoveWorstGroupOrDefault}.}, label={func:RemoveWorstGroupOrDefault}]
+public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
+{
+	var changed = false;
+	var candidatesToRemove = new CandidateGroup(inserted);	
+	var route = vehicle.Route;	
+	var candidateGroups = new List<CandidateGroup>();
+	candidateGroups = GetCandidateGroups(); 	
+	
+	foreach(var candidateGroup in candidateGroups)
+	{
+		var distance = GetDistanceWithout(route, candidateGroup);
+		if(distance <= vehicle.dMax && candidateGroup.Profit < candidatesToRemove.Profit)
+		{
+			candidatesToRemove = candidateGroup;
+			changed = true;
+		}
+	}
+
+	foreach (var client in candidatesToRemove.Clients)
+		vehicle.Route.RemoveClient(client);
+
+	return changed;
+}
+\end{lstlisting}
+\end{minipage}
 
 \subsection{Encoder}
 
