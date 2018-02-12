@@ -989,7 +989,7 @@ public bool RemoveWorst(Vehicle vehicle, Client inserted)
 El \textit{Replace Simple} tiene un orden de complejidad:
 
 \begin{equation*}
-O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2)
+O(Replace Simple) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2)
 \end{equation*}
 \end{minipage}
 
@@ -997,17 +997,16 @@ O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2
 
 \subsection{Replace Multiple}
 
-El \textit{Replace Multiple} se diferencia del \textit{Replace Simple} de dos formas. La primer diferencia es que explora todos los reemplazos posibles incluso remover múltiples clientes visitados por un cliente no visitado. La segunda diferencia es que dentro de todas sus opciones para reemplazar, selecciona aquella que maximice el beneficio. En cambio el \textit{Replace Simple} cuando encuentra multiples candidatos a remover elige aquel que minimice la distancia que recorre el vehículo. El \textit{Replace Multiple} tiene una complejidad algorítmica mayor al \textit{Replace Simple} ya que dentro de las opciones que explora incluye aquellas exploradas por el \textit{Replace Simple}. La segunda diferencia la agregue con el objetivo de diferenciar, aún más, las soluciones resultantes de aplicar uno u otra búsqueda.
+El \textit{Replace Multiple} se diferencia del \textit{Replace Simple} de dos formas. La primer diferencia es que explora todos los reemplazos posibles incluso remover múltiples clientes visitados por un cliente no visitado. La segunda diferencia es que dentro de todas sus opciones para reemplazar, selecciona aquella que maximice el beneficio. En cambio el \textit{Replace Simple} cuando encuentra múltiples candidatos a remover elige aquel que minimice la distancia que recorre el vehículo. El \textit{Replace Multiple} tiene una complejidad algorítmica mayor al \textit{Replace Simple} ya que dentro de las opciones que explora incluye aquellas exploradas por el \textit{Replace Simple}. La segunda diferencia la agregue con el objetivo de diferenciar, aún más, las soluciones resultantes de aplicar uno u otra búsqueda.
 
 \bigskip
 
-En mi desarrollo el \textit{Replace Multiple} se diferencia del \textit{Replace Simple} durante la ejecución del método \textit{Replace} \ref{func:ReplaceSimple} descrito anteriormente. Si se está ejecutando un \textit{Replace Simple} se llama al método \textit{RemoveWorst} y si se está ejecutando el \textit{Replace Multiple} se llama al método \textit{RemoveWorstGroup}. Cuando comienza a ejecutarse el \textit{RemoveWorstGroup} \ref{func:RemoveWorstGroupOrDefault} lo primero que hace es armar una lista de los potenciales grupos de clientes a remover. Un grupo de clientes tiene el potencial de ser removido si la sumatoria de sus beneficios es menor al beneficio del cliente insertado. En el pseudocódigo \ref{func:RemoveWorstGroupOrDefault} un \textit{CandidateGroup} representa un potencial grupo de clientes a remover. Obtenida la lista de los grupos de clientes candidatos, dentro de aquellos grupos que al removerlos la ruta resultante recorra una distancia menor a $d_{max}$, se elige el grupo de clientes que en conjunto tengan el menor beneficio. Finalmente se eliminan los clientes del grupo seleccionado que en el peor caso es el mismo cliente que se insertó.
-
+En mi desarrollo el \textit{Replace Multiple} se diferencia del \textit{Replace Simple} durante la ejecución del método \textit{Replace} \ref{func:ReplaceSimple} descrito anteriormente. Si se está ejecutando un \textit{Replace Simple} se llama al método \textit{RemoveWorst} y si se está ejecutando el \textit{Replace Multiple} se llama al método \textit{RemoveWorstGroup}. Cuando comienza a ejecutarse el \textit{RemoveWorstGroup} \ref{func:RemoveWorstGroupOrDefault} lo primero que hace es armar una lista de los potenciales grupos de clientes a remover. Un grupo de clientes tiene el potencial de ser removido si la sumatoria de sus beneficios es menor al beneficio del cliente insertado. En el pseudocódigo \ref{func:RemoveWorstGroupOrDefault} un \textit{CandidateGroup} representa un potencial grupo de clientes a remover. Obtenida la lista de los grupos de clientes candidatos se filtran dejando solo aquellos grupos que al removerlos, la ruta resultante recorra una distancia menor a $d_{max}$. Si después del filtrado queda un solo grupo, se eliminan los clientes de tal grupo. Si hay varios grupos de clientes candidatos, se remueven de la ruta los clientes del grupo cuya sumatorio de beneficios sea menor. Si no queda ningún grupo, se elimina el cliente que se insertó.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={\textit{RemoveWorstGroup}.}, label={func:RemoveWorstGroupOrDefault}]
+\begin{lstlisting} [caption={Selección de los clientes a remover en el \textit{Replace Multiple}.}, label={func:RemoveWorstGroupOrDefault}]
 public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 {
 	var changed = false;
@@ -1071,7 +1070,7 @@ public List<CandidateGroup> GetCandidateGroups(Vehicle v, Client c)
 El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
 
 \begin{equation*}
-O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVisitados})
+O(Replace Multiple) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVisitados})
 \end{equation*}
 
 
