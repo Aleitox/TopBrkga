@@ -921,6 +921,8 @@ public bool ApplyHeuristic(Solution solution)
 
 El \textit{Replace Simple} es similar al \textit{Insert}. El \textit{Replace Simple} comienza analizando cual es la mejor posición para insertar el cliente no visitado y lo inserta sin verificar que el $d_{max}$ del vehículo haya sido superado. En caso de que la solución siga siendo válida continua con el siguiente cliente del mismo modo que lo hace el \textit{Insert}. El \textit{Replace Simple} se diferencia del \textit{Insert} en el caso en que la solución pase a ser inválida. En tal caso, se debe remover algún cliente de forma tal que se vuelva a respetar la restricción de la distancia máxima, $d_{max}$. Por lo tanto el \textit{Replace Simple} busca un cliente de menor beneficio que el insertado, tal que al removerlo la ruta vuelva a tener una distancia recorrida menor a $d_{max}$. En caso de no encontrar ninguno se remueve el cliente que se había insertado en un principio. Si existen múltiples clientes candidatos a removerse, se elige el que minimice el recorrido de la ruta. Elegí priorizar distancia sobre beneficio en el caso de múltiples candidatos a remover. Tomé tal decisión por que también implementé otro reemplazo enfocado puramente en mejorar el beneficio de la ruta. De este modo los vecindarios explorados por ambas búsquedas de reemplazo contienen menor cantidad de soluciones en común. Llamé a esta búsqueda \textit{Replace Simple} por que tiene una complejidad algorítmica menor que el otro reemplazo y cuando se efectuá un reemplazo siempre se remueve a lo sumo un cliente visitado. Podemos ver el pseudocódigo del \textit{Replace Simple} en la figura \ref{func:ReplaceSimple}.
 
+\bigskip
+
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Método \textit{Replace Simple}.}, label={func:ReplaceSimple}]
 private bool Replace(Solution solution, Vehicle vehicle)
@@ -935,10 +937,7 @@ private bool Replace(Solution solution, Vehicle vehicle)
 		var res = AnalizeInsert(solution, vehicle, client);
 		vehicle.AddDestinationAt(destination, res.BestInsertPosition);
 		if (!res.CanBeInserted)
-		{
-			var removedClient = RemoveWorstOrDefault(vehicle, client);
-			changed = changed || removedClient.Id != client.Id;
-		}
+			changed = changed || RemoveWorstOrDefault(vehicle, client);
 		else
 			changed = true;
 	}
@@ -946,6 +945,48 @@ private bool Replace(Solution solution, Vehicle vehicle)
 }
 \end{lstlisting}
 \end{minipage}
+
+\bigskip
+
+El método \textit{RemoveWorstOrDefault} recibe como parámetros el vehículo que excedió $d_{max}$ y al cliente que se le insertó. El cliente que se insertó es el candidato que se removerá por defecto. Como podemos ver en el pseudocódigo \ref{func:RemoveWorstOrDefault}, para cada cliente con menor beneficio que el beneficio del cliente insertado, se calcula la distancia resultante si se lo remueve. Finalmente se remueve aquel cliente que minimice la distancia de la ruta que en el peor de los casos es el mismo cliente que se insertó.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={Selección del cliente a remover en el \textit{Replace Simple}.}, label={func:RemoveWorstOrDefault}]
+public static bool RemoveWorstOrDefault(Vehicle vehicle, Client inserted)
+{
+	var toRemove = inserted;
+	var minDistance = vehicle.dMax;
+	var route = vehicle.Route;
+	foreach (var client in route)
+	{
+		if (client.Profit > inserted.Profit)
+			continue;
+		var distance = GetDistanceWithout(route, client);
+		if (distance <= minDistance)
+		{
+			minDistance = distance;
+			toRemove = client;
+		}
+	}
+	vehicle.Route.RemoveClient(toRemove);
+	return toRemove.Id != inserted.Id;
+}
+\end{lstlisting}
+\end{minipage}
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+El \textit{Replace Simple} tiene un orden de complejidad:
+
+\begin{equation*}
+O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2)
+\end{equation*}
+\end{minipage}
+
+\bigskip
 
 \subsection{Replace Multiple}
 
