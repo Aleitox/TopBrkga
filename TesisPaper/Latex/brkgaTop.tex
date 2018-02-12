@@ -924,7 +924,7 @@ El \textit{Replace Simple} es similar al \textit{Insert}. El \textit{Replace Sim
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{Replace Simple}.}, label={func:ReplaceSimple}]
+\begin{lstlisting} [caption={Método \textit{Replace}.}, label={func:ReplaceSimple}]
 private bool Replace(Solution solution, Vehicle vehicle)
 {
 	var unvisited = solution.GetCurrentUnvistedDestination;
@@ -937,7 +937,14 @@ private bool Replace(Solution solution, Vehicle vehicle)
 		var res = AnalizeInsert(solution, vehicle, client);
 		vehicle.AddDestinationAt(destination, res.BestInsertPosition);
 		if (!res.CanBeInserted)
-			changed = changed || RemoveWorst(vehicle, client);
+		{
+			var justChanged = false;
+			if(IsReplaceSimple())
+				justChanged = RemoveWorst(vehicle, client);
+			else
+				justChanged = RemoveWorstGroup(vehicle, client);
+			changed = changed || justChanged;
+		}
 		else
 			changed = true;
 	}
@@ -948,12 +955,12 @@ private bool Replace(Solution solution, Vehicle vehicle)
 
 \bigskip
 
-El método \textit{RemoveWorstOrDefault} recibe como parámetros el vehículo que excedió $d_{max}$ y al cliente que se le insertó. El cliente que se insertó es el candidato que se removerá por defecto. Como podemos ver en el pseudocódigo \ref{func:RemoveWorstOrDefault}, para cada cliente con menor beneficio que el beneficio del cliente insertado, se calcula la distancia resultante si se lo remueve. Finalmente se remueve aquel cliente que minimice la distancia de la ruta que en el peor de los casos es el mismo cliente que se insertó.
+El método \textit{RemoveWorst} recibe como parámetros el vehículo que excedió $d_{max}$ y al cliente que se le insertó. El cliente que se insertó es el candidato que se removerá por defecto. Como podemos ver en el pseudocódigo \ref{func:RemoveWorst}, para cada cliente con menor beneficio que el beneficio del cliente insertado, se calcula la distancia resultante si se lo remueve. Finalmente se remueve aquel cliente que minimice la distancia de la ruta que en el peor de los casos es el mismo cliente que se insertó.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Selección del cliente a remover en el \textit{Replace Simple}.}, label={func:RemoveWorstOrDefault}]
+\begin{lstlisting} [caption={Selección del cliente a remover en el \textit{Replace Simple}.}, label={func:RemoveWorst}]
 public bool RemoveWorst(Vehicle vehicle, Client inserted)
 {
 	var toRemove = inserted;
@@ -990,32 +997,34 @@ O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2
 
 \subsection{Replace Multiple}
 
-El \textit{Replace Multiple} se diferencia del \textit{Replace Simple} en dos aspectos. El primer diferencia es que permite reemplazar varios clientes visitados por un cliente no visitado. La segunda diferencia es que dentro de todas sus opciones para reemplazar, selecciona aquella que maximice el beneficio. El \textit{Replace Multiple} tiene una complejidad algorítmica mayor al \textit{Replace Simple} ya que explora todas las opciones que explora el \textit{Replace Simple} y sus combinaciones. La segunda diferencia la agregue con el objetivo de diferenciar, aún más, el conjunto de soluciones exploradas por cada \textit{Replace}.
+El \textit{Replace Multiple} se diferencia del \textit{Replace Simple} de dos formas. La primer diferencia es que explora todos los reemplazos posibles incluso remover múltiples clientes visitados por un cliente no visitado. La segunda diferencia es que dentro de todas sus opciones para reemplazar, selecciona aquella que maximice el beneficio. En cambio el \textit{Replace Simple} cuando encuentra multiples candidatos a remover elige aquel que minimice la distancia que recorre el vehículo. El \textit{Replace Multiple} tiene una complejidad algorítmica mayor al \textit{Replace Simple} ya que dentro de las opciones que explora incluye aquellas exploradas por el \textit{Replace Simple}. La segunda diferencia la agregue con el objetivo de diferenciar, aún más, las soluciones resultantes de aplicar uno u otra búsqueda.
 
 \bigskip
 
-Al momento de seleccionar los clientes a remover, el \textit{Replace Multiple} crea un conjunto de conjuntos de clientes donde la sumatoria de beneficios de cada conjunto de clientes es menor o igual al beneficio del cliente insertado. Luego elimina los conjuntos de clientes que al eliminarlos del recorrido, la distancia de la ruta resultante sigue siendo mayor a la distancia máxima permitida. Dentro de los conjuntos restantes, se selecciona aquel de menor beneficio total. Nuevamente, en el peor de los casos se remueve al cliente insertado.
+En mi desarrollo el \textit{Replace Multiple} se diferencia del \textit{Replace Simple} durante la ejecución del método \textit{Replace} \ref{func:ReplaceSimple} descrito anteriormente. Si se está ejecutando un \textit{Replace Simple} se llama al método \textit{RemoveWorst} y si se está ejecutando el \textit{Replace Multiple} se llama al método \textit{RemoveWorstGroup}. Cuando comienza a ejecutarse el \textit{RemoveWorstGroup} \ref{func:RemoveWorstGroupOrDefault} lo primero que hace es armar una lista de los potenciales grupos de clientes a remover. Un grupo de clientes tiene el potencial de ser removido si la sumatoria de sus beneficios es menor al beneficio del cliente insertado. En el pseudocódigo \ref{func:RemoveWorstGroupOrDefault} un \textit{CandidateGroup} representa un potencial grupo de clientes a remover. Obtenida la lista de los grupos de clientes candidatos, dentro de aquellos grupos que al removerlos la ruta resultante recorra una distancia menor a $d_{max}$, se elige el grupo de clientes que en conjunto tengan el menor beneficio. Finalmente se eliminan los clientes del grupo seleccionado que en el peor caso es el mismo cliente que se insertó.
 
-\bigskip
-
-El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Su complejidad aumenta bastante ya que el conjunto de conjuntos de clientes en el peor de los casos es de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta. Sería el tamaño del conjunto de partes de clientes visitados restando el conjunto vacío. De todos modos es difícil que se de este caso, ya que para que suceda el beneficio del cliente insertado debe ser mayor o igual a la sumatoria de los beneficios del resto de los clientes en la ruta.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={\textit{RemoveWorstGroupOrDefault}.}, label={func:RemoveWorstGroupOrDefault}]
+\begin{lstlisting} [caption={\textit{RemoveWorstGroup}.}, label={func:RemoveWorstGroupOrDefault}]
 public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 {
 	var changed = false;
 	var candidatesToRemove = new CandidateGroup(inserted);	
 	var route = vehicle.Route;	
 	var candidateGroups = new List<CandidateGroup>();
-	candidateGroups = GetCandidateGroups(); 	
+	candidateGroups = GetCandidateGroups(route, client); 	
+	
+	var bestOption = false;
+	var valid = false;
 	
 	foreach(var candidateGroup in candidateGroups)
 	{
 		var distance = GetDistanceWithout(route, candidateGroup);
-		if(distance <= vehicle.dMax && candidateGroup.Profit < candidatesToRemove.Profit)
+		valid = distance <= vehicle.dMax;
+		bestOption = candidateGroup.Profit < candidatesToRemove.Profit;
+		if(valid && bestOption)
 		{
 			candidatesToRemove = candidateGroup;
 			changed = true;
@@ -1029,6 +1038,42 @@ public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 }
 \end{lstlisting}
 \end{minipage}
+
+\bigskip
+
+El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta del vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de beneficios de los clientes visitados. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{clientesVisitados})$ que es muy alto. De todos modos el peor escenario tiene una probabilidad muy baja de suceder, entonces el la practica no es tan lento.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={Método \textit{GetCandidateGroups}.}, label={func:GetCandidateGroups}]
+public List<CandidateGroup> GetCandidateGroups(Vehicle v, Client c)
+{
+	var candidateGroups = new List<CandidateGroup>();
+	var route = v.Route;
+	for (var client in route)
+	{
+		if (client.Profit >= c.Profit)
+			continue;		
+		var newGroup = new CandidateGroup(client);
+		foreach (var candidateGroup in candidateGroups)
+			if (candidateGroup.Profit + client.Profit < inserted.Profit)
+				candidateGroup.Add(client);
+		candidateGroups.Add(newGroup);
+	}
+	return candidateGroups;
+}
+\end{lstlisting}
+\end{minipage}
+
+\bigskip
+
+El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
+
+\begin{equation*}
+O(2Opt) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVisitados})
+\end{equation*}
+
 
 \subsection{Encoder}
 
