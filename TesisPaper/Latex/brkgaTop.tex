@@ -735,13 +735,13 @@ r_b'.Dist \leq v'_b.d_{max}
 
 \bigskip
 
-En el pseudocódigo \ref{func:ApplyHeuristicSwap} podemos ver que al aplicar esta búsqueda a una solución se ejecuta el método \textit{SwapDestinationsBetween} para todo par de rutas de la solución. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween}, que podemos observar en el pseudocódigo \ref{func:SwapDestinationsBetween}, prueba intercambiar cada cliente de la ruta $a$ con cada cliente de la ruta $b$ y si efectivamente conviene hacer un \textit{Swap}, lo realiza. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual del \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
+En el pseudocódigo \ref{func:ApplyLocalSearchSwap} podemos ver que al aplicar esta búsqueda a una solución se ejecuta el método \textit{SwapDestinationsBetween} para todo par de rutas de la solución. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween}, que podemos observar en el pseudocódigo \ref{func:SwapDestinationsBetween}, prueba intercambiar cada cliente de la ruta $a$ con cada cliente de la ruta $b$ y si efectivamente conviene hacer un \textit{Swap}, lo realiza. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual del \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Swap}.}, label={func:ApplyHeuristicSwap}]
-public bool ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Swap}.}, label={func:ApplyLocalSearchSwap}]
+public bool ApplyLocalSearch(Solution solution)
 {
 	var changed = false;
 	var combinations = GetCombinationsFor(solution.Vehicles.Count);
@@ -786,7 +786,7 @@ public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 
 \bigskip
 
-El orden de complejidad del método \textit{ApplyHeuristic} de la clase \textit{SwapHeuristic} es:
+El orden de complejidad del método \textit{ApplyLocalSearch} de la clase \textit{SwapHeuristic} es:
 
 \begin{equation*}
 O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
@@ -797,8 +797,8 @@ O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
 El objetivo de esta búsqueda local es encontrar una posición en alguna ruta para un cliente no visitado sin sobrepasar el limite de distancia máxima de la ruta. Básicamente para cada vehículo y cada cliente no visitado se busca en que posición se debe insertar el cliente de forma tal que minimice el incremento de distancia recorrida. Si la distancia resultante es menor a la distancia máxima del vehículo, se inserta al cliente en tal posición. En caso contrario, no se inserta y se prueba con el siguiente cliente no visitado. El orden en que se toman los clientes no visitados es según su distancia al COG de la ruta a optimizar, de forma ascendente.
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:ApplyHeuristicInsert}]
-public bool ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Insert}.}, label={func:ApplyLocalSearchInsert}]
+public bool ApplyLocalSearch(Solution solution)
 {
 	var changed = false;	
 	var uClients = solution.GetUnvistedClients;	
@@ -825,7 +825,7 @@ public bool ApplyHeuristic(Solution solution)
 
 \bigskip
 
-Como vemos en el pseudocódigo \ref{func:ApplyHeuristicInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyHeuristic} del \textit{Insert} es: 
+Como vemos en el pseudocódigo \ref{func:ApplyLocalSearchInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyLocalSearch} del \textit{Insert} es: 
 
 \begin{equation*}
 0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
@@ -833,11 +833,11 @@ Como vemos en el pseudocódigo \ref{func:ApplyHeuristicInsert} al empezar la eje
 
 \subsection{2-Opt}
 
-El algoritmo \textit{2-Opt} es un algoritmo simple de búsqueda local propuesto por Croes \cite{Croes}. El objetivo es buscar un orden alternativo de los clientes visitados dentro de una misma ruta, de modo que disminuya la distancia recorrida por el vehículo. Es decir, un intercambio de posiciones entre dos clientes dentro de una misma ruta. Como podemos observar en el pseudocódigo \ref{func:ApplyHeuristicInsert} se aplica el método \textit{Do2OptSwap} a cada vehículo de la solución.
+El algoritmo \textit{2-Opt} es un algoritmo simple de búsqueda local propuesto por Croes \cite{Croes}. El objetivo es buscar un orden alternativo de los clientes visitados dentro de una misma ruta, de modo que disminuya la distancia recorrida por el vehículo. Es decir, un intercambio de posiciones entre dos clientes dentro de una misma ruta. Como podemos observar en el pseudocódigo \ref{func:ApplyLocalSearchInsert} se aplica el método \textit{Do2OptSwap} a cada vehículo de la solución.
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:ApplyHeuristicOptSwap}]
-public bool ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Insert}.}, label={func:ApplyLocalSearchOptSwap}]
+public bool ApplyLocalSearch(Solution solution)
 {
 	var index = 0;
 	var changed = false;	
@@ -860,7 +860,7 @@ El método \textit{Do2OptSwap} primero obtiene una lista de las todas las posibl
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Insert}.}, label={func:OptSwap}]
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Insert}.}, label={func:OptSwap}]
 private bool Do2OptSwap(Vehicle vehicle)
 {
 	var changed = false;	
@@ -900,13 +900,13 @@ O(2Opt) &= O(veh\acute{i}culos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1
 
 \subsection{Replace Simple}
 
-Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por un cliente visitado de una ruta de forma tal que aumente el beneficio de la ruta. Del mismo modo que la búsqueda \textit{Insert}, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos. En el pseudocódigo \ref{func:ApplyHeuristicReplaceSimple} vemos que se aplica el \textit{Replace Simple} a cada vehículo de la solución.
+Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por un cliente visitado de una ruta de forma tal que aumente el beneficio de la ruta. Del mismo modo que la búsqueda \textit{Insert}, los clientes no visitados se toman en orden según su distancia al COG de la ruta, empezando por los más cercanos. En el pseudocódigo \ref{func:ApplyLocalSearchReplaceSimple} vemos que se aplica el \textit{Replace Simple} a cada vehículo de la solución.
 
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyHeuristic} del \textit{Replace Simple}.}, label={func:ApplyHeuristicReplaceSimple}]
-public bool ApplyHeuristic(Solution solution)
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Replace Simple}.}, label={func:ApplyLocalSearchReplaceSimple}]
+public bool ApplyLocalSearch(Solution solution)
 {	
 	var vehicles = solution.Vehicles;
 	var changed = false;	
@@ -1076,13 +1076,28 @@ O(Replace Multiple) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVis
 
 \subsection{Encoder}
 
-Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución, se modifican sus rutas. Ahora bien, si no se actualizamos su genética acorde a los cambios realizados a la solución, es decir su \textit{RandomKeys}, sus descendientes heredarán los genes que generan una solución no optimizada por las búsquedas locales.
+Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sea valida la ecuación \ref{eq:reversibilidad}.
 
-\begin{equation*}
-ApplyHeuristic(s) \neq Decoder.Decode(s.RandomKeys, ProblemInfo)
-\end{equation*}
+\bigskip
 
-Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{RandomKeys}, de la solución mejorada de modo que al decodificar tal vector aleatorio de enteros, genere la solución modificada. Como mencioné en el sección del Decodificador (ver sección~\ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objecto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Luego el primer cliente con el que trabaja el decodificador, es el cliente con menor valor de \textit{Key}. Algo que no mencioné sobre la implementación de los decodificadores es que el primer vehículo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehículos son indistinguibles al tener el mismo \textit{tMax} en el benchmark de instancias de problemas. De todos modos ahora debo respetar la decisión que tomé en el desarrollo de los decodificadores. Por lo tanto tomo el primer cliente de la ruta del vehículo con menor \textit{Id} y a ese cliente le voy a asociar el {RandomKey} que tenga el menor \textit{Key}. Así, cuando el decodificador inicie, lo primero que hará es tomar este cliente e intentará adjudicárselo al primer vehículo, que justamente será el de menor \textit{Id}. Luego tomaré el segundo cliente del mismo vehículo y le asignare el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Luego repito el procedimiento con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, no tendré mas vehículos y quedará un resto de clientes no visitados a los cuales le tengo que asociar algún \textit{RandomKey}. A estos clientes podría asignarle cualquier \textit{RandomKey}. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, les asigne un \textit{RandomKey} tal que entre ellos mantengan el mismo orden que tenían antes de la mejora. Es decir, dentro de los clientes no visitados, el cliente que previamente tenia el \textit{RandomKey} con menor \textit{Key}, le asigne el \textit{RandomKey} de menor \textit{Key} que había disponible.  Este proceso puede verse en la figura \ref{fig:codificacionDeSolucionUno} \ref{fig:codificacionDeSolucionDos}.
+\begin{mycapequ}[!ht]
+	\caption{Ecuación que debe ser válida para que el \textit{crossover} sea correcto.}
+	\begin{equation} \label{eq:reversibilidad}
+	ApplyLocalSearch(s) = Decoder.Decode(s.RandomKeys, ProblemInfo)
+	\end{equation}
+\end{mycapequ}
+
+\bigskip
+
+Como mencioné en la sección del Decodificador (ver sección \ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objeto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Por lo tanto el primer cliente con el que trabaja el decodificador, es el cliente con menor valor de \textit{Key}. Algo que no mencioné sobre la implementación de los decodificadores es que el primer vehículo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehículos son indistinguibles al tener el mismo $d_{max}$ en el benchmark de instancias de problemas. De todos modos ahora debo respetar la decisión que tomé en el desarrollo de los decodificadores. Por lo tanto al primer cliente de la ruta del vehículo con menor \textit{Id} se le debe asociar el \textit{RandomKey} que tenga el menor \textit{Key}. Así, cuando el decodificador inicie, lo primero que hará es tomar este cliente e intentará adjudicárselo al primer vehículo, que justamente será el de menor \textit{Id}. Continuando con esta lógica el segundo cliente del mismo vehículo debe tener asignado el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Este proceso debe repetirse con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, quedarán sin \textit{RandomKey} asignado todos los clientes no visitados. En principio a estos clientes se les podría asignar cualquier \textit{RandomKey}. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, se les asigna un \textit{RandomKey} tal que entre ellos mantengan el mismo orden que tenían antes de la mejora. Es decir, dentro de los clientes no visitados, el cliente que previamente tenía el \textit{RandomKey} con menor \textit{Key}, se le asigna el \textit{RandomKey} de menor \textit{Key} que queda disponible. 
+
+\bigskip
+
+En la figura \ref{fig:codificacionDeSolucionUno} podemos observar un vector de \textit{RandomKeys} ordenado por su campo \textit{Key}. Los \textit{ClientId} resaltados con color verde claro pertenecen al primer vehículo y los resaltados con verde oscura pertenecen al segundo vehículo. Debajo del vector de \textit{RandomKeys} podemos ver el hash de la solución y por ultimo las rutas que fueron generadas por el decodificador goloso (los mismo clientes que estaban coloreados en el vector de \textit{RandomKeys}).
+
+\bigskip
+
+A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican algunas búsquedas locales y podemos ver los cambios en la figura \ref{fig:codificacionDeSolucionDos}. Ambas rutas se extienden con un nuevo cliente, la primer ruta incluso cambia el orden en que se visitan el cliente 2 y el 6. Debajo de las rutas vemos el vector de \textit{RandomKeys} ordenado por su campo \textit{Key} con los campos \textit{ClientId} actualizados de forma que al decodificar el el vector de \textit{RandomKeys} genere la solución optimizada.
 
 \bigskip
 
@@ -1104,10 +1119,6 @@ Para solucionar esto se debe modificar el vector aleatorio de enteros, \textit{R
 \bigskip
 
 Ahora bien, digamos que existe un escenario donde el decodificador se encuentra trabajando con un \textit{RandomKeys} que fue generado por el codificador y sucede lo siguiente. Al agregar al último cliente de la primer ruta, el decodificador intentará agregar a la primer ruta al resto de los clientes y supongamos que efectivamente encuentra uno. Cuando vi la posibilidad de este escenario, decidí agregar unos delimitadores de modo que si el decodificador se encuentra con uno, siempre cambie de vehículo. Estos delimitadores son modelados por la propiedad \textit{ForceVehicleChangeAfterThis}, con la que extendí al objeto \textit{RandomKey}. De este modo el decodificador, luego de utilizar el \textit{RandomKey}, se fija si \textit{ForceVehicleChangeAfterThis} es \textit{true} y si lo es, deja de intentar agregar clientes a la ruta del vehículo actual. Los delimitadores no son heredados a los descendientes. Estos delimitadores me aseguran la ecuación \ref{eq:reversibilidad} sea válida.
-
-\begin{equation} \label{eq:reversibilidad}
-ApplyHeuristic(s) = Decoder.Decode(s.RandomKeys, ProblemInfo)
-\end{equation}
 
 \bigskip
 
