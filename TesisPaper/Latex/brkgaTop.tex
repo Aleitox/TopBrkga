@@ -654,7 +654,7 @@ Configuraciones:
 
 \bigskip
 
-Como síntesis de estos resultados observo que la configuración básica no tiene un fuerte impacto sobre el beneficio final de la ejecución. En el caso de la instancia \textit{p5.3.x}, el $i_{eAvg}$ siempre se encuentra en el intervalo [0.41,0.43] y en en \textit{p7.4.t} el intervalo es [0.45,0.47] siempre que se utiliza el decodificador simple. Para ambas instancias hay una configuración que es claramente peor y es la configuración \textbf{4} donde se utiliza el decodificar \textbf{simple} en vez del \textbf{goloso}. Por lo tanto en esta versión del BRKGA puro el decodificador tiene gran impacto en el resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Mínima cantidad de iteraciones, mínima cantidad de iteraciones sin cambios, tamaño de la población, población elite, etc). Si observamos los tiempos de ejecución, al comparar el $T_{avg}$ de la configuración \textbf{3} y \textbf{4} podemos ver que la configuración \textbf{3} es aproximadamente tres veces más lenta que la configuración \textbf{4} y solo difieren en el tipo de decodificador. Es muy claro que aunque el mejor beneficio obtenido con el decodificador simple es mucho menor, su tiempo de ejecución es mucho menor.
+Como síntesis de estos resultados observo que la configuración básica no tiene un fuerte impacto sobre el beneficio final de la ejecución. En el caso de la instancia \textit{p5.3.x}, el $i_{eAvg}$ siempre se encuentra en el intervalo [0.41,0.43] y en en \textit{p7.4.t} el intervalo es [0.45,0.47] siempre que se utiliza el decodificador simple. Para ambas instancias hay una configuración que es claramente peor y es la configuración \textbf{4} donde se utiliza el decodificar simple en vez del goloso. Por lo tanto en esta versión del BRKGA puro el decodificador tiene gran impacto en el resultado final. Lamentablemente el resto de las configuraciones impacta muy poco en el beneficio total cuando la instancia del problema es grande (Mínima cantidad de iteraciones, mínima cantidad de iteraciones sin cambios, tamaño de la población, población elite, etc). Si observamos los tiempos de ejecución, al comparar el $T_{avg}$ de la configuración \textbf{3} y \textbf{4} podemos ver que la configuración \textbf{3} es aproximadamente tres veces más lenta que la configuración \textbf{4} y solo difieren en el tipo de decodificador. Es muy claro que aunque el mejor beneficio obtenido con el decodificador simple es mucho menor, su tiempo de ejecución es mucho menor.
 
 \bigskip
 
@@ -1238,28 +1238,44 @@ p7.4.t & SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \label{tab:resultadosListaLS}
 \end{table}
 
+\bigskip
 
 En la tabla \ref{tab:resultadosListaLS}, se pueden observar los resultados de variar el orden en que se aplican las búsquedas locales. Claramente el peor orden de búsquedas locales es IRmRsOS (\textit{Insert}, \textit{Replace Multiple}, \textit{Replace Simple}, \textit{2-Opt}, \textit{Swap}). Las búsquedas \textit{Insert} y \textit{Replace} intentan agregar mas clientes o intercambiar por clientes mas rentables mejorando el beneficio de la ruta. En cambio las búsquedas \textit{2-Opt} y \textit{Swap} modifican la secuencia en que se visitan los clientes seleccionados con el objetivo de minimizar la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que reducen la distancia recorrida, no se hace uso de la distancia disminuida por \textit{2-Opt} y \textit{Swap}.
 
 \bigskip
 
-TODO explicar por que me quede con SOSIRsSORm
+Entre las otras 6 combinaciones aquellas con mejor resultados en sus 25 ejecuciones fueron SOSIRsSORm y SOIORsRmSORm. Ambas son las únicas que obtuvieron un $i_{eAvg}$ de 0.98 para las dos instancias. La configuración SIORsSORm llego a encontrar la mejor solución conocida para la instancia \textit{p7.4.t} pero su $i_{eAvg}$ es de 0.97. Decidí priorizar el valor del $i_{eAvg}$ sobre el valor del $i_{eMax}$ porque el $i_{eMax}$ no es estable, por lo tanto no garantiza buenos resultados. Entre las dos configuraciones con mejor $i_{eAvg}$ seleccioné SOSIRsSORm por que como se puede observar que en la tabla \ref{tab:resultadosListaLS} tuvo un tiempo de ejecución promedio al menor un 20\% menor al de la configuración SOIORsRmSORm.
 
 \bigskip
 
-TODO Comentar que las soluciones generales mejoraron ampliamente
+Por último, antes de calcular los resultados finales sobre todo el bechmark de problemas, hice una prueba de eficiencia entre los dos decodificadores ahora que el BRKGA tiene búsquedas locales. Para las mismas dos instancias de la tabla \ref{tab:resultadosListaLS}, ejecute 10 veces el BRKGA variando solamente los decodificadores utilizados. La lista de búsquedas locales aplicadas es la que mejores resultados obtuvo en el análisis previo: SOSIRsSORm.
 
 \bigskip
 
-TODO Analisis de tiempos de ejecucion entre decodificadores
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & Deco & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p5.3.x & G & 93131 & 1515 & 1525 & 1545 & 0.98 & 0.99 & 1555  \\
+p5.3.x & S & 50313 & 1515 & 1524 & 1535 & 0.98 & 0.99 & 1555  \\
+p7.4.t & G & 198831 & 1043 & 1047 & 1051 & 0.97 & 0.98 & 1077  \\
+p7.4.t & S & 119328 & 1041 & 1051 & 1059 & 0.98 & 0.98 & 1077  \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Resultados de aplicar distintos decodificadores al BRKGA con búsquedas locales.}
+\label{tab:resultadosLSDecos}
+\end{table}
 
 \bigskip
 
-TODO Tabla tiempos de ejecucion fase 1011
+En la tabla \ref{tab:resultadosLSDecos} podemos observar los resultados obtenidos sobre las instancias \textit{p5.3.x} y \textit{p7.4.t} para el BRKGA con búsquedas locales modificando solamente los decodificadores. Los beneficios obtenidos son prácticamente utilizando cualquiera de los decodificadores. Donde podemos ver diferencias en los resultados es en el tiempo promedio de ejecución, $T_{avg}$. El decodificador goloso demoró aproximadamente un 80\% más en ejecutarse que el decodificador simple. Es por este motivo que elegí el decodificador simple para mis resultados finales.
 
 \bigskip
 
-TODO Tabla resultados finales fase 1015
+Con estas últimas pruebas tengo definido la configuración final para el BRKGA. Una última observación que quiero hacer es lo mucho que mejoraron los resultados en las instancias grandes luego de implementar las búsquedas locales. En la tabla \ref{tab:resultadosBrkgaPuro} la instancia \textit{p7.4.t} obtuvo un $i_{eAvg}$ de 0.45 mientras que en la tabla \label{tab:resultadosLSDecos} obtuvo un $i_{eAvg}$ de 0.98. Consideré que los resultados se encontraban en un nivel muy satisfactorio y decidí pasar a calcular los resultados finales sobre todo el benchmark de problemas.
 
 
 
