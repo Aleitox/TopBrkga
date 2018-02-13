@@ -1192,7 +1192,11 @@ Como mencioné previamente la lista de búsquedas locales se setea en el momento
 
 \bigskip
 
-Con el objetivo de encontrar la mejor secuencia de búsquedas locales a aplicar, generé múltiples instancias de mi implementación con distintas listas de búsquedas locales. Cada una de estas instancias la ejecute diez veces y persistí los resultados. Todas las instancias comparten los mismos valores en el resto de su configuración, de forma que los resultados solo varíen por las búsquedas locales aplicadas. La configuración básica que comparten es: MI.200;MNC.50;PS.150;EP.0,3;MP.0,1;EGC.70;TOP.2.
+Con el objetivo de encontrar la mejor secuencia de búsquedas locales a aplicar, generé 7 configuraciones distintas para mi BRKGA que solo difieren en las listas de búsquedas locales. Para cada una de las 7 configuraciones ejecuté el BRKGA 25 veces sobre las dos instancias de problemas para las cuales había obtenido los peores resultados en el BRKGA puro. La configuración básica que comparten todas las configuraciones es la siguiente: 
+
+\bigskip
+
+MI.400;MNC.100;PS.150;EP.0,3;MP.0,1;EGC.0,70;TOP.2;DT.S.
 
 \bigskip
 
@@ -1208,65 +1212,54 @@ Recordando los códigos de las búsquedas locales:
 \bigskip
 
 \begin{table}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c| } 
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c| } 
 \hline
-$I$ & $\# N/V/tMax$ & Orden & D & $t_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eMed}$ & $Best$ \\
+Instancia & Search & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
 \hline
-p2.2.k & 21/2/22.50 & IRsRmOS & G & 4002 & 270 & 271 & 275 & 0.99 & 275 \\
-p2.2.k & 21/2/22.50 & SIORsSORm & G & 4118 & 270 & 272 & 275 & 0.99 & 275 \\
-p2.2.k & 21/2/22.50 & SIORsSORm & S & 2613 & 270 & 272 & 275 & 0.99 & 275 \\
-p2.2.k & 21/2/22.50 & SOIRsRm & G & 3904 & 270 & 273 & 275 & 0.99 & 275 \\
-p2.2.k & 21/2/22.50 & SOIRsRm & S & 2294 & 270 & 274 & 275 & 1.00 & 275 \\
-p2.2.k & 21/2/22.50 & SOISOIRsRm & G & 4089 & 270 & 273 & 275 & 0.99 & 275 \\
-p2.3.g & 21/3/10.70 & IRsRmOS & G & 2181 & 145 & 145 & 145 & 1.00 & 145 \\
-p2.3.g & 21/3/10.70 & SIORsSORm & G & 2293 & 145 & 145 & 145 & 1.00 & 145 \\
-p2.3.g & 21/3/10.70 & SIORsSORm & S & 1880 & 145 & 145 & 145 & 1.00 & 145 \\
-p2.3.g & 21/3/10.70 & SOIRsRm & G & 2649 & 145 & 145 & 145 & 1.00 & 145 \\
-p2.3.g & 21/3/10.70 & SOIRsRm & S & 1777 & 145 & 145 & 145 & 1.00 & 145 \\
-p2.3.g & 21/3/10.70 & SOISOIRsRm & G & 2765 & 145 & 145 & 145 & 1.00 & 145 \\
-p3.4.p & 33/4/22.50 & IRsRmOS & G & 10816 & 530 & 542 & 550 & 0.97 & 560 \\
-p3.4.p & 33/4/22.50 & SIORsSORm & G & 11438 & 540 & 553 & 560 & 0.99 & 560 \\
-p3.4.p & 33/4/22.50 & SIORsSORm & S & 4760 & 550 & 558 & 560 & 1.00 & 560 \\
-p3.4.p & 33/4/22.50 & SOIRsRm & G & 10723 & 540 & 550 & 560 & 0.98 & 560 \\
-p3.4.p & 33/4/22.50 & SOIRsRm & S & 4618 & 550 & 555 & 560 & 0.99 & 560 \\
-p3.4.p & 33/4/22.50 & SOISOIRsRm & G & 11620 & 550 & 558 & 560 & 1.00 & 560 \\
-p5.3.x & 66/3/40.00 & IRsRmOS & G & 35470 & 1455 & 1471 & 1490 & 0.95 & 1555 \\
-p5.3.x & 66/3/40.00 & SIORsSORm & G & 37699 & 1485 & 1495 & 1525 & 0.96 & 1555 \\
-p5.3.x & 66/3/40.00 & SIORsSORm & S & 16790 & 1485 & 1497 & 1515 & 0.96 & 1555 \\
-p5.3.x & 66/3/40.00 & SOIRsRm & G & 29260 & 1485 & 1506 & 1525 & 0.97 & 1555 \\
-p5.3.x & 66/3/40.00 & SOIRsRm & S & 12601 & 1490 & 1508 & 1535 & 0.97 & 1555 \\
-p5.3.x & 66/3/40.00 & SOISOIRsRm & G & 34053 & 1485 & 1502 & 1515 & 0.97 & 1555 \\
-p7.2.e & 102/2/50.00 & IRsRmOS & G & 13134 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.2.e & 102/2/50.00 & SIORsSORm & G & 13259 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.2.e & 102/2/50.00 & SIORsSORm & S & 7500 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.2.e & 102/2/50.00 & SOIRsRm & G & 12695 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.2.e & 102/2/50.00 & SOIRsRm & S & 6828 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.2.e & 102/2/50.00 & SOISOIRsRm & G & 13658 & 290 & 290 & 290 & 1.00 & 290 \\
-p7.4.t & 102/4/100.00 & IRsRmOS & G & 60299 & 984 & 1013 & 1034 & 0.94 & 1077 \\
-p7.4.t & 102/4/100.00 & SIORsSORm & G & 68191 & 1006 & 1029 & 1047 & 0.96 & 1077 \\
-p7.4.t & 102/4/100.00 & SIORsSORm & S & 37733 & 1019 & 1037 & 1063 & 0.96 & 1077 \\
-p7.4.t & 102/4/100.00 & SOIRsRm & G & 63010 & 1023 & 1033 & 1051 & 0.96 & 1077 \\
-p7.4.t & 102/4/100.00 & SOIRsRm & S & 31241 & 1020 & 1035 & 1050 & 0.96 & 1077 \\
-p7.4.t & 102/4/100.00 & SOISOIRsRm & G & 67730 & 1012 & 1030 & 1052 & 0.96 & 1077 \\
+p5.3.x & IRmRsOS & 49397 & 1460 & 1485 & 1540 & 0.95 & 0.99 & 1555  \\
+p5.3.x & ORsSIRm & 39576 & 1485 & 1509 & 1525 & 0.97 & 0.98 & 1555  \\
+p5.3.x & SIORsSORm & 43556 & 1495 & 1512 & 1535 & 0.97 & 0.99 & 1555  \\
+p5.3.x & SOIORsRmSORm & 49449 & 1505 & 1522 & 1545 & 0.98 & 0.99 & 1555  \\
+p5.3.x & SOIRsRm & 36595 & 1500 & 1512 & 1525 & 0.97 & 0.98 & 1555  \\
+p5.3.x & SOSIRsSORm & 40375 & 1505 & 1521 & 1535 & 0.98 & 0.99 & 1555  \\
+p5.3.x & SRsOIRm & 43423 & 1480 & 1510 & 1535 & 0.97 & 0.99 & 1555  \\
+p7.4.t & IRmRsOS & 81876 & 1004 & 1038 & 1064 & 0.96 & 0.99 & 1077  \\
+p7.4.t & ORsSIRm & 86537 & 1024 & 1038 & 1063 & 0.96 & 0.99 & 1077  \\
+p7.4.t & SIORsSORm & 91839 & 1033 & 1049 & 1077 & 0.97 & 1.00 & 1077  \\
+p7.4.t & SOIORsRmSORm & 126705 & 1042 & 1055 & 1069 & 0.98 & 0.99 & 1077  \\
+p7.4.t & SOIRsRm & 82889 & 1032 & 1047 & 1071 & 0.97 & 0.99 & 1077  \\
+p7.4.t & SOSIRsSORm & 94731 & 1038 & 1055 & 1071 & 0.98 & 0.99 & 1077  \\
+p7.4.t & SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \hline
 \end{tabular}
-\caption{Resultados de distintos ordenes de búsquedas locales.}
-\label{tab:secuenciaBusqueda}
+\end{center}
+\caption{Resultados de aplicar distintas listas de búsquedas locales.}
+\label{tab:resultadosListaLS}
 \end{table}
 
 
-En la tabla \ref{tab:secuenciaBusqueda}, se pueden observar los resultados de variar el orden en que se ejecutan las búsquedas locales. Claramente el peor orden de búsquedas locales es IRsRmOS (\textit{Insert}, \textit{Replace Simple}, \textit{Replace Multiple}, \textit{2-Opt}, \textit{Swap}). Esto sucede porque \textit{Insert} y \textit{Replace} intentan agregar mas clientes o intercambiar por clientes mas rentables mejorando el beneficio de la ruta. Mientras que \textit{2-Opt} y \textit{Swap} hacen un reordenamiento de la secuencia en que se visitan los clientes seleccionados, luego minimizan la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que decrementan la distancia recorrida, no hacemos uso de la distancia disminuida por \textit{2-Opt} y \textit{Swap}.
+En la tabla \ref{tab:resultadosListaLS}, se pueden observar los resultados de variar el orden en que se aplican las búsquedas locales. Claramente el peor orden de búsquedas locales es IRmRsOS (\textit{Insert}, \textit{Replace Multiple}, \textit{Replace Simple}, \textit{2-Opt}, \textit{Swap}). Las búsquedas \textit{Insert} y \textit{Replace} intentan agregar mas clientes o intercambiar por clientes mas rentables mejorando el beneficio de la ruta. En cambio las búsquedas \textit{2-Opt} y \textit{Swap} modifican la secuencia en que se visitan los clientes seleccionados con el objetivo de minimizar la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que reducen la distancia recorrida, no se hace uso de la distancia disminuida por \textit{2-Opt} y \textit{Swap}.
 
 \bigskip
 
-Luego el mejor orden según estos resultados, fue SIORSOR. Notar que repito búsquedas en esta secuencia, en una primera impresión parece redundante pero no lo es. Por ejemplo, la primera vez que se aplica \textit{2-Opt} se hace luego de un \textit{Insert} que utiliza toda la distancia disponible y la segunda vez que se aplica el \textit{2-Opt} es posterior de un \textit{Swap}.
+TODO explicar por que me quede con SOSIRsSORm
 
 \bigskip
 
-Sobre $T_{avg}$, notar entre la configuración 2 y 3 el tiempo puede llegar a ser más del doble y la única diferencia es que se uso el decodificador simple versus el goloso. Esto lo logra con un $i_eAvg$ prácticamente igual en todas las instancias. Lo mismo podemos observar entre la configuración 4 y 5. Por lo tanto, habiendo agregado las búsquedas locales, el decodificador goloso no mejora el beneficio final y el decodificador simple reduce el tiempo de ejecución. Por este motivo para los resultados finales utilicé el decodificar simple.
+TODO Comentar que las soluciones generales mejoraron ampliamente
 
 \bigskip
 
-Estos resultados me parecieron muy buenos ya que en dos de las seis instancias se llega a la mejor solución conocida y en los resultados de las otras cuatro instancias son competitivos con los trabajos previos de la literatura. Por eso decidí correr mi algoritmo para el resto de las instancias del benchmarck.
+TODO Analisis de tiempos de ejecucion entre decodificadores
+
+\bigskip
+
+TODO Tabla tiempos de ejecucion fase 1011
+
+\bigskip
+
+TODO Tabla resultados finales fase 1015
+
 
 
