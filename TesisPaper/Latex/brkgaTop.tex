@@ -1097,39 +1097,32 @@ En la figura \ref{fig:codificacionDeSolucionUno} podemos observar un vector de \
 
 \bigskip
 
-A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican algunas búsquedas locales y podemos ver los cambios en la figura \ref{fig:codificacionDeSolucionDos}. Ambas rutas se extienden con un nuevo cliente, la primer ruta incluso cambia el orden en que se visitan el cliente 2 y el 6. Debajo de las rutas vemos el vector de \textit{RandomKeys} ordenado por su campo \textit{Key} con los campos \textit{ClientId} actualizados de forma que al decodificar el el vector de \textit{RandomKeys} genere la solución optimizada.
-
-\bigskip
-
 \begin{figure}[h]
-	\caption{Como se mejora una solución}
+	\caption{Dado un \textit{RandomKeys}, se obtiene un hash y una solución generada por el decodificador goloso.}
 	\centering
 	\includegraphics[width=14cm]{codificacionDeSolucionParteUno}
 	\label{fig:codificacionDeSolucionUno}
 \end{figure}
 
+\bigskip
+
+A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican algunas búsquedas locales y podemos ver los cambios en la figura \ref{fig:codificacionDeSolucionDos}. Ambas rutas se extienden con un nuevo cliente, la primer ruta incluso cambia el orden en que se visitan el cliente 2 y el 6. Debajo de las rutas vemos el vector de \textit{RandomKeys} ordenado por su campo \textit{Key} con los campos \textit{ClientId} actualizados de forma que al decodificar el el vector de \textit{RandomKeys} genere la solución optimizada.
+
+\bigskip
+
 \begin{figure}[h]
-    \caption{Este es el \textit{RandomKeys} corregido y su hash luego que la solución de la figura \ref{fig:codificacionDeSolucionUno} fue mejorada con una búsqueda local.}
+    \caption{Se aplican búsquedas locales a la solución de la figura \ref{fig:codificacionDeSolucionUno}, después se actualiza el \textit{RandomKeys} y el hash de la solución. }
     \centering
     \includegraphics[width=14cm]{codificacionDeSolucionParteDos}
-    \label{fig:codificacionDeSolucionParteDos}
+    \label{fig:codificacionDeSolucionDos}
 \end{figure} 
 
+Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es valida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo asegurando la valides de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
 
 \bigskip
-
-Ahora bien, digamos que existe un escenario donde el decodificador se encuentra trabajando con un \textit{RandomKeys} que fue generado por el codificador y sucede lo siguiente. Al agregar al último cliente de la primer ruta, el decodificador intentará agregar a la primer ruta al resto de los clientes y supongamos que efectivamente encuentra uno. Cuando vi la posibilidad de este escenario, decidí agregar unos delimitadores de modo que si el decodificador se encuentra con uno, siempre cambie de vehículo. Estos delimitadores son modelados por la propiedad \textit{ForceVehicleChangeAfterThis}, con la que extendí al objeto \textit{RandomKey}. De este modo el decodificador, luego de utilizar el \textit{RandomKey}, se fija si \textit{ForceVehicleChangeAfterThis} es \textit{true} y si lo es, deja de intentar agregar clientes a la ruta del vehículo actual. Los delimitadores no son heredados a los descendientes. Estos delimitadores me aseguran la ecuación \ref{eq:reversibilidad} sea válida.
-
-\bigskip
-
-En caso de no tener los delimitadores, como dije antes, una ruta podría tener un cliente extra, que para fines del algoritmo, no es malo. Al agregar un cliente, hay dos opciones. La primera es que el cliente perteneciera al subconjunto de clientes que no estaba visitado. En este caso aumentaría el beneficio total. Pero para que esto suceda, el algoritmo de \textit{Insert} no debería haber funcionado correctamente ó no fue la última en aplicarse. En caso de que el cliente perteneciere a otro vehículo, el beneficio total no se modifica. El peor escenario es que este segundo vehículo se quede con el cliente de un tercer vehículo, sucediendo un especie de cambios encadenados de clientes entre un subconjunto de vehículos sin que decremente el beneficio total. Luego por mas que tomé la decisión de agregar los delimitadores, considero que ambas opciones eran igual de buenas considerando solamente la función objetivo. Agregando los delimitadores, aseguro la valides de la ecuación \ref{eq:reversibilidad}.
-
-\bigskip
-
-A continuación el pseudocodigo del algoritmo que actualiza el \textit{RandomKeys} de una solución mejorada:
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting}
+\begin{lstlisting} [caption={Método que actualiza el vector de \textit{RandomKeys}.}, label={func:UpdateRandomKeys}]
 public static Solution UpdateRandomKeys(Solution s);
 {
 	var randomKeys = s.GetOrderedRandomKeys();
