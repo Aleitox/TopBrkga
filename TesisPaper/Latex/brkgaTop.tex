@@ -905,7 +905,7 @@ Esta búsqueda tiene como objetivo intercambiar un cliente no visitado por un cl
 \bigskip
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Replace Simple}.}, label={func:ApplyLocalSearchReplaceSimple}]
+\begin{lstlisting} [caption={Método \textit{ApplyLocalSearch} del \textit{Replace}.}, label={func:ApplyLocalSearchReplaceSimple}]
 public bool ApplyLocalSearch(Solution solution)
 {	
 	var vehicles = solution.Vehicles;
@@ -1117,7 +1117,7 @@ A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican al
     \label{fig:codificacionDeSolucionDos}
 \end{figure} 
 
-Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es valida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo asegurando la valides de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
+Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es valida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo. Esto asegura la validez de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
 
 \bigskip
 
@@ -1168,9 +1168,27 @@ public static Solution UpdateRandomKeys(Solution s);
 \end{lstlisting}
 \end{minipage}
 
+Como se puede observar en los pseudocódigo de las búsquedas locales (\ref{func:ApplyLocalSearchSwap}, \ref{func:ApplyLocalSearchInsert}, \ref{func:ApplyLocalSearchOptSwap} y \ref{func:ApplyLocalSearchReplaceSimple}), todas implementan el método \textit{ApplyLocalSearch} que toma una solución y retorna un booleano que vale true si la solución fue modificada y false en caso contrario. Esto lo implementé así para poder ejecutar todas las búsquedas locales en una secuencia sin saber cual es el orden de la secuencia antes de la instanciación del BRKGA. De esta forma puedo setear la secuencia con el objeto \textit{Configuration} en el momento que se instancia el BRKGA. Gracias a esto pude probar las búsquedas locales en múltiples ordenes distintos. En el pseudocódigo \ref{func:ApplyLocalSearchesAll} podemos ver como se aplican las búsquedas según el orden en que se encuentran en la lista que toma de parámetro. Después de aplicar las búsquedas, si la solución fue modificada se actualiza el vector de \textit{RandomKeys}.
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={Aplicación de las búsquedas locales a una solución.}, label={func:ApplyLocalSearchesAll}]
+public Solution ApplyLS(List<ILocalSearch> list, Solution solution)
+{	
+	var changed = false;
+	foreach (var localSearch in list)
+		changed = changed || localSearch.ApplyLocalSearch(solution);
+
+	if(changed)
+		solution = Encoder.UpdateRandomKeys (solution);
+	
+	return solution
+}
+\end{lstlisting}
+\end{minipage}
+
 \subsection{Orden de ejecución de las búsquedas locales}
 
-Cuando se crea una instancia de mi algoritmo BRKGA, se setea una lista de búsquedas locales. En el momento que se realicen las búsquedas locales a una determinada solución, se ejecutaran todas las búsquedas locales de tal lista en el mismo orden que se encuentran en la lista. Por ejemplo, si $lista = (Swap, Insert, 2-Opt, Insert)$, entonces primero se aplicara \textit{Swap}, seguido de \textit{Insert} y finalmente \textit{Replace Multiple}. Esto me permite probar múltiples combinaciones de búsquedas locales modificando solamente una lista. La lista puede contener búsquedas repetidas, por ejemplo $lista = (Swap, Insert, 2-Opt, Insert)$. El orden en que se ejecutan las búsquedas locales tiene un impacto fuerte sobre la solución final generada. Esta lista la agregue al objeto configuración del BRKGA.
+Como mencioné previamente la lista de búsquedas locales se setea en el momento en que se instancia el BRKGA y las búsquedas se aplican en el orden en que se encuentran en la lista. Por ejemplo, si $lista = (Swap, Insert, Replace Multiple)$, entonces primero se aplicará el \textit{Swap}, seguido del \textit{Insert} y finalmente el \textit{Replace Multiple}. La lista puede contener búsquedas repetidas, por ejemplo $lista = (Swap, Insert, 2-Opt, Insert)$. El orden en que se ejecutan las búsquedas locales tiene un impacto fuerte sobre la solución final generada.
 
 \bigskip
 
