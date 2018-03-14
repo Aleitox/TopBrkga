@@ -1,11 +1,11 @@
 
 \chapter{Desarrollo del algoritmo BRKGA con búsqueda local para el TOP}
 
-En el presente capítulo describiré en detalle la solución que implementé para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencioné en el capítulo BRKGA tiene la tarea de convertir un vector de números reales aleatorios en una solución válida del problema. El siguiente módulo sería el algoritmo BRKGA, cuya implementación podría hacerse con total independencia del problema a resolver. Por último las búsquedas locales aplicadas en cada nueva generación a los mejores individuos de la población. 
+En el presente capítulo describiré en detalle la solución que implementé para el \textit{Team Orienteering Problem}. La implementación se la puede dividir en 3 módulos importantes. Primero el decodificador, que como mencioné en el capítulo anterior, tiene la tarea de convertir un vector de números reales aleatorios en una solución válida del problema. El siguiente módulo sería el algoritmo BRKGA, cuya implementación podría hacerse con total independencia del problema a resolver. Por último las búsquedas locales aplicadas en cada nueva generación a los mejores individuos de la población. 
 
 \bigskip
 
-En este capítulo mostré los resultados parciales obtenidos a lo largo del desarrollo de mi implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida creé un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución previamente publicada para la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el $i_e$. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
+En este capítulo mostraré los resultados parciales obtenidos a lo largo del desarrollo de mi implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida creé un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución previamente publicada para la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el $i_e$. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
 
 \bigskip
 
@@ -74,7 +74,7 @@ Descripciones:
 	\item \textbf{$B_{avg}$}: El \textbf{B}eneficio promedio que obtuve para la instancia mencionada.
 	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. Utiliza mi beneficio máximo obtenido para la instancia mencionada.
 	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. Utiliza mi beneficio promedio obtenido para la instancia mencionada.
-	\item \textbf{$Best$}: Máximo beneficio obtenido por alguna trabajo previo sobre la misma instancia mencionada.
+	\item \textbf{$Best$}: Máximo beneficio obtenido por algún trabajo previo sobre la misma instancia mencionada.
 \end{itemize}
 
 \section{Decodificador}
@@ -160,7 +160,7 @@ Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera s
 \bigskip
 
 \begin{mycapequ}[!ht]
-	\caption{Formula matemática que modela el método \textit{CanVisit}.}
+	\caption{El método \textit{CanVisit} retorna \textit{true} cuando la siguiente formula es válida:}
 	\begin{equation} \label{eq:canVisit}
 	d_{act}\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, n_f)\, -\, distancia(c_u, n_f) \leq d_{max}
 	\end{equation}
@@ -195,7 +195,7 @@ En los resultados de la tabla \ref{tab:resultadosDecoSimple} vemos que para inst
 
 \subsection{Características y debilidades del decodificador simple}
 
-Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la práctica nunca se llega a visitar a todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logro insertar en su ruta. Por lo tanto en la practica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
+Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la práctica nunca se llega a visitar a todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logró insertar en su ruta. Por lo tanto en la práctica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
 
 \bigskip
 
@@ -457,7 +457,7 @@ El \textit{LastProfits} del pseudocódigo \ref{func:GenerateRandomKey}, es una c
 
 \subsection{Evolución de la población}
 
-Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población de no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección BRKGA (ver sección~\ref{sec:brkga}). Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. De ser idéntica a otra solución, se genera una solución aleatoria del mismo modo que se generaron los mutantes. En el pseudocódigo \ref{func:Evolve} podemos ver como evoluciona una población.
+Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población de no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección \ref{sec:brkga}. Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. De ser idéntica a otra solución, se genera una solución aleatoria del mismo modo que se generaron los mutantes. En el pseudocódigo \ref{func:Evolve} podemos ver como evoluciona una población.
 
 \bigskip
 
@@ -577,7 +577,7 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población, es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajo la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve mas lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
+En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve mas lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
 
 \subsection{Resultados de la primer versión}
 
@@ -662,7 +662,7 @@ Como podemos ver en los resultados de la tabla \ref{tab:resultadosBrkgaPuro}, se
 
 \bigskip
 
-\section{Búsquedas Locales}
+\section{Búsqueda Local}
 
 Con el objetivo de optimizar los resultados obtenidos hasta el momento, implementé algunas búsquedas locales. La idea fue aplicar estas búsquedas a algunas de las mejores soluciones de cada generación. La cantidad de individuos a mejorar por generación es regida por el atributo \textit{ApplyLocalSearchesToTop} del objeto \textit{Configuration}. En caso de que a la solución ya se le hubiese aplicado las búsquedas en una generación anterior, se aplican a la siguiente mejor solución. Esto puede suceder ya que las mejores soluciones pertenecen al conjunto de elite y todos los individuos del conjunto de elite pasan directamente a la siguiente generación. Todas las búsquedas locales pueden modificar una solución ya sea para reducir su tiempo de recorrido o beneficio recolectado. La solución resultante de aplicar las búsquedas siempre es válida. Es decir, la solución resultante respeta la distancia máxima de la ruta de los vehículos y ningún cliente es visitado más de una vez. 
 
@@ -1040,7 +1040,7 @@ public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 
 \bigskip
 
-El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta del vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de beneficios de los clientes visitados. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{clientesVisitados})$ que es muy alto. De todos modos el peor escenario tiene una probabilidad muy baja de suceder, entonces el la practica no es tan lento.
+El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta del vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de beneficios de los clientes visitados. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{clientesVisitados})$ que es muy alto. De todos modos el peor escenario tiene una probabilidad muy baja de suceder, entonces el la práctica no es tan lento.
 
 \bigskip
 
@@ -1168,7 +1168,7 @@ public static Solution UpdateRandomKeys(Solution s);
 \end{lstlisting}
 \end{minipage}
 
-Como se puede observar en los pseudocódigo de las búsquedas locales (\ref{func:ApplyLocalSearchSwap}, \ref{func:ApplyLocalSearchInsert}, \ref{func:ApplyLocalSearchOptSwap} y \ref{func:ApplyLocalSearchReplaceSimple}), todas implementan el método \textit{ApplyLocalSearch} que toma una solución y retorna un booleano que vale true si la solución fue modificada y false en caso contrario. Esto lo implementé así para poder ejecutar todas las búsquedas locales en una secuencia sin saber cual es el orden de la secuencia antes de la instanciación del BRKGA. De esta forma puedo setear la secuencia con el objeto \textit{Configuration} en el momento que se instancia el BRKGA. Gracias a esto pude probar las búsquedas locales en múltiples ordenes distintos. En el pseudocódigo \ref{func:ApplyLocalSearchesAll} podemos ver como se aplican las búsquedas según el orden en que se encuentran en la lista que toma de parámetro. Después de aplicar las búsquedas, si la solución fue modificada se actualiza el vector de \textit{RandomKeys}.
+Como se puede observar en los pseudocódigo de las búsquedas locales (\ref{func:ApplyLocalSearchSwap}, \ref{func:ApplyLocalSearchInsert}, \ref{func:ApplyLocalSearchOptSwap} y \ref{func:ApplyLocalSearchReplaceSimple}), todas implementan el método \textit{ApplyLocalSearch} que toma una solución y retorna un booleano que vale true si la solución fue modificada y false en caso contrario. Esto lo implementé así para poder ejecutar todas las búsquedas locales en una secuencia sin saber cual es el orden de la secuencia antes de la instanciación del BRKGA. De esta forma puedo setear la secuencia con el objeto \textit{Configuration} en el momento que se instancia el BRKGA. Gracias a esto pude probar las búsquedas locales en múltiples órdenes distintos. En el pseudocódigo \ref{func:ApplyLocalSearchesAll} podemos ver como se aplican las búsquedas según el orden en que se encuentran en la lista que toma de parámetro. Después de aplicar las búsquedas, si la solución fue modificada se actualiza el vector de \textit{RandomKeys}.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Aplicación de las búsquedas locales a una solución.}, label={func:ApplyLocalSearchesAll}]
@@ -1188,7 +1188,7 @@ public Solution ApplyLS(List<ILocalSearch> list, Solution solution)
 
 \subsection{Orden de ejecución de las búsquedas locales}
 
-Como mencioné previamente la lista de búsquedas locales se setea en el momento en que se instancia el BRKGA y las búsquedas se aplican en el orden en que se encuentran en la lista. Por ejemplo, si $lista = (Swap, Insert, Replace Multiple)$, entonces primero se aplicará el \textit{Swap}, seguido del \textit{Insert} y finalmente el \textit{Replace Multiple}. La lista puede contener búsquedas repetidas, por ejemplo $lista = (Swap, Insert, 2-Opt, Insert)$. El orden en que se ejecutan las búsquedas locales tiene un impacto fuerte sobre la solución final generada.
+Como mencioné previamente la lista de búsquedas locales se setea en el momento en que se instancia el BRKGA y las búsquedas se aplican en el orden en que se encuentran en la lista. Por ejemplo, si \textit{lista = (Swap, Insert, Replace Multiple)}, entonces primero se aplicará el \textit{Swap}, seguido del \textit{Insert} y finalmente el \textit{Replace Multiple}. La lista puede contener búsquedas repetidas, por ejemplo \textit{lista = (Swap, Insert, 2-Opt, Insert)}. El orden en que se ejecutan las búsquedas locales tiene un impacto fuerte sobre la solución final generada.
 
 \bigskip
 
@@ -1266,12 +1266,12 @@ p7.4.t & S & 119328 & 1041 & 1051 & 1059 & 0.98 & 0.98 & 1077  \\
 \end{tabular}
 \end{center}
 \caption{Resultados de aplicar distintos decodificadores al BRKGA con búsquedas locales.}
-\label{tab:resultadosLSDecos}
+\label{tab:testMe}
 \end{table}
 
 \bigskip
 
-En la tabla \ref{tab:resultadosLSDecos} podemos observar los resultados obtenidos sobre las instancias \textit{p5.3.x} y \textit{p7.4.t} para el BRKGA con búsquedas locales modificando solamente los decodificadores. Los beneficios obtenidos son prácticamente utilizando cualquiera de los decodificadores. Donde podemos ver diferencias en los resultados es en el tiempo promedio de ejecución, $T_{avg}$. El decodificador goloso demoró aproximadamente un 80\% más en ejecutarse que el decodificador simple. Es por este motivo que elegí el decodificador simple para mis resultados finales.
+En la tabla \ref{tab:testMe} podemos observar los resultados obtenidos sobre las instancias \textit{p5.3.x} y \textit{p7.4.t} para el BRKGA con búsquedas locales modificando solamente los decodificadores. Los beneficios obtenidos son prácticamente iguales utilizando cualquiera de los decodificadores. Donde podemos ver diferencias en los resultados es en el tiempo promedio de ejecución, $T_{avg}$. El decodificador goloso demoró aproximadamente un 80\% más en ejecutarse que el decodificador simple. Es por este motivo que elegí el decodificador simple para mis resultados finales.
 
 \bigskip
 
