@@ -5,7 +5,7 @@ En el presente capítulo describiré en detalle la solución que implementé par
 
 \bigskip
 
-En este capítulo mostraré los resultados parciales obtenidos a lo largo del desarrollo de mi implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida creé un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución previamente publicada para la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados para crear el $i_e$. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
+En este capítulo mostraré los resultados parciales obtenidos a lo largo del desarrollo de mi implementación. A modo de analizar el rendimiento de una solución de forma simple y rápida creé un índice que llamo \textit{índice de efectividad} ($i_e$). El $i_e$ muestra que tan buena es la solución encontrada. Esto se hace comparando el beneficio de mi solución encontrada con el beneficio de la mejor solución previamente publicada para la misma instancia del problema. Se utilizaron los resultados de los trabajos previos mencionados en la revisión bibliográfica para crear el $i_e$. Es importante destacar que el $i_e$ no es la función objetivo. La función objetivo es maximizar el beneficio a recolectar. 
 
 \bigskip
 
@@ -26,7 +26,7 @@ Se explicará en detalle el funcionamiento de los módulos que componen la imple
 
 \bigskip
 
-Para la valuación de $i_e$ elegí seis instancias del benchmark bien diversas entre sí. Tomé dos pequeñas, dos medianas y dos grandes, cuyas descripciones pueden observarse en la tabla \ref{tab:instanciasDiversas}. Como mencioné en el abstract, el benchmark de instancias se compone de siete conjuntos. Dentro de cada set, todas las instancias contienen los mismo clientes. Esto significa que tiene las mismas coordenadas en el eje cartesiano y el mismo beneficio. Dentro de un set las instancias se diferencian entre si por la cantidad de vehículos que poseen y el $d_{max}$ de sus rutas. Esto es importante mencionarlo ya que ayuda a entender los resultados parciales que obtuve sobre las seis instancias seleccionadas. Los nombres de las instancias nos dan información sobre el conjunto del benchmarck al cual pertenecen y la cantidad de vehículos que tienen. Por ejemplo la instancia \textit{p2.3.g} tiene pertenece al conjunto número 2 del benchmark y tiene 3 vehículos. La instancia \textit{p2.2.k} también pertenece al conjunto número 2 del benchmark, lo que significa que tiene los mismos clientes que \textit{p2.3.g}.
+Para la valuación de $i_e$ elegí seis instancias del benchmark bien diversas entre sí. Tomé dos pequeñas, dos medianas y dos grandes, cuyas descripciones pueden observarse en la tabla \ref{tab:instanciasDiversas}. Como mencioné en el abstract, el benchmark de instancias se compone de siete conjuntos. Dentro de cada set, todas las instancias contienen los mismo clientes. Esto significa que tiene las mismas coordenadas en el eje cartesiano y el mismo beneficio. Dentro de un set las instancias se diferencian entre si por la cantidad de vehículos que poseen y el $d_{max}$ de sus rutas. Esto es importante mencionarlo ya que ayuda a entender los resultados parciales que obtuve sobre las seis instancias seleccionadas. Los nombres de las instancias nos dan información sobre el conjunto del benchmarck al cual pertenecen y la cantidad de vehículos que tienen. Por ejemplo la instancia \textit{p2.3.g} pertenece al conjunto número 2 del benchmark y tiene 3 vehículos. La instancia \textit{p2.2.k} tiene 2 vehículos y también pertenece al conjunto número 2 del benchmark, lo que significa que tiene los mismos clientes que \textit{p2.3.g}.
 
 \begin{table}
 \begin{center}
@@ -87,7 +87,7 @@ Propuse dos decodificadores, uno al cual llamé \textit{Decodificador Simple} y 
 
 \subsection{Orden en que los clientes se intentan agregar a las rutas.}\label{sec:ordenDeco}
 
-Como dije, dado una instancia de un problema con $n$ clientes y un vector de claves aleatorias del mismo tamaño $n$, un decodificador genera una solución valida de un problema. En mi implementación, modelé una clave aleatoria con el objeto \textit{RandomKey}. Un \textit{RandomKey} tiene dos propiedades, un entero aleatorio llamado \textit{Key} y otro entero llamado \textit{ClientId} que siempre toma el valor de un identificador de uno de los clientes de la instancia. Podemos ver el objeto \textit{RandomKey} en el pseudocódigo \ref{func:RandomKey}.
+Como dije, dado una instancia de un problema con $n$ clientes y un vector de claves aleatorias del mismo tamaño $n$, un decodificador genera una solución válida de un problema. En mi implementación, modelé una clave aleatoria con el objeto \textit{RandomKey}. Un \textit{RandomKey} tiene dos propiedades, un entero aleatorio llamado \textit{Key} y otro entero llamado \textit{ClientId} que siempre toma el valor de un identificador de uno de los clientes de la instancia. Podemos ver el objeto \textit{RandomKey} en el pseudocódigo \ref{func:RandomKey}.
 
 \bigskip
 
@@ -101,7 +101,7 @@ public class RandomKey
 
 \bigskip
 
-El propósito de $ClientId$ es asociar un \textit{RandomKey} con un cliente. Existe un vector de clientes en el Mapa del problema, a cada cliente se le asigna un identificador que es un numero entero en el intervalo $[1, \#clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#clientes]$. De esta forma cada \textit{RandomKey} siempre se asocia con un solo cliente. Luego de asociar cada cliente con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual se asoció. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. El pseudocódigo \ref{func:GetOrderedClients} muestra como se obtienen los clientes ordenados dado un vector de \textit{RandomKeys}. En el figura \ref{fig:RandomKeysOrdenando} se puede observar un vector de \textit{RandomKeys} en su estado inicial y luego ordenado por su campo \textit{Key} mostrando el orden en que se tomarán los clientes.
+El propósito de $ClientId$ es asociar un \textit{RandomKey} con un cliente. Existe un vector de clientes en el Mapa del problema, a cada cliente se le asigna un identificador que es un número entero en el intervalo $[1, \#clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#clientes]$. De esta forma cada \textit{RandomKey} siempre se asocia con un solo cliente. Luego de asociar cada cliente con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual se asoció. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. El pseudocódigo \ref{func:GetOrderedClients} muestra como se obtienen los clientes ordenados dado un vector de \textit{RandomKeys}. En el figura \ref{fig:RandomKeysOrdenando} se puede observar un vector de \textit{RandomKeys} en su estado inicial y luego ordenado por su campo \textit{Key} mostrando el orden en que se tomarán los clientes.
 
 \bigskip
 
@@ -155,7 +155,7 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 \end{lstlisting}
 \end{minipage}
 
-Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $d_{max}$ la distancia máxima de $v$, $d_{act}$ la distancia actual de la ruta de $v$, $n_f$ el nodo final de la ruta, $c_u$ el último cliente agregado a la ruta de $v$ y $c_i$ cliente que se intenta agregar a la ruta de $v$. Si aún no se insertaron clientes en la ruta, $c_u = n_i$ donde $n_i$ representa el nodo inicial de la ruta. Como podemos observar en el pseudocódigo \ref{func:decodeSimple}, creé un método llamado \textit{CanVisit}, que modela la fórmula \ref{eq:canVisit}, que retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario
+Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera su distancia máxima permitida. Sean $v$ vehículo, $d_{max}$ la distancia máxima de $v$, $d_{act}$ la distancia actual de la ruta de $v$, $n_f$ el nodo final de la ruta, $c_u$ el último cliente agregado a la ruta de $v$ y $c_i$ cliente que se intenta agregar a la ruta de $v$. Si aún no se insertaron clientes en la ruta, $c_u = n_i$ donde $n_i$ representa el nodo inicial de la ruta. Como podemos observar en el pseudocódigo \ref{func:decodeSimple}, creé un método llamado \textit{CanVisit}, que modela la fórmula \ref{eq:canVisit}. \textit{CanVisit} retorna \textit{true} cuando $c_i$ se puede agregar a la ruta y \textit{false} en caso contrario.
 
 \bigskip
 
@@ -168,7 +168,7 @@ Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera s
 
 \bigskip
 
-Una vez que terminé de implementar el decodificador simple, analicé el rendimiento de las soluciones generadas a partir de este decodificador. Hice este análisis para saber que tan buena sería la población inicial de mi algoritmo BRKGA cuando se utiliza el decodificador simple. Para realizar este análisis creé 200 vectores de $RandomKeys$ que el decodificador simple convirtió en 200 soluciones válidas del problema. Sobre estas 200 soluciones calculé el beneficio máximo, promedio y mínimo, y sus índices de efectividad promedio y máximo. Esto se realizó para cada una de las seis instancias del benchmark seleccionadas anteriormente \ref{tab:instanciasDiversas}. Podemos observar los resultados en la tabla \ref{tab:resultadosDecoSimple}.
+Una vez que terminé de implementar el decodificador simple, analicé el rendimiento de las soluciones generadas a partir de este decodificador. Hice este análisis para saber que tan buena sería la población inicial de mi algoritmo BRKGA cuando se utiliza el decodificador simple. Para realizar este análisis creé aleatoriamente 200 vectores de $RandomKeys$ que el decodificador simple convirtió en 200 soluciones válidas del problema. Sobre estas 200 soluciones calculé el beneficio máximo, promedio y mínimo, y sus índices de efectividad promedio y máximo. Esto se realizó para cada una de las seis instancias del benchmark seleccionadas anteriormente \ref{tab:instanciasDiversas}. Podemos observar los resultados en la tabla \ref{tab:resultadosDecoSimple}.
 
 \bigskip
 
@@ -191,18 +191,18 @@ p7.4.t & 102/4/100.00 & 40 & 116 & 221 & 0.11 & 0.21 & 1077 \\
 \label{tab:resultadosDecoSimple}
 \end{table}
 
-En los resultados de la tabla \ref{tab:resultadosDecoSimple} vemos que para instancias pequeñas los resultados son mejores. En la instancia \textit{p2.3.g} una de las 200 soluciones quedo muy cercana a la mejor solucion conocida, obteniendo un $i_{eMax}=0.97$. Esta instancia tiene los mismos clientes que la instancia \textit{p2.2.k} pero como el $d_{max}$ de \textit{p2.3.g} es prácticamente la mitad que el de \textit{p2.2.k} luego la cantidad de combinaciones de rutas diferentes disminuye considerablemente. Es por eso que obtuve mejores resultados de \textit{p2.3.g}. Por otro lado podemos observar $i_{eAvg}$ disminuye a medida que la instancia tiene mayor numero de clientes. Los peores resultados los obtuvo la instancia \textit{p7.4.t}, la instancia de mayor cantidad de clientes y mayor $d_{max}$.
+En los resultados de la tabla \ref{tab:resultadosDecoSimple} vemos que para instancias pequeñas los resultados son mejores. En la instancia \textit{p2.3.g} una de las 200 soluciones quedo muy cercana a la mejor solucion conocida, obteniendo un $i_{eMax}=0.97$. Esta instancia tiene los mismos clientes que la instancia \textit{p2.2.k} pero como el $d_{max}$ de \textit{p2.3.g} es prácticamente la mitad que el de \textit{p2.2.k} luego la cantidad de combinaciones de rutas diferentes disminuye considerablemente. Es por eso que obtuve mejores resultados de \textit{p2.3.g}. Por otro lado podemos observar $i_{eAvg}$ disminuye a medida que la instancia tiene mayor número de clientes. Los peores resultados los obtuvo la instancia \textit{p7.4.t}, la instancia de mayor cantidad de clientes y mayor $d_{max}$.
 
 \subsection{Características y debilidades del decodificador simple}
 
-Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#vehiculos)$. En la práctica nunca se llega a visitar a todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logró insertar en su ruta. Por lo tanto en la práctica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblacion$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
+Este decodificador es simple y rápido, su orden de complejidad es de $O(\#clientes + \#veh\acute{\dotlessi}culos)$. En la práctica nunca se llega a visitar a todos los clientes ya que cambia de vehículo en cuanto encontró un cliente que no logró insertar en su ruta. Por lo tanto en la práctica nunca llega al orden de complejidad mencionado. Esto es una gran ventaja ya que en cada iteración del BRKGA se va a decodificar una cantidad $\#Poblaci\acute{o}n$ de veces. Luego una decodificación rápida nos permitirá mayor cantidad de generaciones.
 
 \bigskip
 
 Una característica menos relevante es el orden en que quedan los clientes asignados en los vehículos al ver el vector de \textit{RandomKeys}.  Sea $v$ el vector de clientes ordenados por un vector de \textit{RandomKeys}. Existen $m+1$ índices $i_0 = 0, i_1, i_2, .., i_m$ donde $m$ es la cantidad de vehículos y $0 \leq i_j \leq \#clientes$ tales que el vehículo $j$ incluye en su recorrido a todos los clientes del subvector $v[i_{j-1}, i_j-1]$. Luego todos los clientes en el subvector $v[i_m, v.Length - 1]$ son clientes no alcanzados por la solución. En otras palabras, los clientes quedan agrupados por vehículo cuando los vemos en el vector ordenado. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoSimple}.
 
 \begin{figure}[h]
-	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de \textit{RandomKeys} de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de tiempo, no intento agregar a los siguientes clientes.}
+	\caption{Posible distribución de clientes utilizando el decodificador simple para el vector de \textit{RandomKeys} de ejemplo. La primer ruta visita primero al cliente 6 y luego al 2. Como no pudo incluir al cliente 5, se cerró la ruta del primer vehículo y siguió con el próximo vehículo disponible. La segunda ruta visita al cliente 5 y luego al cliente 1. Como no pudo visitar al cliente 4 por la limitación de distancia, no intento agregar a los siguientes clientes.}
 	\centering
 	\includegraphics[width=14cm]{DistribucionClientesDecoSimple}
 	\label{fig:DistribucionClientesDecoSimple}
@@ -223,7 +223,7 @@ Un problema que tiene este decodificar es en la existencia de un cliente inalcan
 
 \bigskip
 
-Si utilizamos el decodificador simple y tenemos un cliente inalcanzable en el mapa, existe el escenario en el cual hay soluciones de la población donde todos los vehículos tienen sus rutas vacías. Supongamos que existe un cliente inalcanzable y que es el primer cliente que se intenta agregar en la ruta del primer vehículo. Como el cliente es inalcanzable no entra en la ruta, entonces se considera que el vehículo tiene la ruta completa y se pasa con el siguiente vehículo dejando su ruta vacía. Esto se repite con todos los vehículos ya que tienen el mismo valor de $d_{max}$. La solución óptima a este problema es filtrar todos los clientes inalcanzables previo a la ejecución del BRKGA utilizando un método que modele la función \ref{eq:inalcanzable}. Haciendo esto no solo evitamos el escenario de rutas vacías, también reducimos el tamaño del problema antes de comenzar a resolverlo. 
+Si utilizamos el decodificador simple y tenemos un cliente inalcanzable en el mapa, existe el escenario en el cual hay soluciones de la población donde todos los vehículos tienen sus rutas vacías. Supongamos que existe un cliente inalcanzable y que es el primer cliente que se intenta agregar en la ruta del primer vehículo. Como el cliente es inalcanzable no entra en la ruta, entonces se considera que el vehículo tiene la ruta completa y se pasa al siguiente vehículo dejando su ruta vacía. Esto se repite con todos los vehículos ya que tienen el mismo valor de $d_{max}$. La solución óptima a este problema es filtrar todos los clientes inalcanzables previo a la ejecución del BRKGA utilizando un método que modele la función \ref{eq:inalcanzable}. Haciendo esto no solo evitamos el escenario de rutas vacías, también reducimos el tamaño del problema antes de comenzar a resolverlo. 
 
 \bigskip
 
@@ -266,14 +266,14 @@ public Solution Decode(List<RandomKey> randomKeys, ProblemInfo pi)
 
 \bigskip
 
-Como podemos observar en el pseudocódigo \ref{func:decodeGoloso}, su complejidad es $0(\#clientes * \#vehiculos)$. El método \textit{Decode} es usado tantas veces a lo largo del BRKGA que este pequeño aumento en su complejidad algorítmica tiene un impacto visible en el tiempo de ejecución total. Por otro lado, utilizar el decodificador goloso mejora el beneficio de las soluciones generadas respecto de las soluciones generadas por el decodificador simple. Esa es la compensación que tenemos entre el decodificador simple y el goloso.
+Como podemos observar en el pseudocódigo \ref{func:decodeGoloso}, su complejidad es $0(\#clientes * \#veh\acute{\dotlessi}culos)$. El método \textit{Decode} es usado tantas veces a lo largo del BRKGA que este pequeño aumento en su complejidad algorítmica tiene un impacto visible en el tiempo de ejecución total. Por otro lado, utilizar el decodificador goloso mejora el beneficio de las soluciones generadas respecto de las soluciones generadas por el decodificador simple. Esa es la compensación que tenemos entre el decodificador simple y el goloso.
 
 \bigskip
 
 Otra característica que podemos mencionar sobre el decodificador goloso es que al observar el vector ordenado de \textit{RandomKeys}, ya no tenemos a los clientes de forma continua según su vehículo asignado como sucedía con el decodificador simple. Esto puede verse en la figura \ref{fig:DistribucionClientesDecoGoloso}.
 
 \begin{figure}[h]
-	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir al cliente 5, en cambio intenta con el resto de los clientes aún no visitados manteniendo el orden y logra insertar al cliente 8. De un modo similar, sucede con la segunda ruta al no poder incluir al cliente 4. Con el cliente 8 no lo intenta por que esta asignado a la primer ruta. Intenta con éxito insertar al cliente 3 y por ultimo falla con el cliente 7. }
+	\caption{Posible distribución de clientes utilizando el decodificador goloso para el vector de RandomKeys de ejemplo. La primer ruta visita a los clientes 6, 2 y por último al 8. El decodificador goloso no cerró la ruta del primer vehículo al no poder incluir al cliente 5, en cambio intenta con el resto de los clientes aún no visitados manteniendo el orden y logra insertar al cliente 8. De un modo similar, sucede con la segunda ruta al no poder incluir al cliente 4. Con el cliente 8 no lo intenta por que esta asignado a la primer ruta. Intenta con éxito insertar al cliente 3 y por último falla con el cliente 7. }
 	\centering
 	\includegraphics[width=14cm]{DistribucionClientesDecoGoloso}
 	\label{fig:DistribucionClientesDecoGoloso}
@@ -308,7 +308,7 @@ Como podemos ver en la tabla \ref{tab:resultadosDecoGoloso}, todos los resultado
 
 \section{Biased Random Key Genetic Algorithms}
 
-En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir se crea una nueva generación de soluciones a partir de la generación anterior como se explica en la sección BRKGA (ver sección~\ref{sec:brkga}). En el pseudocódigo \ref{func:RunBrkga} podemos ver un punto de vista macro del algoritmo BRKGA implementado.
+En una primera instancia se implementa un BRKGA estándar. Dado una instancia de un problema, primero se genera la población inicial. Luego mientras no se cumpla la condición de parada, evolucionamos la población. Es decir se crea una nueva generación de soluciones a partir de la generación anterior como se explica en el capítulo~\ref{sec:brkga}. En el pseudocódigo \ref{func:RunBrkga} podemos ver un punto de vista macro del algoritmo BRKGA implementado.
 
 \bigskip
 
@@ -328,12 +328,12 @@ public Solution RunBrkga(ProblemManager problemManager)
 
 \subsection{Configuración} \label{sec:config}
 
-A modo de poder probar distintas configuraciones del BRKGA, creé el objeto \textit{Configuration} que instancia todas las variables que pueden impactan en el resultado final del BRKGA. Este objeto es esencial para ajustar mi implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, gané mucho tiempo al probar variaciones de mi implementación. Además, al estar centralizada toda la información variable, se obtiene una lectura veloz del BRKGA que se estaba probando. En otras palabras incrementé mi capacidad de monitoreo y control del desarrollo. El pseudocódigo \ref{func:config} muestra todas las propiedades configurables del mi desarrollo.
+A modo de poder probar distintas configuraciones del BRKGA, creé el objeto \textit{Configuration} que instancia todas las variables que pueden impactan en el resultado final del BRKGA. Este objeto es esencial para ajustar mi implementación de una forma rápida y ordenada. Al centralizar todas las variables que podrían impactar en resultado final, gané mucho tiempo al probar variaciones de mi implementación. Además, al estar centralizada toda la información variable, se obtiene una lectura veloz del BRKGA que se esta probando. En otras palabras incrementé mi capacidad de monitoreo y control del desarrollo. El pseudocódigo \ref{func:config} muestra todas las propiedades configurables de mi desarrollo.
 
 \bigskip
 
 \begin{minipage}{\linewidth}
-\begin{lstlisting} [caption={Objeto \textit{Configuración} donde se encuentran todas las variables importantes del BRKGA.}, label={func:config}]
+\begin{lstlisting} [caption={Objeto \textit{Configuration} donde se encuentran todas las variables importantes del BRKGA.}, label={func:config}]
 public class Configuration
 {
 	public string Description { get; }
@@ -353,9 +353,9 @@ public class Configuration
 
 \bigskip
 
-\subsection{Descripción y codificación de las propiedades del objeto configuración}\label{sec:descrCongif}
+\subsection{Descripción y codificación de las propiedades configurables}\label{sec:descrCongif}
 
-Como mencioné, uno de los beneficios de tener todas las variables configurables en un solo objeto es poder leer rápidamente que BRKGA estoy probando. Es que le agregue la propiedad \textit{Description} que se instancia automáticamente al instanciar el objeto \textit{Configuration}. Su valor es del tipo \textit{string} y codifica el valor del resto de las propiedades del objeto \textit{Configuration}. A continuación explico las propiedades del objeto Configuración:
+Como mencioné, uno de los beneficios de tener todas las variables configurables en un solo objeto es poder leer rápidamente que BRKGA estoy probando. A continuación explico las propiedades del objeto Configuración:
 
 \begin{itemize}
   \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto \textit{Configuration}. Codifica los valores del resto de las propiedades utilizando su clave y valor.
@@ -828,7 +828,7 @@ public bool ApplyLocalSearch(Solution solution)
 Como vemos en el pseudocódigo \ref{func:ApplyLocalSearchInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyLocalSearch} del \textit{Insert} es: 
 
 \begin{equation*}
-0(vehiculos * clientesNoVisitados * mediaClientesEnRuta)
+0(veh\acute{\dotlessi}culos * clientesNoVisitados * mediaClientesEnRuta)
 \end{equation*}
 
 \subsection{2-Opt}
@@ -1076,7 +1076,7 @@ O(Replace Multiple) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVis
 
 \subsection{Encoder}
 
-Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sea valida la ecuación \ref{eq:reversibilidad}.
+Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sea válida la ecuación \ref{eq:reversibilidad}.
 
 \bigskip
 
@@ -1093,7 +1093,7 @@ Como mencioné en la sección del Decodificador (ver sección \ref{sec:ordenDeco
 
 \bigskip
 
-En la figura \ref{fig:codificacionDeSolucionUno} podemos observar un vector de \textit{RandomKeys} ordenado por su campo \textit{Key}. Los \textit{ClientId} resaltados con color verde claro pertenecen al primer vehículo y los resaltados con verde oscura pertenecen al segundo vehículo. Debajo del vector de \textit{RandomKeys} podemos ver el hash de la solución y por ultimo las rutas que fueron generadas por el decodificador goloso (los mismo clientes que estaban coloreados en el vector de \textit{RandomKeys}).
+En la figura \ref{fig:codificacionDeSolucionUno} podemos observar un vector de \textit{RandomKeys} ordenado por su campo \textit{Key}. Los \textit{ClientId} resaltados con color verde claro pertenecen al primer vehículo y los resaltados con verde oscura pertenecen al segundo vehículo. Debajo del vector de \textit{RandomKeys} podemos ver el hash de la solución y por último las rutas que fueron generadas por el decodificador goloso (los mismo clientes que estaban coloreados en el vector de \textit{RandomKeys}).
 
 \bigskip
 
@@ -1117,7 +1117,7 @@ A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican al
     \label{fig:codificacionDeSolucionDos}
 \end{figure} 
 
-Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es valida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo. Esto asegura la validez de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
+Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es válida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo. Esto asegura la validez de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
 
 \bigskip
 
