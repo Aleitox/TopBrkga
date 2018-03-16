@@ -29,7 +29,49 @@ Una última mejora que implementé en mi algoritmo es la aplicación de una secu
 
 \bigskip
 
-Dentro de todos los trabajos previos de la literatura que encontré que incluyeran resultados del benchmark de instancias de Chao y los de Tsiligirides \cite{IntancesChaoTsiligirides}, comparé mis resultados con los obtenidos del \textit{Memetic Algorithm} (MA) de Bouly et al. \cite{BoulyDangMoukrim}, del \textit{Ant Colony Optimization} ($ACO_{seq}$) de Ke et al. \cite{KeArchettiFeng} y del \textit{Variable Neighborhood Search} ($VNS_{slow}$) de Archetti et al. \cite{ArchettiHertzSperanza}. Elegí estos trabajos previos por que contienen enfoques diversos y obtuvieron los mejores resultados de la literatura. Los resultados se pueden observar en las tablas: \ref{tab:resultadosFinales1}, \ref{tab:resultadosFinales2}, \ref{tab:resultadosFinales3}, \ref{tab:resultadosFinales4}, \ref{tab:resultadosFinales5}, \ref{tab:resultadosFinales6}, \ref{tab:resultadosFinales7} y \ref{tab:resultadosFinales8}. Cada instancia se ejecutó 3 veces para poder comparar los resultados del mismo modo que lo hicieron los trabajos previos mencionados. Como muestran las tablas, los resultados obtenidos fueron muy buenos. Se alcanzó el mejor resultado conocido para un 70\% de las instancias del benchmark.
+Dentro de todos los trabajos previos de la literatura que encontré que incluyeran resultados del benchmark de instancias de Chao y los de Tsiligirides \cite{IntancesChaoTsiligirides}, comparé mis resultados con los obtenidos del \textit{Memetic Algorithm} (MA) de Bouly et al. \cite{BoulyDangMoukrim}, del \textit{Ant Colony Optimization} (ACO\textsubscript{seq}) de Ke et al. \cite{KeArchettiFeng} y del \textit{Variable Neighborhood Search} (VNS\textsubscript{slow}) de Archetti et al. \cite{ArchettiHertzSperanza}. Elegí estos trabajos previos por que contienen enfoques diversos y obtuvieron los mejores resultados de la literatura. Los resultados se pueden observar en las tablas: \ref{tab:resultadosFinales1}, \ref{tab:resultadosFinales2}, \ref{tab:resultadosFinales3}, \ref{tab:resultadosFinales4}, \ref{tab:resultadosFinales5}, \ref{tab:resultadosFinales6}, \ref{tab:resultadosFinales7} y \ref{tab:resultadosFinales8}. Cada instancia se ejecutó 3 veces para poder comparar los resultados del mismo modo que lo hicieron los trabajos previos mencionados. Las columnas $B_{min}$, $B_{avg}$ y $B_{max}$ muestran el valor mínimo, promedio y máximo respectivamente obtenido por mi implementación para la instancia correspondiente. Agregue también la columna $i_{eMax}$ para obtener una rápida lectura de la fila, si $i_{eMax} = 1$ entonces en al menos una de las 3 ejecuciones se obtuvo el mejor beneficio publicado para tal instancia. Como muestran las tablas, los resultados obtenidos fueron muy buenos. Se alcanzó el mejor resultado conocido para un 70\% de las instancias del benchmark.
+
+\bigskip
+
+La tabla \ref{tab:resultadosSintesis} muestra una síntesis de los resultados. En esta tabla se agregaron los resultados del \textit{Tabu Search} de Tang et al. \cite{TangMillerHooks} y del trabajo de Chao et al. \cite{ChaoGoldenWasil}. También incluyo las otras propuestas de Archetti et al. \cite{ArchettiHertzSperanza}: el TS\textsubscript{penalty}, TS\textsubscript{feasible} y el VNS\textsubscript{fast}. El resto de los trabajos son los mismos con los que comparé mis resultados finales. Según el resumen de resultados, la eficiencia de mi algoritmo se encuentra por debajo del trabajo de Tang et al. \cite{TangMillerHooks} y por encima de la propuesta de Chao et al. \cite{ChaoGoldenWasil}. Las ecuaciones \ref{eq:zMin}, \ref{eq:zMax} y \ref{eq:DeltaZ} muestran como se obtiene los valores de las columnas de la tabla \ref{tab:resultadosSintesis} que resume los resultados. El valor $\delta Z_{min}$ del algoritmo \textit{X} es la sumatoria de las diferencias entre el mejor valor obtenido por cualquier algoritmo para cierta instancia y el menor valor obtenido para la misma instancia por el algoritmo \textit{X} (idem $\delta Z_{max}$). El valor de $\delta Z$ es la diferencia entre $\delta Z_{min}$ y $\delta Z_{max}$.
+
+\bigskip
+
+\begin{equation} \label{eq:zMin}
+\delta Z_{min} = \sum_{i \in instance} Best_i - B_{min}
+\end{equation}
+
+\begin{equation} \label{eq:zMax}
+\delta Z_{max} = \sum_{i \in instance} Best_i - B_{max}
+\end{equation}
+
+\begin{equation} \label{eq:DeltaZ}
+\delta Z = \delta Z_{min} - \delta Z_{max}
+\end{equation}
+
+\bigskip
+
+\begin{table}[!htbp]
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Algoritmo & $\delta Z_{min}$ & $\delta Z_{max}$ & $\delta Z$  \\
+\hline
+CGW & 4340 & - & -  \\
+BRKGA & 3341 & 1735 & 1606  \\
+TMH & 2404 & - & -  \\
+TS\textsubscript{penalty} & 2376 & 981 & 1395  \\
+TS\textsubscript{feasible} & 1184 & 399 & 785  \\
+VNS\textsubscript{fast} & 1436 & 352 & 1084  \\
+VNS\textsubscript{slow} & 427 & 84 & 343  \\
+ACO\textsubscript{seq} & - & 204 & -  \\
+MA & 434 & 80 & 354  \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Síntesis de los resultados.}
+\label{tab:resultadosSintesis}
+\end{table}
 
 \bigskip
 
@@ -493,48 +535,6 @@ p7.4.t & 1046 & 1057 & 1067 & 1077 & 1077 & 1077 & 0.99 & 1077  \\
 \end{center}
 \caption{Resultados finales (Parte 8).}
 \label{tab:resultadosFinales8}
-\end{table}
-
-\bigskip
-
-La tabla \ref{tab:resultadosSintesis} muestra una síntesis de los resultados. En esta tabla se agregaron los resultados del \textit{Tabu Search} de Tang et al. \cite{TangMillerHooks} y del trabajo de Chao et al. \cite{ChaoGoldenWasil}. También incluyo las otras propuestas de Archetti et al. \cite{ArchettiHertzSperanza}: el TS\textsubscript{penalty}, TS\textsubscript{feasible} y el VNS\textsubscript{fast}. El resto de los trabajos son los mismos con los que comparé mis resultados finales. Según el resumen de resultados, la eficiencia de mi algoritmo se encuentra por debajo del trabajo de Tang et al. \cite{TangMillerHooks} y por encima de la propuesta de Chao et al. \cite{ChaoGoldenWasil}. Las ecuaciones \ref{eq:zMin}, \ref{eq:zMax} y \ref{eq:DeltaZ} muestran como se obtiene los valores de las columnas de la tabla \ref{tab:resultadosSintesis} que resume los resultados. El valor $\delta Z_{min}$ del algoritmo \textit{X} es la sumatoria de las diferencias entre el mejor valor obtenido por cualquier algoritmo para cierta instancia y el menor valor obtenido para la misma instancia por el algoritmo \textit{X} (idem $\delta Z_{max}$). El valor de $\delta Z$ es la diferencia entre $\delta Z_{min}$ y $\delta Z_{max}$.
-
-\bigskip
-
-\begin{equation} \label{eq:zMin}
-\delta Z_{min} = \sum_{i \in instance} Best_i - B_{min}
-\end{equation}
-
-\begin{equation} \label{eq:zMax}
-\delta Z_{max} = \sum_{i \in instance} Best_i - B_{max}
-\end{equation}
-
-\begin{equation} \label{eq:DeltaZ}
-\delta Z = \delta Z_{min} - \delta Z_{max}
-\end{equation}
-
-\bigskip
-
-\begin{table}[!htbp]
-\begin{center}
-\begin{tabular}{ |c|c|c|c|c|c|c|c|c| } 
-\hline
-Algoritmo & $\delta Z_{min}$ & $\delta Z_{max}$ & $\delta Z$  \\
-\hline
-CGW & 4340 & - & -  \\
-BRKGA & 3341 & 1735 & 1606  \\
-TMH & 2404 & - & -  \\
-TS\textsubscript{penalty} & 2376 & 981 & 1395  \\
-TS\textsubscript{feasible} & 1184 & 399 & 785  \\
-VNS\textsubscript{fast} & 1436 & 352 & 1084  \\
-VNS\textsubscript{slow} & 427 & 84 & 343  \\
-ACO\textsubscript{seq} & - & 204 & -  \\
-MA & 434 & 80 & 354  \\
-\hline
-\end{tabular}
-\end{center}
-\caption{Síntesis de los resultados.}
-\label{tab:resultadosSintesis}
 \end{table}
 
 \bigskip

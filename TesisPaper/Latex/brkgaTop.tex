@@ -160,7 +160,7 @@ Un cliente $c_i$ se puede agregar a la ruta si al agregarlo, la ruta no supera s
 \bigskip
 
 \begin{mycapequ}[!ht]
-	\caption{El método \textit{CanVisit} retorna \textit{true} cuando la siguiente formula es válida:}
+	\caption{El método \textit{CanVisit} retorna \textit{true} cuando la siguiente fórmula es válida:}
 	\begin{equation} \label{eq:canVisit}
 	d_{act}\, +\, distancia(c_u, c_i)\, +\, distancia(c_i, n_f)\, -\, distancia(c_u, n_f) \leq d_{max}
 	\end{equation}
@@ -668,7 +668,7 @@ Con el objetivo de optimizar los resultados obtenidos hasta el momento, implemen
 
 \subsection{Centro de Gravedad}
 
-Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza esta dado por su distancia al centro de gravedad (COG) de la ruta a la cual se le aplica el \textit{Insert} o el \textit{Replace}. Cuanto más cercano sea el cliente al COG de la ruta a optimizar, mayor prioridad tendrá el cliente. Implementé el cálculo del COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada del COG de una ruta se calcula como muestran las formulas \ref{eq:cogX} y \ref{eq:cogY}.
+Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza esta dado por su distancia al centro de gravedad (COG) de la ruta a la cual se le aplica el \textit{Insert} o el \textit{Replace}. Cuanto más cercano sea el cliente al COG de la ruta a optimizar, mayor prioridad tendrá el cliente. Implementé el cálculo del COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada del COG de una ruta se calcula como muestran las fórmulas \ref{eq:cogX} y \ref{eq:cogY}.
 
 \begin{mycapequ}[!ht]
 	\caption{Coordenada X del COG de una ruta.}
@@ -714,14 +714,14 @@ r'.x_{cog} =  \frac{(\sum_{\forall i \in r.ruta} x_i * B_i) + x_k * B_k}{(\sum_{
 
 \bigskip
 
-Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un cliente de una ruta, hay que remover del COG el impacto que tenía el cliente eliminado sobre el COG (Ídem cuando se inserta un cliente en la ruta). La actualizacion del COG puede implementarse con un complejidad de $O(1)$ si mantenemos los valores de $x_{cog.num}$ y $x_{cog.den}$ cuando calculamos el COG por primera vez como se observa en la formula \ref{eq:cogNumDen}. La formula \ref{eq:cogRemove} muestra como se actualiza el COG en $O(1)$ luego de remover un cliente utilizando los valores de $x_{cog.num}$ y $x_{cog.den}$. Ídem formula \ref{eq:cogAdd} para el caso en que se inserta un cliente.
+Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un cliente de una ruta, hay que remover del COG el impacto que tenía el cliente eliminado sobre el COG (Ídem cuando se inserta un cliente en la ruta). La actualizacion del COG puede implementarse con un complejidad de $O(1)$ si mantenemos los valores de $x_{cog.num}$ y $x_{cog.den}$ cuando calculamos el COG por primera vez como se observa en la fórmula \ref{eq:cogNumDen}. La fórmula \ref{eq:cogRemove} muestra como se actualiza el COG en $O(1)$ luego de remover un cliente utilizando los valores de $x_{cog.num}$ y $x_{cog.den}$. Idem fórmula \ref{eq:cogAdd} para el caso en que se inserta un cliente.
 
 \bigskip
 
 
 \subsection{Swap}
 
-El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas. Es decir, dados $v_a$ y $v_b$ vehículos y sus respectivas rutas $r_a$ y $r_b$, se puede realizar un \textit{Swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$ son válidas las formulas \ref{eq:swap1}, \ref{eq:swap2} y \ref{eq:swap3}.
+El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas. Es decir, dados $v_a$ y $v_b$ vehículos y sus respectivas rutas $r_a$ y $r_b$, se puede realizar un \textit{Swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$ son válidas las fórmulas \ref{eq:swap1}, \ref{eq:swap2} y \ref{eq:swap3}.
 
 \begin{equation}\label{eq:swap1}
 r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist
@@ -1076,7 +1076,7 @@ O(Replace Multiple) = O(veh\acute{\dotlessi}culos * clientesNoVisitados * 2^{cli
 
 \subsection{Encoder}
 
-Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sean validas la ecuaciones \ref{eq:reversibilidad} y \ref{eq:reversibilidad2}.
+Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sean válidas la ecuaciones \ref{eq:reversibilidad} y \ref{eq:reversibilidad2}.
 
 \bigskip
 
