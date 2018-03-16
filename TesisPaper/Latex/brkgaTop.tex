@@ -79,7 +79,7 @@ Descripciones:
 
 \section{Decodificador}
 
-El decodificador debe generar una solución válida del problema dado un vector de claves aleatorios y conociendo la instancia del problema (vehículos disponibles, clientes, $d_{max}$, etc). Con tal objetivo construye una solución asignando clientes a las rutas de los vehículos disponibles respetando $d_{max}$. De acá en adelante llamaré clientes a todos los nodos que tienen un beneficio mayor a cero. Es decir, todos los nodos excepto el nodo de inicio y fin de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Tal orden es determinado por el el vector de claves aleatorias. Por lo tanto el vector tendrá una longitud equivalente a la cantidad de clientes del problema.
+El decodificador debe generar una solución válida del problema dado un vector de claves aleatorios y conociendo la instancia del problema (vehículos disponibles, clientes, $d_{max}$, etc). Con tal objetivo construye una solución asignando clientes a las rutas de los vehículos disponibles respetando $d_{max}$. De acá en adelante llamaré clientes a todos los nodos que tienen un beneficio mayor a cero. Es decir, todos los nodos excepto el nodo de inicio y fin de recorrido. El orden en que toma los clientes a asignar es clave y determina la solución resultante. Tal orden es determinado por el vector de claves aleatorias. Por lo tanto el vector tendrá una longitud equivalente a la cantidad de clientes del problema.
 
 \bigskip
 
@@ -457,7 +457,7 @@ El \textit{LastProfits} del pseudocódigo \ref{func:GenerateRandomKey}, es una c
 
 \subsection{Evolución de la población}
 
-Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población de no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección \ref{sec:brkga}. Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. De ser idéntica a otra solución, se genera una solución aleatoria del mismo modo que se generaron los mutantes. En el pseudocódigo \ref{func:Evolve} podemos ver como evoluciona una población.
+Se toma la población y se ordenan sus individuos de forma descendente según su beneficio calculado con la función objetivo. Los mejores individuos pasan a ser parte de la población de elite y el resto de la población no-elite. El tamaño de la población de elite depende de la propiedad \textit{ElitePercentage} del objeto \textit{Configuration}. Luego se generan individuos mutantes, su cantidad es un porcentaje de la población total seteado por la propiedad \textit{MutantPercentage}. Finalmente se completa la nueva generación emparentando individuos de la población de elite con individuos de la población de no-elite. Los padres son elegidos al azar y el proceso de apareamiento se realiza como se describe en el la sección \ref{sec:brkga}. Durante el apareamiento, no es tan extraño que se genere una solución idéntica a otra ya existente en la población. De modo de no repetir soluciones, antes de insertar el individuo resultante se verifica que no exista otra solución idéntica en la nueva generación. De ser idéntica a otra solución, se genera una solución aleatoria del mismo modo que se generan los mutantes. En el pseudocódigo \ref{func:Evolve} podemos ver como evoluciona una población.
 
 \bigskip
 
@@ -543,7 +543,7 @@ private void AddMutants(int amount)
 
 \bigskip
 
-Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no requiere comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden que de los clientes que determinan sus vectores de \textit{RandomKeys}. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(1)$ ya que simplemente es comparar dos \textit{strings}. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
+Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no es necesario comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden en que se asignan sus clientes a las rutas. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(1)$ ya que simplemente es comparar dos \textit{strings}. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
 
 \bigskip
 
@@ -577,7 +577,7 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve mas lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
+En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve más lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
 
 \subsection{Resultados de la primer versión}
 
@@ -735,7 +735,7 @@ r_b'.Dist \leq v'_b.d_{max}
 
 \bigskip
 
-En el pseudocódigo \ref{func:ApplyLocalSearchSwap} podemos ver que al aplicar esta búsqueda a una solución se ejecuta el método \textit{SwapDestinationsBetween} para todo par de rutas de la solución. Por lo tanto, este método será llamado $veh\acute{i}culos * (veh\acute{i}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween}, que podemos observar en el pseudocódigo \ref{func:SwapDestinationsBetween}, prueba intercambiar cada cliente de la ruta $a$ con cada cliente de la ruta $b$ y si efectivamente conviene hacer un \textit{Swap}, lo realiza. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual del \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
+En el pseudocódigo \ref{func:ApplyLocalSearchSwap} podemos ver que al aplicar esta búsqueda a una solución se ejecuta el método \textit{SwapDestinationsBetween} para todo par de rutas de la solución. Por lo tanto, este método será llamado $veh\acute{\dotlessi}culos * (veh\acute{\dotlessi}culos-1) / 2$ veces (la cantidad de combinaciones posibles de tomar dos elementos de un conjunto). El método \textit{SwapDestinationsBetween}, que podemos observar en el pseudocódigo \ref{func:SwapDestinationsBetween}, prueba intercambiar cada cliente de la ruta $a$ con cada cliente de la ruta $b$ y si efectivamente conviene hacer un \textit{Swap}, lo realiza. De modo de no estar cambiando múltiples veces a un mismo cliente entre dos rutas en una misma ejecución, cuando se cambia de ruta a un cliente se lo agrega en una lista de clientes prohibidos para intercambiar hasta que termine la ejecución actual del \textit{SwapDestinationsBetween}. Esta búsqueda local no mejora el beneficio total de una solución, lo que hace es disminuir la distancia recorrida de alguna ruta aumentando la probabilidad de insertar clientes no visitados.
 
 \bigskip
 
@@ -890,8 +890,8 @@ Este algoritmo tiene un orden de complejidad:
 
 \begin{equation*}
 \begin{split}
-O(2Opt) &= O(veh\acute{i}culos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) \\
-            &= O(veh\acute{i}culos * mediaClientesEnRuta^2 / 2)
+O(2Opt) &= O(veh\acute{\dotlessi}culos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) \\
+            &= O(veh\acute{\dotlessi}culos * mediaClientesEnRuta^2 / 2)
 \end{split}
 \end{equation*}
 \end{minipage}
@@ -989,7 +989,7 @@ public bool RemoveWorst(Vehicle vehicle, Client inserted)
 El \textit{Replace Simple} tiene un orden de complejidad:
 
 \begin{equation*}
-O(Replace Simple) = O(veh\acute{i}culos * clientesNoVisitados * mediaClientesVisitados * 2)
+O(Replace Simple) = O(veh\acute{\dotlessi}culos * clientesNoVisitados * mediaClientesVisitados * 2)
 \end{equation*}
 \end{minipage}
 
@@ -1067,23 +1067,26 @@ public List<CandidateGroup> GetCandidateGroups(Vehicle v, Client c)
 
 \bigskip
 
-El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas mas opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
+El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas más opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
 
 \begin{equation*}
-O(Replace Multiple) = O(veh\acute{i}culos * clientesNoVisitados * 2^{clientesVisitados})
+O(Replace Multiple) = O(veh\acute{\dotlessi}culos * clientesNoVisitados * 2^{clientesVisitados})
 \end{equation*}
 
 
 \subsection{Encoder}
 
-Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sea válida la ecuación \ref{eq:reversibilidad}.
+Agregar búsquedas locales entre generación de poblaciones conlleva un problema que debe resolverse. Al mejorar la solución se modifican sus rutas. Ahora bien, si no se actualizan los genes de una solución acorde a los cambios realizados por las búsquedas locales sus descendientes heredarán los genes de la solución no optimizada. Una vez que se optimiza una solución el vector de \textit{RandomKeys} debe ser actualizado de forma que sean validas la ecuaciones \ref{eq:reversibilidad} y \ref{eq:reversibilidad2}.
 
 \bigskip
 
 \begin{mycapequ}[!ht]
-	\caption{Ecuación que debe ser válida para que el \textit{crossover} sea correcto.}
+	\caption{Ecuaciones que deben ser válidas para que el \textit{crossover} sea correcto.}
 	\begin{equation} \label{eq:reversibilidad}
-	ApplyLocalSearch(s) = Decoder.Decode(s.RandomKeys, ProblemInfo)
+	ApplyLocalSearch(s) = s'
+	\end{equation}
+	\begin{equation} \label{eq:reversibilidad2}
+	s' = Decoder.Decode(s'.RandomKeys, ProblemInfo)
 	\end{equation}
 \end{mycapequ}
 
@@ -1106,7 +1109,7 @@ En la figura \ref{fig:codificacionDeSolucionUno} podemos observar un vector de \
 
 \bigskip
 
-A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican algunas búsquedas locales y podemos ver los cambios en la figura \ref{fig:codificacionDeSolucionDos}. Ambas rutas se extienden con un nuevo cliente, la primer ruta incluso cambia el orden en que se visitan el cliente 2 y el 6. Debajo de las rutas vemos el vector de \textit{RandomKeys} ordenado por su campo \textit{Key} con los campos \textit{ClientId} actualizados de forma que al decodificar el el vector de \textit{RandomKeys} genere la solución optimizada.
+A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican algunas búsquedas locales y podemos ver los cambios en la figura \ref{fig:codificacionDeSolucionDos}. Ambas rutas se extienden con un nuevo cliente, la primer ruta incluso cambia el orden en que se visitan el cliente 2 y el 6. Debajo de las rutas vemos el vector de \textit{RandomKeys} ordenado por su campo \textit{Key} con los campos \textit{ClientId} actualizados de forma tal que al decodificar el vector de \textit{RandomKeys} genere la solución optimizada.
 
 \bigskip
 
@@ -1117,7 +1120,7 @@ A la solución de la figura \ref{fig:codificacionDeSolucionUno} se le aplican al
     \label{fig:codificacionDeSolucionDos}
 \end{figure} 
 
-Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenece a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría mas tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es válida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo. Esto asegura la validez de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
+Existe un escenario en donde al decodificar un \textit{RandomKeys} actualizado por el codificador no genere exactamente la misma solución que fue optimizada. Supongamos que tenemos el \textit{RandomKeys} de la figura \ref{fig:codificacionDeSolucionDos} que fue actualizado por el codificador luego de que la solución a la cual corresponde fuera optimizada por las búsquedas locales. Cuando el decodificador goloso le asigna el ClientId 6 al primer vehículo antes de cambiar de vehículo intentará asignar el resto de los clientes al primer vehículo. Lo que normalmente sucederá es que no logre insertar ninguno de los otros clientes, pero podría ser que alguno de los clientes pueda insertarse en el primer vehículo. De ser así existen dos opciones. La primera es que el cliente extra que se agregara a la primer ruta pertenezca a otro vehículo. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 7, 5 o 3. Si sucede esto, el segundo vehículo tendría más tiempo disponible y menor beneficio. Si al segundo vehículo no se le inserta ningún cliente extra, el beneficio total de la solución se mantiene. En caso contrario algún cliente no visitado ahora tiene lugar en el segundo vehículo y el beneficio de la solución incremento. La segunda opcion es que el cliente extra insertado en el primer vehículo era un cliente no visitado. En el ejemplo de la figura \ref{fig:codificacionDeSolucionDos} podría ser el caso los ClientId: 1 o 4. Luego el segundo vehículo no se vería afectado. Lo que significa que el beneficio total de la solución aumento. Por lo tanto existen escenarios donde la ecuación \ref{eq:reversibilidad} no es válida pero el beneficio total de la solución resultante es igual o mayor a la que debería ser. Entonces no es un problema grave, además es un escenario poco factible ya que significaría que las búsquedas \textit{Insert}, \textit{Replace Simple} y \textit{Replace Multiple} no encontraron esta mejor solución que es vecina de la solución encontrada. De todos modos, opte por implementar unos delimitadores que agrega el codificador al actualizar el vector de \textit{RandomKeys} de forma tal que cuando los decodificadores pasan por uno de estos delimitadores son forzados a cambiar de vehículo. Esto asegura la validez de la ecuación \ref{eq:reversibilidad}. Podemos observar el pseudocódigo \ref{func:UpdateRandomKeys} que actualiza el vector de \textit{RandomKeys} luego de que la solución es optimizada por las búsquedas locales.
 
 \bigskip
 
@@ -1240,15 +1243,15 @@ p7.4.t & SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 
 \bigskip
 
-En la tabla \ref{tab:resultadosListaLS}, se pueden observar los resultados de variar el orden en que se aplican las búsquedas locales. Claramente el peor orden de búsquedas locales es IRmRsOS (\textit{Insert}, \textit{Replace Multiple}, \textit{Replace Simple}, \textit{2-Opt}, \textit{Swap}). Las búsquedas \textit{Insert} y \textit{Replace} intentan agregar mas clientes o intercambiar por clientes mas rentables mejorando el beneficio de la ruta. En cambio las búsquedas \textit{2-Opt} y \textit{Swap} modifican la secuencia en que se visitan los clientes seleccionados con el objetivo de minimizar la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que reducen la distancia recorrida, no se hace uso de la distancia disminuida por \textit{2-Opt} y \textit{Swap}.
+En la tabla \ref{tab:resultadosListaLS}, se pueden observar los resultados de variar el orden en que se aplican las búsquedas locales. Claramente el peor orden de búsquedas locales es IRmRsOS (\textit{Insert}, \textit{Replace Multiple}, \textit{Replace Simple}, \textit{2-Opt}, \textit{Swap}). Las búsquedas \textit{Insert} y \textit{Replace} intentan agregar más clientes o intercambiar por clientes más rentables mejorando el beneficio de la ruta. En cambio las búsquedas \textit{2-Opt} y \textit{Swap} modifican la secuencia en que se visitan los clientes seleccionados con el objetivo de minimizar la distancia recorrida de una ruta. Al ejecutar primero las búsquedas que incrementan el beneficio y luego las que reducen la distancia recorrida, no se hace uso de la distancia disminuida por \textit{2-Opt} y \textit{Swap}.
 
 \bigskip
 
-Entre las otras 6 combinaciones aquellas con mejor resultados en sus 25 ejecuciones fueron SOSIRsSORm y SOIORsRmSORm. Ambas son las únicas que obtuvieron un $i_{eAvg}$ de 0.98 para las dos instancias. La configuración SIORsSORm llego a encontrar la mejor solución conocida para la instancia \textit{p7.4.t} pero su $i_{eAvg}$ es de 0.97. Decidí priorizar el valor del $i_{eAvg}$ sobre el valor del $i_{eMax}$ porque el $i_{eMax}$ no es estable, por lo tanto no garantiza buenos resultados. Entre las dos configuraciones con mejor $i_{eAvg}$ seleccioné SOSIRsSORm por que como se puede observar que en la tabla \ref{tab:resultadosListaLS} tuvo un tiempo de ejecución promedio al menor un 20\% menor al de la configuración SOIORsRmSORm.
+Entre las otras 6 combinaciones aquellas con mejor resultados en sus 25 ejecuciones fueron SOSIRsSORm y SOIORsRmSORm. Ambas son las únicas que obtuvieron un $i_{eAvg}$ de 0.98 para las dos instancias. La configuración SIORsSORm llego a encontrar la mejor solución conocida para la instancia \textit{p7.4.t} pero su $i_{eAvg}$ es de 0.97. Decidí priorizar el valor del $i_{eAvg}$ sobre el valor del $i_{eMax}$ porque el $i_{eMax}$ no es estable, por lo tanto no garantiza buenos resultados. Entre las dos configuraciones con mejor $i_{eAvg}$ seleccioné SOSIRsSORm por que como se puede observar en la tabla \ref{tab:resultadosListaLS} tuvo un tiempo de ejecución promedio al menos un 20\% menor al de la configuración SOIORsRmSORm.
 
 \bigskip
 
-Por último, antes de calcular los resultados finales sobre todo el bechmark de problemas, hice una prueba de eficiencia entre los dos decodificadores ahora que el BRKGA tiene búsquedas locales. Para las mismas dos instancias de la tabla \ref{tab:resultadosListaLS}, ejecute 10 veces el BRKGA variando solamente los decodificadores utilizados. La lista de búsquedas locales aplicadas es la que mejores resultados obtuvo en el análisis previo: SOSIRsSORm.
+Por último, antes de calcular los resultados finales sobre todo el bechmark de problemas, hice una prueba de eficiencia entre los dos decodificadores ahora que el BRKGA tiene búsquedas locales. Para las mismas dos instancias de la tabla \ref{tab:resultadosListaLS}, ejecute 10 veces el BRKGA variando solamente los decodificadores utilizados. Para esta prueba utilicé la lista de búsquedas locales que mejores resultados obtuvo en el análisis previo: SOSIRsSORm.
 
 \bigskip
 
@@ -1271,7 +1274,7 @@ p7.4.t & S & 119328 & 1041 & 1051 & 1059 & 0.98 & 0.98 & 1077  \\
 
 \bigskip
 
-En la tabla \ref{tab:testMe} podemos observar los resultados obtenidos sobre las instancias \textit{p5.3.x} y \textit{p7.4.t} para el BRKGA con búsquedas locales modificando solamente los decodificadores. Los beneficios obtenidos son prácticamente iguales utilizando cualquiera de los decodificadores. Donde podemos ver diferencias en los resultados es en el tiempo promedio de ejecución, $T_{avg}$. El decodificador goloso demoró aproximadamente un 80\% más en ejecutarse que el decodificador simple. Es por este motivo que elegí el decodificador simple para mis resultados finales.
+En la tabla \ref{tab:testMe} podemos observar los resultados obtenidos sobre las instancias \textit{p5.3.x} y \textit{p7.4.t} para el BRKGA con búsquedas locales modificando solamente los decodificadores. Los beneficios obtenidos son prácticamente iguales utilizando cualquiera de los decodificadores. Donde podemos ver diferencias en los resultados es la columna $T_{avg}$, el tiempo promedio de ejecución. El decodificador goloso demoró aproximadamente un 80\% más en ejecutarse que el decodificador simple. Es por este motivo que elegí el decodificador simple para mis resultados finales.
 
 \bigskip
 
