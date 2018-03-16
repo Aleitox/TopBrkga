@@ -1,10 +1,10 @@
 \chapter{Introducción}
 
-La orientación es un deporte originario de Escandinavia jugado al aire libre normalmente en bosques o zonas montañosas. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de control específico e intenta visitar tantos otros puntos de control como le sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de este deporte es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Por lo tanto cada competidor debe seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total. Este problema se conoce como el \textit{Orienteering Problem} y se denota por OP.
+La orientación \cite{ChaoGoldenWasil} es un deporte originario de Escandinavia jugado al aire libre normalmente en bosques o zonas montañosas. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de control específico e intenta visitar tantos otros puntos de control como le sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de este deporte es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Por lo tanto cada competidor debe seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total. Este problema se conoce como el \textit{Orienteering Problem} y se denota por OP.
 
 \bigskip
 
-El equipo de orientación extiende la versión de un solo competidor del deporte a un equipo formado por varios competidores (digamos 2, 3 o 4 miembros). Todos los competidores comienzan en el mismo punto y cada miembro del equipo intenta visitar tantos puntos de control como le sea posible dentro de un límite de tiempo prescrito, terminando en el punto final. Una vez que un miembro del equipo visita un punto y se le otorga la puntuación asociada, ningún otro miembro del equipo puede obtener una puntuación por visitar el mismo punto. Por lo tanto, cada miembro de un equipo tiene que seleccionar un subconjunto de puntos de control para visitar, de modo que haya una superposición mínima en los puntos visitados por cada miembro del equipo, el límite de tiempo no sea violado y la puntuación total del equipo sea maximizada. Este problema se conoce como el \textit{Team Orienteering Problem} y lo denotan por TOP.
+El equipo de orientación extiende la versión de un solo competidor del deporte a un equipo formado por varios competidores (digamos 2, 3 o 4 miembros). Todos los competidores comienzan en el mismo punto y cada miembro del equipo intenta visitar tantos puntos de control como le sea posible dentro de un límite de tiempo prescrito, terminando en el punto final. Una vez que un miembro del equipo visita un punto y se le otorga la puntuación asociada, ningún otro miembro del equipo puede obtener una puntuación por visitar el mismo punto. Por lo tanto, cada miembro de un equipo tiene que seleccionar un subconjunto de puntos de control para visitar, de modo que dos miembros del mismo equipo no visiten el mismo punto de control, el límite de tiempo no sea violado y la puntuación total del equipo sea maximizada. Este problema se conoce como el \textit{Team Orienteering Problem} y lo denotan por TOP.
 
 \bigskip
 
@@ -51,7 +51,7 @@ Una instancia de TOP contiene:
 
 \begin{itemize}
   \item $N$ vehículos de carga. Cada vehículo tiene una distancia máxima, llamada $d_{max}$, que puede recorrer. En esta implementación cada vehículo puede tener una distancia máxima diferente. De todos modos en las instancias de test utilizadas, los vehículos tienen el mismo $d_{max}$.
-  \item $M$ clientes. Un cliente es un nodo con beneficio mayor a cero. Cada cliente tienen un set de coordenadas $X$ e $Y$ que representan su ubicación en un plano cartesiano.
+  \item $M$ clientes. Un cliente es un nodo con beneficio mayor a cero. Cada cliente tiene un set de coordenadas $X$ e $Y$ que representan su ubicación en un plano cartesiano.
   \item Un nodo de inicio y fin de ruta. Todos los vehículos inician y finalizan el recorrido en estos nodos. Ambos nodos tienen un beneficio de cero y tienen un set de coordenadas $X$ e $Y$.
 \end{itemize}
 \end{minipage}
@@ -79,7 +79,7 @@ En el capítulo 2 se encuentra la revisión bibliográfica, donde se sintetizaro
 En el capítulo 3 se presentará el modelo matemático de TOP que presentaron Tang y Miller-Hooks \cite{TangMillerHooks} .
 En el capítulo 4 describiré los algoritmos genéticos en general, luego se explica en particular el RKGA y el BRKGA. Por último se comenta sobre el algoritmo decodificador que utiliza el BRKGA.
 En el capítulo 5 se detalla en profundidad la implementación de toda la solución, comenzando por los decodificadores utilizados, su eficiencia, desventajas y comportamiento. Luego se explica mi implementación del algoritmo BRKGA, detallando las configuraciones testeadas, resultados parciales y problemas encontrados. Por último en este mismo capítulo se describen las búsquedas locales implementadas, el objetivo de cada una, los distintos ordenes en que se aplicaron las búsquedas locales y los resultados parciales sobre un subconjunto diverso del benchmark de instancias.
-En el capítulo 6 muestro los resultados obtenidos sobre las instancias del benchmark de problemas.
+En el capítulo 6 muestro los resultados finales obtenidos sobre las instancias del benchmark de problemas.
 Por último en el capítulo 7 comento sobre las conclusiones y trabajos futuros.
 
 

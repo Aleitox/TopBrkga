@@ -1,7 +1,7 @@
 
 \chapter*{\tituloAbstractEn}
 
-\noindent In the \textit{Orienteering Problem} (OP) \cite{Tsiligirides}, a set of nodes is given, each with a certain benefit. The objective is to determine a path, limited in length, that visits some nodes in order that maximizes the sum of the collected benefits. The OP can be formulated in the following way: given $n$ nodes in the euclidean plane each with a benefit, where $benefit(node_i) \geq 0$ y $benefit(node_1) = benefit(node_n) = 0$, find a route of maximum benefit through these nodes beginning at $node_1$ and ending at $node_n$ of length no greater than $d_{max}$. In the  arcticle \textit{Heuristic Methods Applied to Orienteering} by Tsiligirides \cite{Tsiligirides} this problem is refers as the \textit{Generalized Traveling Salesman Problem} (GTSP).
+\noindent In the \textit{Orienteering Problem} (OP) \cite{Tsiligirides}, a set of nodes is given, each with a certain benefit. The objective is to determine a path, limited in length, that visits some nodes in order that maximizes the sum of the collected benefits. The OP can be formulated in the following way: given $n$ nodes in the euclidean plane each with a benefit, where $benefit(node_i) \geq 0$ y $benefit(node_1) = benefit(node_n) = 0$, find a route of maximum benefit through these nodes beginning at $node_1$ and ending at $node_n$ of length no greater than $d_{max}$. Tsiligirides \cite{Tsiligirides} called this problem as the \textit{Generalized Traveling Salesman Problem} (GTSP).
 
 \bigskip
 
@@ -13,7 +13,7 @@ In this dissertation I propose a combination of the \textit{Biased Random Key Ge
 
 \bigskip
 
-In my algorithm, in every new generation, the best solution is enhanced with some local searches. Given a solution $s$, a local search algorithim searches for better solutions in the neighborhood of $s$. The solution $s'$ in the neighborhood of $s$, is better than $s$ if the total collected benefit from $s'$ is greater than the one from $s$ or their total collected benefit are equal and the distance traveled by the routes of $s'$ is less than the distance traveled by the routes of $s$. In this work I implemented the following local search algorithims: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
+In my algorithm, in every new generation, the best solution is enhanced with some local searches. Given a solution $s$, a local search algorithm searches for better solutions in the neighborhood of $s$. The solution $s'$ in the neighborhood of $s$, is better than $s$ if the total collected benefit from $s'$ is greater than the one from $s$ or their total collected benefit are equal and the distance traveled by the routes of $s'$ is less than the distance traveled by the routes of $s$. In this work I implemented the following local search algorithms: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
 
 \bigskip
 
@@ -21,7 +21,7 @@ I performed the computational experiments in standard instances of the literatur
 
 \bigskip
 
-The results of my algorithm are very good given that for 70\% of the instances my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the mentioned previous works.
+The results of my algorithm are very good given that in 70\% of the instances my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the mentioned previous works.
 
 \bigskip
 
