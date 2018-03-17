@@ -5,15 +5,15 @@
 
 \bigskip
 
-The \textit{Team Orienteering Problem} (TOP) \cite{ChaoGoldenWasil} is the generalization to the case of multiple tours of the \textit{Orienteering Problem}. Solving TOP involves finding a set of paths from the starting node to the ending node such that the total collected benefit received from visiting a subset of nodes is maximized, the length of each path is restricted by $d_{max}$ and no node is visited more than once. The OP belongs to the class of NP-Hard problems, as it contains the well known \textit{Traveling Salesman Problem} as a special case (see Garey y Johnson \cite{GareyJohnson}). In the same way, TOP belongs to the NP-Hard problems as it contains the OP as a special case when there is only one path. Solving TOP requires not only determining a calling order on each tour, but also selecting which subset of nodes in the graph to visit.
+The \textit{Team Orienteering Problem} (TOP) \cite{ChaoGoldenWasil} is the generalization to the case of multiple tours of the \textit{Orienteering Problem}. Solving TOP involves finding a set of paths from the starting node to the ending node such that the total collected benefit received from visiting a subset of nodes is maximized, the length of each path is restricted by $d_{max}$ and no node is visited more than once. The OP belongs to the class of NP-Hard problems, as it contains the well known \textit{Travelling Salesman Problem} as a special case (see Garey y Johnson \cite{GareyJohnson}). In the same way, TOP belongs to the NP-Hard problems as it contains the OP as a special case when there is only one path. Solving TOP requires not only determining a calling order on each tour, but also selecting which subset of nodes in the graph to visit.
 
 \bigskip
 
-In this dissertation I propose a combination of the \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} and local searchs to solve the TOP. The BRKGA is a class of genetic algorithms that initialize its population using a decoder that converts a set of random integer vectors into a set of valid solutions of the problem. The BRKGA is a variant of the \textit{Random Key Genetic Algorithm} (RKGA). These algorithms differ in the mating process (\textit{crossover}), while in the RKGA the parents are chosen randomly between all individuals of the population, in the BRKGA one of the parents always belongs to the subset of best individuals of the population and this parent has better chances of transmitting his gens to the individual resulting from the mating process.
+In this dissertation, I propose a combination of the \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} and local searchs to solve the TOP. The BRKGA is a class of genetic algorithms that initializes its population using a decoder that converts a set of random integer vectors into a set of valid solutions of the problem. The BRKGA is a variant of the \textit{Random Key Genetic Algorithm} (RKGA). These algorithms differ in the mating process (\textit{crossover}), while in the RKGA the parents are chosen randomly between all individuals of the population, in the BRKGA one of the parents always belongs to the subset of best individuals of the population and this parent has better chances of transmitting his gens to the individual resulting from the mating process.
 
 \bigskip
 
-In my algorithm, in every new generation, the best solution is enhanced with some local searches. Given a solution $s$, a local search algorithm searches for better solutions in the neighborhood of $s$. The solution $s'$ in the neighborhood of $s$, is better than $s$ if the total collected benefit from $s'$ is greater than the one from $s$ or their total collected benefit are equal and the distance traveled by the routes of $s'$ is less than the distance traveled by the routes of $s$. In this work I implemented the following local search algorithms: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
+In my algorithm, in every new generation, the best solution is enhanced with some local searches. Given a solution $s$, a local search algorithm searches for better solutions in the neighborhood of $s$. The solution $s'$ in the neighborhood of $s$, is better than $s$ if the total collected benefit from $s'$ is greater than the one from $s$ or their total collected benefit are equal and the distance traveled by the routes of $s'$ is less than the distance traveled by the routes of $s$. In this work, I implemented the following local search algorithms: \textit{Insert}, \textit{Swap}, \textit{2-Opt}, \textit{Simple Replace} y \textit{Mutiple Replace}.
 
 \bigskip
 
@@ -21,7 +21,7 @@ I performed the computational experiments in standard instances of the literatur
 
 \bigskip
 
-The results of my algorithm are very good given that in 70\% of the instances my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the mentioned previous works.
+The results of my algorithm are very good given that in 70\% of the instances of the benchmark my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the mentioned previous works.
 
 \bigskip
 

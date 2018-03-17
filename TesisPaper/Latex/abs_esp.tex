@@ -5,11 +5,11 @@
 
 \bigskip
 
-El \textit{Team Orienteering Problem} (TOP) \cite{ChaoGoldenWasil} es la generalización al caso de múltiples rutas del \textit{Orienteering Problem}. Resolver el TOP implica encontrar un conjunto de rutas desde el nodo de inicio hasta el nodo final de forma tal que se maximice la sumatoria de los beneficios recolectados, la distancia de todas las rutas no supere a $d_{max}$ y ningún nodo sea visitado más de una vez. El OP pertenece a la clase problemas NP-Completo ya que contiene al problema \textit{Traveling Salesman Problem} como caso especial (ver Garey y Johnson \cite{GareyJohnson}). De la misma manera, el TOP pertenece a la clase de problemas NP-Completo porque contiene al OP como un caso especial donde solo hay una ruta. Resolver el TOP requiere determinar el orden en que se visitan los nodos y además, seleccionar qué subconjunto de nodos a visitar, ya que no necesariamente se visitan todos los nodos.
+El \textit{Team Orienteering Problem} (TOP) \cite{ChaoGoldenWasil} es la generalización al caso de múltiples rutas del \textit{Orienteering Problem}. Resolver el TOP implica encontrar un conjunto de rutas desde el nodo de inicio hasta el nodo final de forma tal que se maximice la sumatoria de los beneficios recolectados, la distancia de todas las rutas no supere a $d_{max}$ y ningún nodo sea visitado más de una vez. El OP pertenece a la clase problemas NP-Completo ya que contiene al problema \textit{Traveling Salesman Problem} como caso especial (ver Garey y Johnson \cite{GareyJohnson}). De la misma manera, el TOP pertenece a la clase de problemas NP-Completo porque contiene al OP como un caso especial donde sólo hay una ruta. Resolver el TOP requiere determinar el orden en que se visitan los nodos y además, seleccionar qué subconjunto de nodos a visitar, ya que no necesariamente se visitan todos los nodos.
 
 \bigskip
 
-En este trabajo propongo una combinación del \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} y de búsquedas locales para resolver el TOP. El BRKGA es una clase de algoritmos genéticos cuya población inicial es generada utilizando un decodificador que convierte un conjunto de vectores de números enteros aleatorios, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). Estos algoritmos se diferencian en el proceso de apareamiento (\textit{crossover}), mientras que en el RKGA los padres son elegidos al azar entre todos los individuos de la población, en el BRKGA uno de los padres siempre pertenece al subconjunto de los mejores individuos de la población y este padre tiene mayor probabilidad de trasmitir sus genes al individuo resultante del proceso de apareamiento.
+En este trabajo, propongo una combinación del \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} y de búsquedas locales para resolver el TOP. El BRKGA es una clase de algoritmos genéticos cuya población inicial es generada utilizando un decodificador que convierte un conjunto de vectores de números enteros aleatorios, en un conjunto de soluciones válidas del problema. El BRKGA es una variante del \textit{Random Key Genetic Algorithm} (RKGA). Estos algoritmos se diferencian en el proceso de apareamiento (\textit{crossover}), mientras que en el RKGA los padres son elegidos al azar entre todos los individuos de la población, en el BRKGA uno de los padres siempre pertenece al subconjunto de los mejores individuos de la población y este padre tiene mayor probabilidad de trasmitir sus genes al individuo resultante del proceso de apareamiento.
 
 \bigskip
 
@@ -21,7 +21,7 @@ Los experimentos computacionales los realicé en instancias estándar de la lite
 
 \bigskip
 
-Los resultados de mi algoritmo son muy buenos dado que en el 70\% de las instancias mi implementación obtuvo la mejor solución conocida y para el 30\% restante obtuvo valores competitivos con los trabajos previos mencionados.
+Los resultados de mi algoritmo son muy buenos dado que en el 70\% de las instancias del benchmark mi implementación obtuvo la mejor solución conocida y para el 30\% restante obtuvo valores competitivos con los trabajos previos mencionados.
 
 \bigskip
 

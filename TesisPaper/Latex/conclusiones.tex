@@ -2,7 +2,7 @@
 
 \bigskip
 
-El \textit{Team Orienteering Problem} combina la decisión de qué clientes seleccionar con la decisión de cómo planificar la ruta. Al ser TOP un problema reconocido como modelo de muchas aplicaciones reales, se han generado varios trabajos que encaran el mismo. Incluso algunos pocos con algoritmos genéticos pero no encontré ninguno que implemente un BRKGA. Mi contribución al problema TOP consiste en generar una implementación que utilice como base de su construcción de soluciones al algoritmo BRKGA, mejorando las soluciones con búsquedas locales y analizar que tan efectivo es tal combinación de metaheurísticas.
+El \textit{Team Orienteering Problem} combina la decisión de qué clientes seleccionar con la decisión de cómo planificar la ruta. Al ser TOP un problema reconocido como modelo de muchas aplicaciones reales, se han generado varios trabajos que lo encaran. Incluso algunos pocos con algoritmos genéticos pero no encontré ninguno que implemente un BRKGA. Mi contribución al problema TOP consiste en generar una implementación que utilice como base de su construcción de soluciones al algoritmo BRKGA, mejorando las soluciones con búsquedas locales y analizar que tan efectivo es tal combinación de metaheurísticas.
 
 \bigskip
 
@@ -22,11 +22,11 @@ El BRKGA puro necesita mejoras, los resultados obtenidos utilizando solo el BRKG
 
 \bigskip
 
-En el decodificador buscaría alguna manera de que su secuencia de alelos se use de forma completa, es decir que todo alelo impacte en la formación de la solución. Para entender esto tomar como ejemplo el decodificador simple, una instancia con 10 clientes y digamos que la solución generada a partir de su secuencia de alelos visita a 6 de los 10 clientes. Por lo tanto los últimos 4 alelos de la secuencia no impactan en el resultado final. Es decir, estos 4 alelos podría cambiar de posición entre si y la solución resultante sería la misma. Quizá se podría implementar de tal forma, que los clientes se distribuyan uniformemente entre todos los vehículos y luego con un proceso de limpieza se convierta la solución en una factible. Sino, que implementando sectores preestablecidos asignados a un determinado vehículo, basados en cercanía ó el centro de gravedad del sector.
+En el decodificador buscaría alguna manera de que su secuencia de alelos se use de forma completa, es decir que todo alelo impacte en la formación de la solución. Para entender esto tomar como ejemplo el decodificador simple, una instancia con 10 clientes y digamos que la solución generada a partir de su secuencia de alelos visita a 6 de los 10 clientes. Por lo tanto, los últimos 4 alelos de la secuencia no impactan en el resultado final. Es decir, estos 4 alelos podrían cambiar de posición entre si y la solución resultante sería la misma. Quizá se podría implementar de tal forma, que los clientes se distribuyan uniformemente entre todos los vehículos y luego con un proceso de limpieza se convierta la solución en una factible. Otra alternativa sería implementar sectores preestablecidos asignados a un determinado vehículo, basados en cercanía ó el centro de gravedad del sector.
 
 \bigskip
 
-El segundo punto por el que intentaría mejorar los resultados del BRKGA es modificando el algoritmo de apareamiento. Quizá el individuo resultante deba heredar rutas enteras. Entonces el individuo descendiente herede dos rutas de un padre y la tercer ruta del otro. Finalmente, con algún proceso de limpieza se muevan los clientes que se visitan de forma repetida y se incluyen otros. En este contexto, la cantidad de alelos que tendría una solución estaría dictaminado por la cantidad de vehículos. Esto podría representar un problema ya que existen muchos menos vehículos que clientes, generando baja diversidad de soluciones, es decir explorando muy poco el dominio de soluciones posibles.
+El segundo punto por el que intentaría mejorar los resultados del BRKGA es modificando el algoritmo de apareamiento. Quizá, el individuo resultante deba heredar rutas enteras. Entonces el individuo descendiente herede dos rutas de un padre y la tercer ruta del otro. Finalmente, con algún proceso de limpieza se muevan los clientes que se visitan de forma repetida y se incluyen otros. En este contexto, la cantidad de alelos que tendría una solución estaría dictaminado por la cantidad de vehículos. Esto podría representar un problema ya que existen muchos menos vehículos que clientes, generando baja diversidad de soluciones, es decir explorando muy poco el dominio de soluciones posibles.
 
 \bigskip
 
@@ -34,7 +34,7 @@ Sobre trabajos futuros relacionados con las búsquedas locales, se podría imple
 
 \bigskip
 
-Los resultados finales fueron muy buenos, de continuar trabajando en mi desarrollo haría foco en las ideas sobre cambio del método de \textit{crossover} y en el decodificador del BRKGA.
+Los resultados finales fueron muy buenos, en el caso de continuar trabajando en mi desarrollo haría foco en las ideas sobre cambio del método de \textit{crossover} y en el decodificador del BRKGA.
 
 
 
