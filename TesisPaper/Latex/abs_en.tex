@@ -1,7 +1,7 @@
 
 \chapter*{\tituloAbstractEn}
 
-\noindent In the \textit{Orienteering Problem} (OP) \cite{Tsiligirides}, a set of nodes is given, each with a certain benefit. The objective is to determine a path, limited in length, that visits some nodes in order that maximizes the sum of the collected benefits. The OP can be formulated in the following way: given $n$ nodes in the euclidean plane each with a benefit, where $benefit(node_i) \geq 0$ y $benefit(node_1) = benefit(node_n) = 0$, find a route of maximum benefit through these nodes beginning at $node_1$ and ending at $node_n$ of length no greater than $d_{max}$. Tsiligirides \cite{Tsiligirides} called this problem as the \textit{Generalized Traveling Salesman Problem} (GTSP).
+\noindent In the \textit{Orienteering Problem} (OP) \cite{Tsiligirides}, a set of nodes is given, each with a certain benefit. The objective is to determine a path, limited in length, that visits some nodes in order that maximizes the sum of the collected benefits. The OP can be formulated in the following way: given $n$ nodes in the euclidean plane each with a benefit, where $benefit(node_i) > 0$ if $0 < i < n$ and $benefit(node_1) = benefit(node_n) = 0$, find a route of maximum benefit through these nodes beginning at $node_1$ and ending at $node_n$ of length no greater than $d_{max}$. Tsiligirides \cite{Tsiligirides} was the first one to present this problem and called it \textit{Score Orienteering Event} (SEO).
 
 \bigskip
 
@@ -9,7 +9,7 @@ The \textit{Team Orienteering Problem} (TOP) \cite{ChaoGoldenWasil} is the gener
 
 \bigskip
 
-In this dissertation, I propose a combination of the \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} and local searchs to solve the TOP. The BRKGA is a class of genetic algorithms that initializes its population using a decoder that converts a set of random integer vectors into a set of valid solutions of the problem. The BRKGA is a variant of the \textit{Random Key Genetic Algorithm} (RKGA). These algorithms differ in the mating process (\textit{crossover}), while in the RKGA the parents are chosen randomly between all individuals of the population, in the BRKGA one of the parents always belongs to the subset of best individuals of the population and this parent has better chances of transmitting his gens to the individual resulting from the mating process.
+In this dissertation, I propose a combination of the \textit{Biased Random Key Genetic Algorithm} (BRKGA) \cite{Bean} and local searchs to solve the TOP. The BRKGA is a class of genetic algorithms that initializes its population using a decoder that converts a set of random integer vectors into a set of valid solutions of the problem. The BRKGA is a variant of the \textit{Random Key Genetic Algorithm} (RKGA). These algorithms differ in the mating process (\textit{crossover}), while in the RKGA the parents are chosen randomly between all individuals of the population, in most of the BRKGA implementations one of the parents always belongs to the subset of best individuals of the population and this parent has better chances of transmitting his gens to the individual resulting from the mating process.
 
 \bigskip
 
@@ -17,12 +17,12 @@ In my algorithm, in every new generation, the best solution is enhanced with som
 
 \bigskip
 
-I performed the computational experiments in standard instances of the literature. The instances are divided in seven sets. The first three sets of instances are those of Tsiligirides \cite{Tsiligirides} and the other four sets are those of Chao et al. \cite{ChaoGoldenWasil}. All instances can be found in \cite{IntancesChaoTsiligirides}. My results were compared with the results obtained by the following authors: Chao, Golden and Wasil \cite{ChaoGoldenWasil} (CGW), Tang and Miller-Hooks \cite{TangMillerHooks} (TMH), Archetti, Hertz and Speranza \cite{ArchettiHertzSperanza} (AHS), Ke, Archetti and Feng \cite{KeArchettiFeng} (KAF) and Bouly, Dang and Moukrim \cite{BoulyDangMoukrim} (BDM). 
+I performed the computational experiments in standard instances of the literature. The instances are divided in seven sets. The first three sets of instances are those of Tsiligirides \cite{Tsiligirides} and the other four sets are those of Chao et al. \cite{ChaoGoldenWasil}. All instances can be found in \cite{IntancesChaoTsiligirides}. My results were compared with the results obtained by the following authors: Chao, Golden and Wasil 1996 \cite{ChaoGoldenWasil} (CGW), Tang and Miller-Hooks 2005 \cite{TangMillerHooks} (TMH), Archetti, Hertz and Speranza 2007 \cite{ArchettiHertzSperanza} (AHS), Ke, Archetti and Feng 2008 \cite{KeArchettiFeng} (KAF) and Bouly, Dang and Moukrim 2010 \cite{BoulyDangMoukrim} (BDM). 
 
 \bigskip
 
-The results of my algorithm are very good given that in 70\% of the instances of the benchmark my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the mentioned previous works.
+The results of my algorithm are very good given that in 70\% of the instances of the benchmark my implementation obtained the best known solution and for the remaining 30\% it obtained competitive values with the previously mentioned works.
 
 \bigskip
 
-\noindent\textbf{Keywords:} Team Orienteering Problem, Biased Random Key Genetic Algorithm, Routing Problem, Local Search Heuristic, Routing Problems, Descoder.
+\noindent\textbf{Keywords:} Team Orienteering Problem, Biased Random Key Genetic Algorithm, Routing Problem, Local Search Heuristic, Routing Problems, Decoder.
