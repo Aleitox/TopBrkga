@@ -1,5 +1,7 @@
 \chapter{Introducción}
 
+\section{Historia}
+
 La orientación \cite{ChaoGoldenWasil} es un deporte originario de Escandinavia jugado al aire libre normalmente en bosques o zonas montañosas. Con ayuda de un mapa y una brújula, un competidor comienza en un punto de control específico e intenta visitar tantos otros puntos de control como le sea posible dentro de un límite de tiempo prescrito y regresa a un punto de control especificado. Cada punto de control tiene una puntuación asociada, de modo que el objetivo de este deporte es maximizar la puntuación total. Un competidor que llegue al punto final después de que el tiempo haya expirado es descalificado. El competidor elegible con la puntuación más alta es declarado ganador. Dado que el tiempo es limitado, un competidor puede no ser capaz de visitar todos los puntos de control. Por lo tanto cada competidor debe seleccionar un subconjunto de puntos de control para visitar que maximizarán la puntuación total. Este problema se conoce como el \textit{Orienteering Problem} y se denota por OP.
 
 \bigskip
@@ -10,9 +12,9 @@ El equipo de orientación extiende la versión de un solo competidor del deporte
 
 El OP es NP-Completo como demostraron Golden, Levy, y Vohra \cite{GoldenLevyVohra}, por lo que el TOP es al menos tan difícil ya que lo contiene. Es por este motivo que la mayoría de las propuestas para estos problemas se han centrado en proporcionar enfoques heurísticos.
 
-\bigskip
+\section{Aplicaciones Practicas}
 
-El TOP ha sido reconocido como un modelo de muchas aplicaciones reales diferentes como por ejemplo:
+Tanto OP como TOP han sido reconocidos como modelo de muchas aplicaciones reales diferentes como por ejemplo:
 
 \begin{enumerate}[i]
 
@@ -26,6 +28,10 @@ Algunas aplicaciones de servicios de recogida o entrega que implican el uso de t
 
 \item
 
+Tsiligirides \cite{Tsiligirides} hace mención del caso del \textit{Travelling Sales Person} (TSP) sin tiempo suficiente para visitar a todos los clientes y que conoce de antemano el valor aproximado de las ventas que realizará en cada ciudad.
+
+\item
+
 La planificación de viajes turísticos donde existen varios puntos de interés que el turista quiere visitar. Cada uno de estos puntos de interés tienen un valor dado por el turista y un tiempo mínimo para poder visitarlo.
 
 \item
@@ -36,11 +42,9 @@ El problema de entrega de combustible con múltiples vehículos de Golden, Levy 
 
 El reclutamiento de jugadores de fútbol americano universitario de Butt y Cavalier \cite{ButtCavalier}. Un método exitoso de reclutamiento utilizado en muchas pequeñas divisiones del \textit{National Collegiate Athletic Association} es visitar los campus de las escuelas secundarias y reunirse con los miembros superiores de los equipos de fútbol americano. A modo de maximizar su potencial para reclutar futuros jugadores, deben visitar tantas escuelas secundarias como sea posible dentro de un radio de 100 km del campus, sabiendo por experiencia previa que visitar todas las escuelas en esta área no es posible. Por lo tanto, deben visitar el mejor subconjunto de escuelas en el área.
 
-\item
-
-El enrutamiento de técnicos para atender a los clientes en ubicaciones geográficamente distribuidas. En este contexto, cada vehículo en el modelo TOP representa un solo técnico y hay a menudo una limitación en el número de horas que cada técnico puede programar para trabajar en un día dado. Por lo tanto, puede no ser posible incluir a todos los clientes que requieren servicio en los horarios de los técnicos para un día determinado. En su lugar, se seleccionará un subconjunto de los clientes. Las decisiones sobre qué clientes elegir para su inclusión en cada uno de los horarios de los técnicos de servicio pueden tener en cuenta la importancia del cliente o la urgencia de la tarea. Este requisito de selección de clientes también surge en muchas aplicaciones de enrutamiento en tiempo real.
-
 \end{enumerate}
+
+\section{Instancias del Benchmark}
 
 Para la generación y comparación de resultados se utilizaron instancias de test de Tsiligirides y de Chao \cite{IntancesChaoTsiligirides}. Las instancias de problemas de ambos autores comparten el mismo formato. 
 
@@ -51,7 +55,7 @@ Una instancia de TOP contiene:
 
 \begin{itemize}
   \item $N$ vehículos de carga. Cada vehículo tiene una distancia máxima, llamada $d_{max}$, que puede recorrer. En esta implementación cada vehículo puede tener una distancia máxima diferente. De todos modos en las instancias de test utilizadas, los vehículos tienen el mismo $d_{max}$.
-  \item $M$ clientes. Un cliente es un nodo con beneficio mayor a cero. Cada cliente tiene un set de coordenadas $X$ e $Y$ que representan su ubicación en un plano cartesiano.
+  \item $M$ clientes. Un cliente es un nodo con beneficio mayor a cero. Cada cliente tiene un set de coordenadas $X$ e $Y$ que representan su ubicación en el plano.
   \item Un nodo de inicio y fin de ruta. Todos los vehículos inician y finalizan el recorrido en estos nodos. Ambos nodos tienen un beneficio de cero y tienen un set de coordenadas $X$ e $Y$.
 \end{itemize}
 \end{minipage}
@@ -74,6 +78,8 @@ También es importante mencionar que:
 \end{minipage}
 
 \bigskip
+
+\section{Resumen}
 
 En el capítulo 2 se encuentra la revisión bibliográfica, donde se sintetizaron las propuestas de los trabajos previos que resolvieron TOP.
 En el capítulo 3 se presentará el modelo matemático de TOP que presentaron Tang y Miller-Hooks \cite{TangMillerHooks} .
