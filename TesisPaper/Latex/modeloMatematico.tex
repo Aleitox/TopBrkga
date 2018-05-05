@@ -4,11 +4,11 @@ La formulación para el TOP donde el punto de inicio y fin son el mismo, ha sido
 
 \bigskip
 
-Dado un grafo completo $G=(V,E)$ donde $V=\{1,...,n\}$ es el conjunto de vértices y $E=\{(i,j)|i,j \in V\}$ es el conjunto de ejes. Cada vértice $i$ en $V$ tiene un beneficio $r_i$. El punto de inicio es el vértice 1, el punto de fin es el vértice $n$ y $r_1=r_n=0$. Todo eje $(i,j)$ en $E$, tiene un costo no negativo $c_{ij}$ asociado, donde $c_{ij}$ es la distancia entre $i$ y $j$. El TOP consiste en encontrar $m$ caminos que comiencen en el vértice 1 y terminen en el vértice $n$ de forma tal que el beneficio total de los vértices visitados sea maximizado. Cada vértice debe ser visitado a lo sumo una sola vez. Para cada vehículo, el tiempo total para visitar los vértices no puede superar un limite pre-especificado $d_{max}$. En el presente modelo matemático se asume que hay una proporcionalidad directa entre la distancia recorrida de un vehículo y el tiempo consumido por el vehículo. Por lo tanto no hay diferencia en considerar $d_{max}$ como una distancia o un tiempo. Para evitar conflictos el valor es considerado como el valor de distancia máxima.
+Sea un grafo completo $G=(V,E)$ donde $V=\{1,...,n\}$ es el conjunto de vértices y $E=\{(i,j)|i,j \in V\}$ es el conjunto de ejes. Cada vértice $i$ en $V$ tiene un beneficio $r_i$. El punto de inicio es el vértice 1, el punto de fin es el vértice $n$ y $r_1=r_n=0$. Todo eje $(i,j)$ en $E$, tiene un costo no negativo $c_{ij}$ asociado, donde $c_{ij}$ es la distancia entre $i$ y $j$. El TOP consiste en encontrar $m$ caminos que comiencen en el vértice 1 y terminen en el vértice $n$ de forma tal que el beneficio total de los vértices visitados sea maximizado. Cada vértice debe ser visitado a lo sumo una sola vez. Para cada vehículo, el tiempo total para visitar los vértices no puede superar un limite pre-especificado $d_{max}$. En el presente modelo matemático se asume que hay una proporcionalidad directa entre la distancia recorrida de un vehículo y el tiempo consumido por el vehículo. Por lo tanto no hay diferencia en considerar $d_{max}$ como una distancia o un tiempo. Para evitar conflictos el valor es considerado como el valor de distancia máxima.
 
 \bigskip
 
-Sea $y_{ik} = 1 (i = 1,...,m)$ si el eje $(i,j)$ es visitado por el vehículo $k$, sino $y_{ik} = 0$. Sea $x_{ijk} = 1 (i,j = 1,...,n; k=1,...,m)$ si el eje $(i,j)$ es visitado por el vehículo $k$, sino $x_{ijk} = 0$. Como $c_{ij}=c_{ji}$ solo $x_{ijk}(i<j)$ se define. Sea $U$ un subconjunto de $V$. Luego TOP puede ser descrito de la siguiente manera:
+Sea $y_{ik} = 1 (i = 1,...,m)$ si $\exists j \in V$ tal que el eje $(i,j)$ es visitado por el vehículo $k$, sino $y_{ik} = 0$. Sea $x_{ijk} = 1$ $(1 \leq i < j \leq n; 1 \leq k \leq m)$ si el eje $(i,j)$ es visitado por el vehículo $k$, sino $x_{ijk} = 0$. Sea $U$ un subconjunto de $V$. Luego TOP puede ser descrito de la siguiente manera:
 
 \bigskip
 
@@ -23,7 +23,7 @@ sujeto a
 \end{equation}
 
 \begin{equation} \label{eq:modelo3}
-\sum_{i<j} x_{ijk} \sum_{i>j} x_{jik} = 2y_{jk} \quad (i =2,...,n-1)
+\sum_{i<j} x_{ijk} + \sum_{i>j} x_{jik} = 2y_{jk} \quad (i =2,...,n-1) \quad (k = 1,...,m)
 \end{equation}
 
 \begin{equation} \label{eq:modelo4}
@@ -35,7 +35,7 @@ sujeto a
 \end{equation}
 
 \begin{equation} \label{eq:modelo6}
-\sum_{i,j\in U \ i<j} x_{ijk} \leq |U|-1 \quad (U \subset V \setminus \{1,n\} ; 2 \leq |U| \leq n-2; k=1,...,m)
+\sum_{i,j\in U \ i<j} x_{ijk} \leq |U|-1 \quad (U \subset V \setminus \{1,n\} ; 3 \leq |U| \leq n-2; k=1,...,m)
 \end{equation}
 
 \begin{equation} \label{eq:modelo7}
@@ -46,6 +46,8 @@ x_{ijk} \in \{0,1\} \quad (1 \leq i < j \leq n; k=1,...,m)
 y_{1k} = y_{nk} = 1, \quad y_{ik} \in \{0,1\} \quad (i = 2,...,n-1; k=1,...,m)
 \end{equation}
 
-La restricción \ref{eq:modelo2} asegura que todo vehículo comienza en el vértice 1 y termina en el vértice $n$. La restricción \ref{eq:modelo3} asegura la conectividad de cada camino. La restricción \ref{eq:modelo4} asegura que cada vértice (excepto el 1 y el $n$) debe ser visitado a los sumo una vez. La restricción \ref{eq:modelo5} describe la limitación de distancia. La restricción \ref{eq:modelo6} asegura que los sub-caminos están prohibidos. La restricción \ref{eq:modelo7} y \ref{eq:modelo8} establecen que todas las variables son enteras.
+\bigskip
+
+La restricción \ref{eq:modelo2} asegura que todo vehículo comienza en el vértice 1 y termina en el vértice $n$. La restricción \ref{eq:modelo3} asegura la conectividad de cada camino. La restricción \ref{eq:modelo4} asegura que cada vértice (excepto el 1 y el $n$) debe ser visitado a los sumo una vez. La restricción \ref{eq:modelo5} describe la limitación de distancia. La restricción \ref{eq:modelo6} asegura que no hay ciclos. La restricción \ref{eq:modelo7} y \ref{eq:modelo8} establecen que todas las variables son enteras.
 
 
