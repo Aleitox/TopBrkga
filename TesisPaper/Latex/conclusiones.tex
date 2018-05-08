@@ -6,11 +6,25 @@ El \textit{Team Orienteering Problem} combina la decisión de qué clientes sele
 
 \bigskip
 
-Los resultados obtenidos son muy buenos, con al menos un 70\% de los resultados llegaron a la mejor solución conocida de la instancia testeada. El resto obtuvo un $i_{eMax}$ en el intervalo [0.97, 0.99], salvo algunos pocos que quedaron en el intervalo [0.94, 0.96]. Los resultados del BRKGA puro no fueron lo suficientemente buenos para instancias grandes del problema, llegando a tener un $i_{eMax}$ aproximado de $0.50$. Quizá esto se deba a como funciona el \textit{crossover} en TOP, las soluciones hijas terminan siendo muy diferentes de sus padres. Si ese fuera el caso, el BRKGA solo puede llegar a buenas soluciones con la ayuda de otras metaheurísticas como es el caso de mi desarrollo.
+Los resultados finales obtenidos son muy buenos, con al menos un 70\% de los resultados llegaron a la mejor solución conocida de la instancia testeada. El resto obtuvo un $i_{eMax}$ en el intervalo [0.97, 0.99], salvo algunos pocos que quedaron en el intervalo [0.94, 0.96]. Los resultados del BRKGA puro no fueron lo suficientemente buenos para instancias grandes del problema, llegando a tener un $i_{eMax}$ aproximado de $0.50$. Quizá esto se deba a como funciona el \textit{crossover} en TOP, las soluciones hijas terminan siendo muy diferentes de sus padres. Si ese fuera el caso, el BRKGA solo puede llegar a buenas soluciones con la ayuda de otras metaheurísticas como es el caso de mi desarrollo.
 
 \bigskip
 
-Considero que uno de los problemas del BRKGA para TOP es que su secuencia de alelos no es utilizada completamente ya que parte del problema es que no todos los clientes pueden ser visitados. Asignar todos los clientes a algún vehículo siempre generaría una solución no factible o la instancia del problema no sería del TOP. Este problema de matching entre alelos y clientes visitados quizá puede ser resuelto modificando lo que representa un gen. Es decir, haciendo un decodificador nuevo.
+Al iniciar el desarrollo, se esperaba obtener buenos resultados del BRKGA puro en base a las características de los algoritmos genéticos tales como la supervivencia del mas apto, la herencia de las características del padre de elite, una población de mejora monotónica, etc. Sin embargo los resultados durante el desarrollo dejaron en claro que el BRKGA puro no obtuvo buenos resultados y que los resultados finales dependieron demasiado de las búsquedas locales. De todos modos este trabajo deja algunos aportes e ideas de como resolver ciertos problemas cuando se implementa un BRKGA. Tales como:
+
+\bigskip
+
+\begin{itemize}
+	\item Se implementaron dos decodificadores, uno que genera una solución lo mas rápido posible y el otro que intenta generar mejores soluciones con una estrategia golosa. Se generaron diversas pruebas sobre estos decodificadores, se compararon y se analizaron sus resultados. 
+	\item Se ideo e implementó un codificador de soluciones de modo que al combinar el BRKGA con búsquedas locales, el método de \textit{crossover} siga siendo independiente del problema que resuelve y logrando que los descendientes hereden genes que se corresponden a la aptitud de la solución de la cual es hija. 
+	\item Se desarrollaron dos método para poder decidir equivalencia entre soluciones sin necesidad de analizar la solución decodificada. Uno de los métodos aunque no asegura unicidad de soluciones dentro de una población, reduce considerablemente los repetidos y no requiere conocimiento del problema. Se realizaron pruebas de eficiencia entre ambos métodos.
+	\item Se implementaron las búsquedas locales clásicas, pero ademas se hicieron variantes de algunas de forma que varíen la vecindad que exploran y se plantearon alternativas cuando el orden de complejidad era muy alto.
+	\item A lo largo de toda la implementación el objetivo de llegar a la mejor solución posible se mantuvo sin dejar de lado la optimización temporal algorítmica. Como fue el caso de calcular el centro de gravedad de una ruta de modo de seleccionar primero los clientes mas cercanos a la ruta al intentar insertarlos pero solo calcularlo en el momento que es necesario y mantenerlo de un modo eficiente. También en el caso de la búsqueda local de reemplazo de múltiples clientes a la vez. Esta búsqueda tiene un orden de complejidad alto pero en la practica es muy bueno, por lo tanto se hicieron pruebas para verificar que en la practica no era tan costoso, que aportaba considerablemente en la solución final.
+\end{itemize}
+
+\bigskip
+
+Considero que uno de los problemas del BRKGA para TOP es que su secuencia de alelos no es utilizada completamente ya que parte del problema es que no todos los clientes pueden ser visitados. Asignar todos los clientes a algún vehículo siempre generaría una solución no factible o la instancia del problema no sería del TOP. Este problema de matching entre alelos y clientes visitados quizá puede ser resuelto modificando lo que representa un gen. 
 
 \section{Trabajos Futuros}
 
@@ -18,7 +32,7 @@ Sería útil tener una herramienta para visualizar las soluciones en un plano ca
 
 \bigskip
 
-El BRKGA puro necesita mejoras, los resultados obtenidos utilizando solo el BRKGA están lejos de ser competitivos. Si continuara mi desarrollo del BRKGA sin búsquedas locales exploraría cambios en el decodificador y en el método de \textit{crossover}. 
+El BRKGA puro para TOP necesita mejoras, los resultados obtenidos utilizando solo el BRKGA están lejos de ser competitivos. Si continuara mi desarrollo del BRKGA sin búsquedas locales exploraría cambios en el decodificador y en el método de \textit{crossover}. 
 
 \bigskip
 
