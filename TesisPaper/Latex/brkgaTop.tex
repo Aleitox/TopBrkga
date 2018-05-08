@@ -12,12 +12,12 @@ En este capítulo mostraré los resultados parciales obtenidos a lo largo del de
 Se seleccionó un subconjunto del benchmark de instancias de problemas de Chao y Tsiligirides \cite{IntancesChaoTsiligirides} para medir el progreso de mi desarrollo. Las seis instancias seleccionadas varían en cantidad de clientes y vehículos, esto es importante para que el análisis del rendimiento sea lo más objetivo posible. Luego de obtener una solución para cada una de estas instancias, se calcula el $i_e$ que definí de la siguiente manera:
 
 \begin{equation}
-i_e(brkga_{v.x},ins_n) = benefit(brkga_{v.x}(ins_n)) / bestBenefitFor(ins_n) \label{eq:iefectividad}
+i_e(brkga_{v.x},ins_n) = funcionObjetivo(brkga_{v.x}(ins_n)) / bestPublishedValue(ins_n) \label{eq:iefectividad}
 \end{equation}
 
 \bigskip
 
-En la función \eqref{eq:iefectividad} $brkga_{v.x}$ representa la versión $x$ de mi $brkga$, $ins_n$ representa la n-ésima instancia del benchmark de problemas y $bestBenefitFor(ins_n)$ representa el mejor beneficio obtenido para la misma instancia en los trabajos previamente publicados. Analizar el rendimiento de mi implementación utilizando el $i_e$ es muy sencillo. Si $i_e = 1$ para $ins_n$, entonces la solución encontrada es tan buena como la mejor solución encontrada hasta el momento, lo que significa que mi implementación es óptima para la instancia $ins_n$. Cuanto más cercano a 1 es $i_e$, más competitiva es mi implentación frente a los trabajos previos. Lamentablemente no existe instancia en el benchmark de problemas tal que mi implementación haya obtenido un resultado mayor al mejor beneficio obtenido para la misma instancia en algún trabajo previo, por lo tanto $i_e \leq 1$.
+En la función \eqref{eq:iefectividad} $brkga_{v.x}$ representa la versión $x$ de mi $brkga$, $ins_n$ representa la n-ésima instancia del benchmark de problemas. La función $brkga_{v.x}(ins_n)$ retorna la mejor solución que mi $brkga_{v.x}$ encontró para la instancia $ins_n$. La función $funcionObjetivo$ retorna la sumatoria de todos los beneficios recolectados en la solución que recibe como parámetro. La función $bestPublishedValue(ins_n)$ retorna el valor de la mejor solución de entre todos los trabajos previos publicados para la instancia que obtiene como parámetro. Analizar el rendimiento de mi implementación utilizando el $i_e$ es muy sencillo. Si $i_e = 1$ para $ins_n$, entonces la solución encontrada es tan buena como la mejor solución encontrada hasta el momento, lo que significa que mi implementación es óptima para la instancia $ins_n$. Cuanto más cercano a 1 es $i_e$, más competitiva es mi implentación frente a los trabajos previos. Lamentablemente no existe instancia en el benchmark de problemas tal que mi implementación haya obtenido un resultado mayor al mejor beneficio obtenido para la misma instancia en algún trabajo previo, por lo tanto $i_e \leq 1$.
 
 \bigskip
 
@@ -51,7 +51,7 @@ Chao & p7.4.t & 102 & 4 & 100.00 \\
 
 \bigskip
 
-Las tablas donde mostraré el $i_e$ y el beneficio de los resultados parciales tendrá un subconjunto de los siguientes encabezados:
+A lo largo del desarrollo muestro algunos resultados parciales en distintas tablas. Estos resultados parciales serán los valores de las $n$ ejecuciones que se realizaron sobre cada una de las instancias de monitoreo. El valor de $n$ varía y será especificado para cada tabla. Esas tablas contendrán todas o algunas de las siguientes columnas:
 
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c|c|c| } 
@@ -68,10 +68,10 @@ Descripciones:
 	\item \textbf{$Instancia$}: Nombre de la instancia utilizada.
 	\item \textbf{$N/V/D$}: Cantidad de \textbf{N}odos / Cantidad de \textbf{V}ehículos / \textbf{D}istancia máxima de la ruta del vehículo.
 	\item \textbf{$Config$}: La configuración utilizada de mi BRKGA al ejecutar la prueba. Es un código que sintetiza la configuración global del algoritmo, explicado en detalle más adelante (ver sección \ref{sec:config}).
-	\item \textbf{$T_{avg}$}: El \textbf{T}iempo promedio en milisegundos de la ejecución del algoritmo para la instancia mencionada.
-	\item \textbf{$B_{max}$}: El \textbf{B}eneficio máximo que obtuve para la instancia mencionada.
-	\item \textbf{$B_{min}$}: El \textbf{B}eneficio mínimo que obtuve para la instancia mencionada.
-	\item \textbf{$B_{avg}$}: El \textbf{B}eneficio promedio que obtuve para la instancia mencionada.
+	\item \textbf{$T_{avg}$}: El \textbf{T}iempo promedio en milisegundos de la ejecución del algoritmo para la instancia mencionada sobre las $n$ ejecuciones.
+	\item \textbf{$B_{max}$}: El \textbf{B}eneficio máximo que obtuve para la instancia mencionada sobre las $n$ ejecuciones.
+	\item \textbf{$B_{min}$}: El \textbf{B}eneficio mínimo que obtuve para la instancia mencionada sobre las $n$ ejecuciones.
+	\item \textbf{$B_{avg}$}: El \textbf{B}eneficio promedio que obtuve para la instancia mencionada sobre las $n$ ejecuciones.
 	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. Utiliza mi beneficio máximo obtenido para la instancia mencionada.
 	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. Utiliza mi beneficio promedio obtenido para la instancia mencionada.
 	\item \textbf{$Best$}: Máximo beneficio obtenido por algún trabajo previo sobre la misma instancia mencionada.
@@ -101,7 +101,7 @@ public class RandomKey
 
 \bigskip
 
-El propósito de $ClientId$ es asociar un \textit{RandomKey} con un cliente. Existe un vector de clientes en el Mapa del problema, a cada cliente se le asigna un identificador que es un número entero en el intervalo $[1, \#clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#clientes]$. De esta forma cada \textit{RandomKey} siempre se asocia con un solo cliente. Luego de asociar cada cliente con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual se asoció. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. El pseudocódigo \ref{func:GetOrderedClients} muestra como se obtienen los clientes ordenados dado un vector de \textit{RandomKeys}. En el figura \ref{fig:RandomKeysOrdenando} se puede observar un vector de \textit{RandomKeys} en su estado inicial y luego ordenado por su campo \textit{Key} mostrando el orden en que se tomarán los clientes.
+El propósito de $ClientId$ es asociar un \textit{RandomKey} con un cliente. Existe un vector de clientes en el Mapa del problema, a cada cliente se le asigna un identificador que es un número entero en el intervalo $[1, \#clientes]$. Luego para un vector de \textit{RandomKeys} de tamaño $\#clientes$ no existen dos \textit{RandomKeys} con mismo valor de \textit{ClientId} y todos los \textit{ClientId} se encuentran en el intervalo $[1, \#clientes]$. De esta forma cada \textit{RandomKey} siempre se asocia con un solo cliente. Luego de asociar cada cliente con su correspondiente \textit{RandomKey}, se los ordena de forma ascendente por el \textit{Key} del \textit{RandomKey} con el cual se asoció. Es decir, ordena los clientes al azar ya que el valor de los enteros en el vector \textit{RandomKeys} es aleatorio. Este es el orden por el cual se tomaran los clientes para ser asignados a los vehículos. El pseudocódigo \ref{func:GetOrderedClients} muestra como se obtienen los clientes ordenados dado un vector de \textit{RandomKeys}. En el figura \ref{fig:RandomKeysOrdenando} se puede observar un vector de \textit{RandomKeys} en su estado inicial y luego ordenado por su campo \textit{Key} mostrando el orden en que se tomarán los clientes.
 
 \bigskip
 
@@ -124,7 +124,7 @@ public List<Client> GetOrderedClients(List<RandomKey> randomKeys)
 
 \subsection{Decodificador Simple}
 
-El decodificador simple recibe como parámetro el vector de \textit{RandomKeys} y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Estos se puede ver en detalle en el pseudocódigo \ref{func:decodeSimple}. 
+El decodificador simple recibe como parámetro el vector de \textit{RandomKeys} y lo primero que hace es obtener los clientes ordenados como describimos anteriormente. Luego por cada vehículo, si el siguiente cliente se puede incluir en la ruta se incluye sino considera que la ruta esta completa y pasa al siguiente vehículo. Es decir, ordena los clientes al azar utilizando el vector de \textit{RandomKeys} y los asigna en orden a los vehículos mientras no estén saturados. Estos se puede ver en detalle en el pseudocódigo \ref{func:decodeSimple}. 
 
 \bigskip
 
@@ -281,7 +281,7 @@ Otra característica que podemos mencionar sobre el decodificador goloso es que 
 
 \bigskip
 
-Le hice un análisis de rendimiento al decodificador goloso del mismo modo que lo hice con el decodificador simple. Generé otros 200 vectores de \textit{RandomKeys} para cada una de las mismas seis instancias de problemas y el decodificador goloso creó 200 soluciones válidas.
+Le hice un análisis de rendimiento al decodificador goloso del mismo modo que lo hice con el decodificador simple. Utilicé los mismos 200 vectores de \textit{RandomKeys} para cada una de las mismas seis instancias de problemas y el decodificador goloso creó 200 soluciones válidas.
 
 \begin{table}
 \begin{center}
@@ -435,7 +435,7 @@ public Population InitializePopulation()
 
 \subsection{Condición de parada}
 
-En una primera instancia de mi implementación la condición de parada era simple, el bucle terminaba cuando iteraba \textit{MinIterations} veces. Es decir que el bucle principal cortaba luego de evolucionar la población \textit{MinIterations} veces. Después de analizar varias ejecuciones, noté que a veces la mejor solución de la población se había encontrado en las últimas evoluciones, por lo tanto agregue una condición de corte adicional: la mejor solución no debe haberse encontrado durante las últimas \textit{MinNoChanges} generaciones. Podemos ver ambas condiciones de parada en el pseudocódigo \ref{func:GenerateRandomKey}.
+En una primera instancia de mi implementación la condición de parada era simple, el bucle terminaba cuando iteraba \textit{MinIterations} veces. Es decir que el bucle principal cortaba luego de evolucionar la población \textit{MinIterations} veces. Después de analizar varias ejecuciones, noté que a veces la mejor solución de la población se había encontrado en las últimas evoluciones, por lo tanto agregue una condición de corte adicional: la mejor solución no debe haberse encontrado durante las últimas \textit{MinNoChanges} generaciones. Por lo tanto el algoritmo para cuando se satisfacen ambas condiciones a la vez. Podemos ver ambas condiciones de parada en el pseudocódigo \ref{func:GenerateRandomKey}.
 
 \bigskip
 
@@ -487,7 +487,7 @@ public Population Evolve(Population population)
 
 \bigskip
 
-Un proceso clave de la evolución es el \textit{crossover}. En el pseudocódigo \ref{func:Mate} observamos el proceso de apareamiento como lo describí en la sección \ref{sec:brkga}. Se crea un vector de \textit{RandomKeys} a partir de los vectores de \textit{RandomKeys} de un individuo elite y otro no-elite. Se determina que alelos recibirá el individuo resultante a partir de un decimal aleatorio en el intervalo [0, 1] y su comparación con la propiedad \textit{EliteGenChance}.
+Un proceso clave de la evolución es el \textit{crossover}. Se crea un vector de \textit{RandomKeys} a partir de los vectores de \textit{RandomKeys} de un individuo elite y otro no-elite. Se determina que alelos recibirá el individuo resultante a partir de un vector de decimales aleatorios en el intervalo [0, 1] y su comparación con la propiedad \textit{EliteGenChance}. En el pseudocódigo \ref{func:Mate} observamos el proceso de apareamiento como lo describí en la sección \ref{sec:brkga} y se puede observar en la figura \ref{fig:biasCrossover}. Este proceso es independiente del problema que se esta resolviendo.
 
 \bigskip
 
@@ -543,7 +543,7 @@ private void AddMutants(int amount)
 
 \bigskip
 
-Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no es necesario comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden en que se asignan sus clientes a las rutas. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(1)$ ya que simplemente es comparar dos \textit{strings}. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
+Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no es necesario comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden en que se asignan sus clientes a las rutas. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(clientes)$ ya que simplemente es comparar dos \textit{strings} que tienen un largo que depende de la cantidad de clientes. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n * clientes)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
 
 \bigskip
 
@@ -577,7 +577,7 @@ public string GetHash()
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce ampliamente la cantidad de soluciones diferentes exploradas, por ende reduce la frecuencia con la que una nueva mejor solución es generada. Además el algoritmo se vuelve más lento ya que repite cómputos en donde obtiene los mismos resultados. Lo que significa que el costo temporal total de validar unicidad en la inserción, que conlleva un orden de complejidad $O(poblaci\acute{o}n * poblaci\acute{o}nNoElite)$ por evolución, resulta muy bajo comparado con el costo de trabajar con múltiples soluciones duplicadas.
+En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce la cantidad de soluciones diferentes exploradas, por lo tanto reduce la probabilidad de encontrar una nueva mejor solución por generación. Además, si admitimos duplicados, el algoritmo repite cómputos en donde obtiene los mismos resultados.
 
 \subsection{Resultados de la primer versión}
 
@@ -610,7 +610,7 @@ p7.4.t & 102/4/100.00 & 31532 & 458 & 481 & 513 & 0.45 & 0.48 & 1077 \\
 
 \bigskip
 
-De estos primeros resultados podemos ver que el BRKGA puro funciona muy bien para instancias de testeo pequeñas. Esto se refleja en la instancia \textit{p2.3.g} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_eAvg$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_eAvg$. Es interesante ver como en la instancia \textit{p7.2.e} se obtuvieron resultados mucho mejores que aquellos obtenidos en la instancia \textit{p7.2.t} considerando que ambas pertenecen al \textit{set} siete. Es decir, tienen el mismo mapa de clientes y difieren en la cantidad de vehículos y el $d_{max}$ de los vehículos. Claramente al aumentar la cantidad de vehículos y el $d_{max}$ de los vehículos, aumenta considerablemente la cantidad de solucione posibles.
+De estos primeros resultados podemos ver que el BRKGA puro funciona muy bien para instancias de testeo pequeñas. Esto es razonable por que al ser una instancia pequeña, las cantidad de combinaciones posibles es mucho menor. Luego el BRKGA explora un mayor porcentaje del conjunto de soluciones válidas del problema. Esto se refleja en la instancia \textit{p2.3.g} que siempre se llegó a la mejor solución posible y en \textit{p2.2.k} donde el $i_eAvg$ supera el 0.90. Luego a medida que incrementa el tamaño de la instancia, disminuye el $i_eAvg$. Es interesante ver como en la instancia \textit{p7.2.e} se obtuvieron resultados mucho mejores que aquellos obtenidos en la instancia \textit{p7.2.t} considerando que ambas pertenecen al \textit{set} siete. Es decir, tienen el mismo mapa de clientes y difieren en la cantidad de vehículos y el $d_{max}$ de los vehículos. Claramente al aumentar la cantidad de vehículos y el $d_{max}$ de los vehículos, aumenta considerablemente la cantidad de solucione posibles.
 
 \bigskip
 
@@ -643,6 +643,7 @@ p7.4.t & 102/4/100.00 & 5 & 96642 & 478 & 491 & 509 & 0.46 & 0.47 & 1077  \\
 
 \bigskip
 
+\begin{minipage}{\linewidth}
 Configuraciones: 
 \begin{itemize}
   \item \textbf{Config = 1}: MI.100;MNC.100;PS.500;EP.0,30;MP.0,05;EGC.70;LS.;TOP.0;D.G
@@ -651,6 +652,7 @@ Configuraciones:
   \item \textbf{Config = 4}: MI.150;MNC.70;PS.200;EP.0,30;MP.0,10;EGC.70;LS.;TOP.0;D.S
   \item \textbf{Config = 5}: MI.250;MNC.50;PS.250;EP.0,15;MP.0,05;EGC.50;LS.;TOP.0;D.G 
 \end{itemize}
+\end{minipage}
 
 \bigskip
 
@@ -668,7 +670,30 @@ Con el objetivo de optimizar los resultados obtenidos hasta el momento, implemen
 
 \subsection{Centro de Gravedad}
 
-Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza esta dado por su distancia al centro de gravedad (COG) de la ruta a la cual se le aplica el \textit{Insert} o el \textit{Replace}. Cuanto más cercano sea el cliente al COG de la ruta a optimizar, mayor prioridad tendrá el cliente. Implementé el cálculo del COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada del COG de una ruta se calcula como muestran las fórmulas \ref{eq:cogX} y \ref{eq:cogY}.
+Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar una lista de clientes con algún orden. Este orden es importante ya que queremos empezar por las mejores opciones. El orden de clientes que se utiliza esta dado por su distancia al centro de gravedad (COG) de la ruta a la cual se le aplica el \textit{Insert} o el \textit{Replace}. Cuanto más cercano sea el cliente al COG de la ruta a optimizar, mayor prioridad tendrá el cliente.
+
+\bigskip
+
+En la figura \ref{fig:cog} podemos observar diez nodos, de los cuales hay ocho clientes, un punto de salida y uno de llegada. También podemos observar una ruta que incluye a los clientes $C_1, C_2 \ y \ C_3$. El punto COG se calcula a partir de las coordenadas de los nodos de salida, llegada y los clientes de la ruta. El cliente no visitado mas cercano al COG es $C_7$, seguido de $C_5, C_8 \ y \ C_6$ respectivamente. Las distancias entre el COG y los nodos no visitados son calculadas de la misma forma que se calculan las distancias entre dos nodos cualesquiera, utilizando la distancia euclidiana.
+
+\bigskip
+
+\begin{figure}[h]
+	\caption{Ejemplo del COG para una ruta.}
+	\centering
+	\includegraphics[width=16cm]{cog}
+	\label{fig:cog}
+\end{figure}
+
+\bigskip
+
+Implementé el cálculo del COG de la forma que lo describen Vansteenwegen et al. \cite{VansteenwegenSouffriauBergheOudheusden}. La coordenada del COG de una ruta se calcula como muestran las fórmulas \ref{eq:cogX} y \ref{eq:cogY}. Las variables $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio. El cálculo del COG tiene una complejidad de $O(ruta.Length)$. Para no realizar cálculos innecesarios, el COG de una ruta solo se calcula cuando se necesita. Es decir, cuando la solución es seleccionada para ser mejorada. Se calcula una sola vez y cuando se modifica la ruta, se actualiza su COG.
+
+\bigskip
+
+Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un cliente de una ruta, hay que remover del COG el impacto que tenía el cliente eliminado sobre el COG (Ídem cuando se inserta un cliente en la ruta). La actualizacion del COG puede implementarse con un complejidad de $O(1)$ si mantenemos los valores de $x_{cog.num}$ y $x_{cog.den}$ cuando calculamos el COG por primera vez como se observa en la fórmula \ref{eq:cogNumDen}. La fórmula \ref{eq:cogRemove} muestra como se actualiza el COG en $O(1)$ luego de remover un cliente utilizando los valores de $x_{cog.num}$ y $x_{cog.den}$. Idem fórmula \ref{eq:cogAdd} para el caso en que se inserta un cliente.
+
+\bigskip
 
 \begin{mycapequ}[!ht]
 	\caption{Coordenada X del COG de una ruta.}
@@ -683,10 +708,6 @@ Para las búsquedas locales \textit{Insert} y \textit{Replace} se deben tomar un
 	y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i
 	\end{equation}
 \end{mycapequ}
-
-\bigskip
-
-Donde $x_i$ e $y_i$ son las coordenadas de un cliente de la ruta y $B_i$ es su beneficio. El cálculo del COG tiene una complejidad de $O(ruta.Length)$. Para no realizar cálculos innecesarios, el COG de una ruta solo se calcula cuando se necesita. Es decir, cuando la solución es seleccionada para ser mejorada. Se calcula una sola vez y cuando se modifica la ruta, se actualiza su COG.
 
 \bigskip
 
@@ -714,21 +735,37 @@ r'.x_{cog} =  \frac{(\sum_{\forall i \in r.ruta} x_i * B_i) + x_k * B_k}{(\sum_{
 
 \bigskip
 
-Cuando una ruta es modificada, el COG debe modificarse acorde. Si se elimina un cliente de una ruta, hay que remover del COG el impacto que tenía el cliente eliminado sobre el COG (Ídem cuando se inserta un cliente en la ruta). La actualizacion del COG puede implementarse con un complejidad de $O(1)$ si mantenemos los valores de $x_{cog.num}$ y $x_{cog.den}$ cuando calculamos el COG por primera vez como se observa en la fórmula \ref{eq:cogNumDen}. La fórmula \ref{eq:cogRemove} muestra como se actualiza el COG en $O(1)$ luego de remover un cliente utilizando los valores de $x_{cog.num}$ y $x_{cog.den}$. Idem fórmula \ref{eq:cogAdd} para el caso en que se inserta un cliente.
-
-\bigskip
-
 
 \subsection{Swap}
 
 El objetivo de esta búsqueda es encontrar e intercambiar clientes entre dos rutas distintas con el fin de disminuir la suma de las distancias recorridas de ambas rutas. Es decir, dados $v_a$ y $v_b$ vehículos y sus respectivas rutas $r_a$ y $r_b$, se puede realizar un \textit{Swap} entre sus rutas si existe un cliente $c_{a_i}$ en la ruta de $r_a$ y otro cliente $c_{b_j}$ en $r_b$ tal que agregando $c_{a_i}$ en alguna posición de $r_b$ y agregando $c_{b_j}$ en alguna posición de $r_a$ son válidas las fórmulas \ref{eq:swap1}, \ref{eq:swap2} y \ref{eq:swap3}.
 
+\bigskip
+
+\begin{minipage}{\textwidth}
+Sean $r_a$, $r_b$, $r_a'$ y $r_b'$ rutas, $c_{a_i}$ cliente en $r_a$ y $c_{b_j}$ cliente en $r_b$ tales que:
+
+\begin{equation*}
+r_a' = r_a.Remove(c_{a_i}).Add(c_{b_j})
+\end{equation*} 
+
+\begin{equation*}
+r_b' = r_b.Remove(c_{b_j}).Add(c_{a_i}) 
+\end{equation*} 
+\end{minipage}
+
+\bigskip
+
+Luego se realiza el \textit{Swap} si las siguientes formulas son válidas:
+
 \begin{equation}\label{eq:swap1}
-r_a.Dist + r_b.Dist < r_a'.Dist + r_b'.Dist
+r_a.Dist + r_b.Dist > r_a'.Dist + r_b'.Dist
 \end{equation} 
+
 \begin{equation}\label{eq:swap2}
 r_a'.Dist \leq v'_a.d_{max}
 \end{equation} 
+
 \begin{equation}\label{eq:swap3}
 r_b'.Dist \leq v'_b.d_{max}
 \end{equation} 
@@ -761,22 +798,30 @@ public bool ApplyLocalSearch(Solution solution)
 public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 {
 	var changed = false;
-	var v1Bans = new Dictionary<int, bool>();
-	var v2Bans = new Dictionary<int, bool>();
+	var reset = false;
+	var bans = new Dictionary<int, bool>();
 	for (var i = 0; i < v1.Route.RouteLenght(); i++)
 	{
-		if(v1Bans.ContainsKey(i)) 
+		var client1 = v1.Route[i];
+		if(bans.ContainsKey(client1.Id)) 
 			continue;
 		for (var j = 0; j < v2.Route.RouteLenght(); j++)
 		{
-			if (v2Bans.ContainsKey(j)) 
+			var client2 = v2.Route[j];
+			if (v2Bans.ContainsKey(client2.Id)) 
 				continue;
 			if (!Swaps(i, j, ref leftRoute, ref rightRoute)) 
 				continue;
 			changed = true;
-			v1Bans.Add(i, true);
-			v2Bans.Add(j, true);
-			break; // Para que cambie i
+			reset = true;
+			bans.Add(client1.Id, true);
+			bans.Add(client2.Id, true);
+			break; // Para resetear j
+		}
+		if(reset)
+		{
+			i = 0;
+			reset = false;
 		}
 	}
 	return changed;
@@ -786,10 +831,10 @@ public bool SwapDestinationsBetween(Vehicle v1, Vehicle v2)
 
 \bigskip
 
-El orden de complejidad del método \textit{ApplyLocalSearch} de la clase \textit{SwapHeuristic} es:
+Como podemos ver en el pseudocódigo de \textit{SwapDestinationsBetween} \ref{func:SwapDestinationsBetween}, el método itera sobre todos los clientes de la ruta del primer vehículo y por cada uno de esos clientes, itera sobre todos los clientes de la ruta del segundo vehículo. Ademas, si se realiza un \textit{swap}, se resetean los indices usados para iterar sobre los clientes visitados. Un cliente es intercambiado entre rutas a lo sumo una sola vez, entonces los indices se resetean a lo sumo una cantidad de veces equivalente a la cantidad de clientes visitados en la ruta más corta de ambos vehículos. El \textit{Swap} llama al método \textit{SwapDestinationsBetween} por cada combinación de vehículos en la solución. Por lo tanto el orden de complejidad del \textit{Swap} es:
 
 \begin{equation*}
-O((n * (n-1) / 2 ) * clientes/n * clientes/n) \approx O(clientes^2/2)
+Swap \in O(veh\acute{\dotlessi}culos^2 * clientes^3)
 \end{equation*}
 
 \subsection{Insert}
@@ -825,10 +870,10 @@ public bool ApplyLocalSearch(Solution solution)
 
 \bigskip
 
-Como vemos en el pseudocódigo \ref{func:ApplyLocalSearchInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del método \textit{ApplyLocalSearch} del \textit{Insert} es: 
+Como vemos en el pseudocódigo \ref{func:ApplyLocalSearchInsert} al empezar la ejecución del \textit{Insert}, lo primero que hace es activar el COG. Hasta el momento no había sido calculado para evitar cálculos innecesarios. Después de activar el COG, por cada cliente no visitado hasta el momento se analiza el \textit{insert}. El método \textit{AnalizeInsert} devuelve un objeto con dos propiedades que contienen la información necesaria para saber si se puede hacer el \textit{Insert} y donde. El objeto tiene una propiedad de tipo \textit{bool} que dice si el cliente puede ser insertado en el vehículo consultado. La otra propiedad dice cual es la mejor posición para insertar el cliente. Si el cliente es insertado en la ruta, se actualiza el COG de la ruta y se remueve el cliente de la lista de no visitados. El orden de complejidad del \textit{Insert} es: 
 
 \begin{equation*}
-0(veh\acute{\dotlessi}culos * clientesNoVisitados * mediaClientesEnRuta)
+Insert \in 0(veh\acute{\dotlessi}culos * clientes^2)
 \end{equation*}
 
 \subsection{2-Opt}
@@ -886,12 +931,11 @@ private bool Do2OptSwap(Vehicle vehicle)
 
 
 \begin{minipage}{\linewidth}
-Este algoritmo tiene un orden de complejidad:
+El \textit{2-Opt} llama al \textit{Do2OptSwap} una vez por cada vehículo. En \textit{Do2OptSwap} se analiza intercambiar toda las posibles combinaciones de los clientes visitados por el vehículo. Por lo tanto el \textit{2-Opt} tiene un orden de complejidad:
 
 \begin{equation*}
 \begin{split}
-O(2Opt) &= O(veh\acute{\dotlessi}culos * mediaClientesEnRuta  * (mediaClientesEnRuta - 1) / 2) \\
-            &= O(veh\acute{\dotlessi}culos * mediaClientesEnRuta^2 / 2)
+2 \textrm{-} Opt \in 0(veh\acute{\dotlessi}culos * clientes^2)
 \end{split}
 \end{equation*}
 \end{minipage}
@@ -985,11 +1029,14 @@ public bool RemoveWorst(Vehicle vehicle, Client inserted)
 
 \bigskip
 
+
 \begin{minipage}{\linewidth}
-El \textit{Replace Simple} tiene un orden de complejidad:
+Por cada vehículo de la solución y para todo cliente no visitado el \textit{Replace Simple} analiza cual es la mejor posición en donde insertar tal cliente y si la solución resultante es inválida analiza cual es el cliente visitado que requiere remover para que la solución resultante sea válida. Por lo tanto el \textit{Replace Simple} tiene un orden de complejidad de:
 
 \begin{equation*}
-O(Replace Simple) = O(veh\acute{\dotlessi}culos * clientesNoVisitados * mediaClientesVisitados * 2)
+\begin{split}
+ReplaceSimple \in 0(veh\acute{\dotlessi}culos * clientes^2)
+\end{split}
 \end{equation*}
 \end{minipage}
 
@@ -1040,7 +1087,25 @@ public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 
 \bigskip
 
-El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes en la ruta del vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de beneficios de los clientes visitados. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{clientesVisitados})$ que es muy alto. De todos modos el peor escenario tiene una probabilidad muy baja de suceder, entonces el la práctica no es tan lento.
+El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes visitados por el vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de los beneficios de los clientes visitados por el vehículo. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{n})$. Agregar una metaheuristica con orden exponencial debe ser justificado. A modo de analizar el uso de tal metaheuristica desarrollé una prueba sobre las dos instancias grandes para los cuales estaba obteniendo los peores resultados. El objetivo de la prueba es poder responder las siguientes preguntas: 
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+Configuraciones: 
+\begin{itemize}
+  \item Cuánto mejora la aptitud física de la solución final usando \textit{Replace Multiple}?
+  \item Cuánto más lento se vuelve la implementación por agregar el \textit{Replace Multiple}?
+  \item Qué sucede si acotamos la cantidad de grupos candidatos del \textit{GetCandidateGroups} en la cantidad de clientes visitados por el vehículo?
+\end{itemize}
+\end{minipage}
+
+\bigskip
+
+% TODO: Tabla
+% TODO: Analisis de Tabla
+% TODO: Seleccion de un metodo. Explicar Orden de complejidad
+% TODO: Mostrar Orden de complejidad
 
 \bigskip
 
@@ -1092,7 +1157,7 @@ Agregar búsquedas locales entre generación de poblaciones conlleva un problema
 
 \bigskip
 
-Como mencioné en la sección del Decodificador (ver sección \ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objeto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Por lo tanto el primer cliente con el que trabaja el decodificador, es el cliente con menor valor de \textit{Key}. Algo que no mencioné sobre la implementación de los decodificadores es que el primer vehículo por el que empieza es por el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehículos son indistinguibles al tener el mismo $d_{max}$ en el benchmark de instancias de problemas. De todos modos ahora debo respetar la decisión que tomé en el desarrollo de los decodificadores. Por lo tanto al primer cliente de la ruta del vehículo con menor \textit{Id} se le debe asociar el \textit{RandomKey} que tenga el menor \textit{Key}. Así, cuando el decodificador inicie, lo primero que hará es tomar este cliente e intentará adjudicárselo al primer vehículo, que justamente será el de menor \textit{Id}. Continuando con esta lógica el segundo cliente del mismo vehículo debe tener asignado el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Este proceso debe repetirse con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, quedarán sin \textit{RandomKey} asignado todos los clientes no visitados. En principio a estos clientes se les podría asignar cualquier \textit{RandomKey}. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, se les asigna un \textit{RandomKey} tal que entre ellos mantengan el mismo orden que tenían antes de la mejora. Es decir, dentro de los clientes no visitados, el cliente que previamente tenía el \textit{RandomKey} con menor \textit{Key}, se le asigna el \textit{RandomKey} de menor \textit{Key} que queda disponible. 
+Como mencioné en la sección del Decodificador (ver sección \ref{sec:ordenDeco}), los clientes se ordenan de forma ascendente por la propiedad \textit{Key} del objeto \textit{RandomKey} asociado según la propiedad \textit{ClientId}. Por lo tanto el primer cliente con el que trabaja el decodificador, es el cliente con menor valor de \textit{Key}. Algo que no mencioné sobre la implementación de los decodificadores es que el primer vehículo por el que empieza es el de menor \textit{Id} ya que los ordena por su \textit{Id} de forma ascendente. Los vehículos son indistinguibles al tener el mismo $d_{max}$ en el benchmark de instancias de problemas. De todos modos ahora debo respetar la decisión que tomé en el desarrollo de los decodificadores. Por lo tanto al primer cliente de la ruta del vehículo con menor \textit{Id} se le debe asociar el \textit{RandomKey} que tenga el menor \textit{Key}. Así, cuando el decodificador inicie, lo primero que hará es tomar este cliente e intentará adjudicárselo al primer vehículo, que justamente será el de menor \textit{Id}. Continuando con esta lógica el segundo cliente del mismo vehículo debe tener asignado el segundo \textit{RandomKey} de menor \textit{Key}. Y así sucesivamente, hasta tener mapeados todos los clientes del primer vehículo con su nuevo \textit{RandomKey}. Este proceso debe repetirse con los clientes del siguiente vehículo ordenados por \textit{Id} ascendentemente. Finalmente, quedarán sin \textit{RandomKey} asignado todos los clientes no visitados. En principio a estos clientes se les podría asignar cualquier \textit{RandomKey}. Aún así, en pos de disminuir los cambios genéticos sobre el individuo, se les asigna un \textit{RandomKey} tal que entre ellos mantengan el mismo orden que tenían antes de la mejora. Es decir, dentro de los clientes no visitados, el cliente que previamente tenía el \textit{RandomKey} con menor \textit{Key}, se le asigna el \textit{RandomKey} de menor \textit{Key} que queda disponible. 
 
 \bigskip
 
@@ -1171,7 +1236,7 @@ public static Solution UpdateRandomKeys(Solution s);
 \end{lstlisting}
 \end{minipage}
 
-Como se puede observar en los pseudocódigo de las búsquedas locales (\ref{func:ApplyLocalSearchSwap}, \ref{func:ApplyLocalSearchInsert}, \ref{func:ApplyLocalSearchOptSwap} y \ref{func:ApplyLocalSearchReplaceSimple}), todas implementan el método \textit{ApplyLocalSearch} que toma una solución y retorna un booleano que vale \textit{true} si la solución fue modificada y false en caso contrario. Esto lo implementé así para poder ejecutar todas las búsquedas locales en una secuencia sin saber cual es el orden de la secuencia antes de la instanciación del BRKGA. De esta forma puedo setear la secuencia con el objeto \textit{Configuration} en el momento que se instancia el BRKGA. Gracias a esto pude probar las búsquedas locales en múltiples órdenes distintos. En el pseudocódigo \ref{func:ApplyLocalSearchesAll} podemos ver como se aplican las búsquedas según el orden en que se encuentran en la lista que toma de parámetro. Después de aplicar las búsquedas, si la solución fue modificada se actualiza el vector de \textit{RandomKeys}.
+Como se puede observar en los pseudocódigo de las búsquedas locales (\ref{func:ApplyLocalSearchSwap}, \ref{func:ApplyLocalSearchInsert}, \ref{func:ApplyLocalSearchOptSwap} y \ref{func:ApplyLocalSearchReplaceSimple}), todas implementan el método \textit{ApplyLocalSearch} que toma una solución y retorna un booleano que vale \textit{true} si la solución fue modificada y false en caso contrario. Esto lo implementé así para poder ejecutar todas las búsquedas locales en una secuencia sin saber cuál es el orden de la secuencia antes de la instanciación del BRKGA. De esta forma puedo setear la secuencia con el objeto \textit{Configuration} en el momento que se instancia el BRKGA. Gracias a esto pude probar las búsquedas locales en múltiples órdenes distintos. En el pseudocódigo \ref{func:ApplyLocalSearchesAll} podemos ver cómo se aplican las búsquedas según el orden en que se encuentran en la lista que toma de parámetro. Después de aplicar las búsquedas, si la solución fue modificada se actualiza el vector de \textit{RandomKeys}.
 
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Aplicación de las búsquedas locales a una solución.}, label={func:ApplyLocalSearchesAll}]
@@ -1195,7 +1260,7 @@ Como mencioné previamente, la lista de búsquedas locales se setea en el moment
 
 \bigskip
 
-Con el objetivo de encontrar la mejor secuencia de búsquedas locales a aplicar, generé 7 configuraciones distintas para mi BRKGA que solo difieren en las listas de búsquedas locales. Para cada una de las 7 configuraciones ejecuté el BRKGA 25 veces sobre las dos instancias de problemas para las cuales había obtenido los peores resultados en el BRKGA puro. La configuración básica que comparten todas las configuraciones es la siguiente: 
+Con el objetivo de encontrar la mejor secuencia de búsquedas locales a aplicar, generé 7 configuraciones distintas para mi BRKGA que sólo difieren en las listas de búsquedas locales. Para cada una de las 7 configuraciones ejecuté el BRKGA 25 veces sobre las dos instancias de problemas para las cuales había obtenido los peores resultados en el BRKGA puro. La configuración básica que comparten todas las configuraciones es la siguiente: 
 
 \bigskip
 
@@ -1251,7 +1316,7 @@ Entre las otras 6 combinaciones aquellas con mejor resultados en sus 25 ejecucio
 
 \bigskip
 
-Por último, antes de calcular los resultados finales sobre todo el bechmark de problemas, hice una prueba de eficiencia entre los dos decodificadores ahora que el BRKGA tiene búsquedas locales. Para las mismas dos instancias de la tabla \ref{tab:resultadosListaLS}, ejecute 10 veces el BRKGA variando solamente los decodificadores utilizados. Para esta prueba utilicé la lista de búsquedas locales que mejores resultados obtuvo en el análisis previo: SOSIRsSORm.
+Por último, antes de calcular los resultados finales sobre todo el bechmark de problemas, hice una prueba de eficiencia entre los dos decodificadores ahora que el BRKGA tiene búsquedas locales. Para las mismas dos instancias de la tabla \ref{tab:resultadosListaLS}, ejecuté 10 veces el BRKGA variando solamente los decodificadores utilizados. Para esta prueba utilicé la lista de búsquedas locales que mejores resultados obtuvo en el análisis previo: SOSIRsSORm.
 
 \bigskip
 
@@ -1278,7 +1343,7 @@ En la tabla \ref{tab:testMe} podemos observar los resultados obtenidos sobre las
 
 \bigskip
 
-Con estas últimas pruebas tengo definido la configuración final para el BRKGA. Una última observación que quiero hacer es lo mucho que mejoraron los resultados en las instancias grandes luego de implementar las búsquedas locales. En la tabla \ref{tab:resultadosBrkgaPuro} la instancia \textit{p7.4.t} obtuvo un $i_{eAvg}$ de 0.45 mientras que en la tabla \label{tab:resultadosLSDecos} obtuvo un $i_{eAvg}$ de 0.98. Consideré que los resultados se encontraban en un nivel muy satisfactorio y decidí pasar a calcular los resultados finales sobre todo el benchmark de problemas.
+Con estas últimas pruebas tengo definido la configuración final para el BRKGA. Una última observación que quiero hacer es lo mucho que mejoraron los resultados en las instancias grandes luego de implementar las búsquedas locales. En la tabla \ref{tab:resultadosBrkgaPuro} la instancia \textit{p7.4.t} obtuvo un $i_{eAvg}$ de 0.45 mientras que en la tabla \ref{tab:testMe} obtuvo un $i_{eAvg}$ de 0.98. Lo que significa que para las instancias grandes, mis resultados obtuvieron un valor un 2\% menor que el mejor resultado publicado para tales instancias, es por eso que consideré que los resultados se encontraban en un nivel muy satisfactorio y decidí pasar a calcular los resultados finales sobre todo el benchmark de problemas.
 
 
 
