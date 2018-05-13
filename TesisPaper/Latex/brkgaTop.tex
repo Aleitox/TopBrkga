@@ -1087,28 +1087,6 @@ public bool RemoveWorstGroup(Vehicle vehicle, Client inserted)
 
 \bigskip
 
-El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes visitados por el vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de los beneficios de los clientes visitados por el vehículo. Por lo tanto el orden de complejidad de \textit{CandidateGroup} es de $O(2^{n})$. Agregar una metaheuristica con orden exponencial debe ser justificado. A modo de analizar el uso de tal metaheuristica desarrollé una prueba sobre las dos instancias grandes para los cuales estaba obteniendo los peores resultados. El objetivo de la prueba es poder responder las siguientes preguntas: 
-
-\bigskip
-
-\begin{minipage}{\linewidth}
-Configuraciones: 
-\begin{itemize}
-  \item Cuánto mejora la aptitud física de la solución final usando \textit{Replace Multiple}?
-  \item Cuánto más lento se vuelve la implementación por agregar el \textit{Replace Multiple}?
-  \item Qué sucede si acotamos la cantidad de grupos candidatos del \textit{GetCandidateGroups} en la cantidad de clientes visitados por el vehículo?
-\end{itemize}
-\end{minipage}
-
-\bigskip
-
-% TODO: Tabla
-% TODO: Analisis de Tabla
-% TODO: Seleccion de un metodo. Explicar Orden de complejidad
-% TODO: Mostrar Orden de complejidad
-
-\bigskip
-
 \begin{minipage}{\textwidth}
 \begin{lstlisting} [caption={Método \textit{GetCandidateGroups}.}, label={func:GetCandidateGroups}]
 public List<CandidateGroup> GetCandidateGroups(Vehicle v, Client c)
@@ -1132,12 +1110,121 @@ public List<CandidateGroup> GetCandidateGroups(Vehicle v, Client c)
 
 \bigskip
 
-El \textit{Replace Multiple} mejoro considerablemente el $i_{eAvg}$ en instancias grandes ya que explora muchas más opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
+El pseudocódigo \ref{func:GetCandidateGroups} muestra como se obtienen los potenciales grupos de clientes a remover a partir del vehículo y el cliente insertado. Este método crea una lista con un tamaño máximo de $2^n-1$, siendo $n$ la cantidad de clientes visitados por el vehículo. El peor caso sucede cuando el cliente insertado tiene un beneficio mayor a la sumatoria de los beneficios de los clientes visitados por el vehículo. Por lo tanto el orden de complejidad de \textit{GetCandidateGroups} es de $O(2^{n})$. Agregar una metaheuristica con orden exponencial debe ser justificado. A modo de analizar el uso de tal metaheuristica desarrollé dos pruebas con el objetivo de responder las siguientes preguntas: 
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+\begin{itemize}
+  \item Cuánto mejora la aptitud física de la solución final usando \textit{Replace Multiple}?
+  \item Es necesario acotar la cantidad de combinaciones de \textit{GetCandidateGroups} de modo que el \textit{Replace Multiple} tenga un orden de complejidad polinomial?
+\end{itemize}
+\end{minipage}
+
+\bigskip
+
+Primero realicé una prueba para mostrar en cuanto mejora la solución final utilizando el \textit{Replace Multiple}. Para esta prueba seleccioné las dos instancias grandes para las cuales mi implementación tenía los peores resultados, las instancias \textit{p5.3.x} y \textit{p7.4.t}. Luego ejecuté 25 veces una implementación que utilizaba el reemplazo múltiple y otras 25 veces una implementación que no la utilizaba. Además, solo para estas pruebas, creé un \textit{Replace Multiple} acotado. Este reemplazo múltiple acotado recibe como parámetro la cantidad máxima de combinaciones que tiene permitido probar al buscar reemplazos. Por lo tanto si su cota es la cantidad de clientes, el orden de complejidad de \textit{GetCandidateGroups} pasaría a ser $O(clientes)$. De modo de poder observar la progresión en que mejora la solución final y el tiempo que se demora la implementación en encontrarla, ejecuté la implementación variando el valor de la cota. Primero con un valor de 2, luego 4, 8, 16 y así sucesivamente hasta 128. Se realizaron 25 ejecuciones para cada una de las configuraciones mencionas y se modificó la condición de parada del BRKGA de forma tal que siempre termine luego de \textit{MinIterations}, así todas las pruebas duran la misma cantidad de iteraciones globales. Los resultados pueden observarse en la tabla \ref{tab:rmaUno}.
+
+\bigskip
+
+\begin{table}
+\begin{center}
+\begin{tabular}
+{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D & Config & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $I_{eAvg}$ & Best \\
+\hline
+p5.3.x & 66/3/40.00 & OSIRs & 2894 & 1410 & 1443 & 1485 & 0.93 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma002 & 3565 & 1460 & 1485 & 1510 & 0.95 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma004 & 3650 & 1455 & 1484 & 1510 & 0.95 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma008 & 3869 & 1470 & 1494 & 1525 & 0.96 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma016 & 4035 & 1480 & 1495 & 1515 & 0.96 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma032 & 4103 & 1480 & 1497 & 1525 & 0.96 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma064 & 4047 & 1470 & 1493 & 1525 & 0.96 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRma128 & 4059 & 1470 & 1495 & 1525 & 0.96 & 1555 \\
+p5.3.x & 66/3/40.00 & OSIRsRm & 4054 & 1465 & 1496 & 1525 & 0.96 & 1555 \\
+p7.4.t & 102/4/100.00 & OSIRs & 5080 & 945 & 972 & 1022 & 0.90 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma002 & 7123 & 969 & 995 & 1039 & 0.92 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma004 & 7788 & 977 & 1004 & 1024 & 0.93 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma008 & 8561 & 1003 & 1019 & 1045 & 0.95 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma016 & 10277 & 998 & 1022 & 1042 & 0.95 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma032 & 10387 & 1006 & 1023 & 1045 & 0.95 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma064 & 10320 & 1008 & 1024 & 1045 & 0.95 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRma128 & 10352 & 1010 & 1024 & 1044 & 0.95 & 1077 \\
+p7.4.t & 102/4/100.00 & OSIRsRm & 10386 & 1005 & 1027 & 1046 & 0.95 & 1077 \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Prueba de eficiencia del \textit{Replace Multiple}.}
+\label{tab:rmaUno}
+\end{table}
+
+\bigskip
+
+La tabla \ref{tab:rmaUno} tiene las filas ordenadas según su configuración. Primero la configuración con todas las búsquedas locales mencionadas anteriormente excepto \textit{Replace Multiple}, luego le sigue una configuración que agrega el \textit{Replace Multiple Acotado} por 2, luego por 4, por 8, etc. Por último se utiliza directamente el \textit{Replace Multiple} sin cota. Podemos ver que el beneficio promedio aumenta considerablemente cuando se le agrega el \textit{Replace Multiple} acotado por 2. Luego sigue mejorando a medida que se incrementa el valor de la cota hasta que llega un punto donde prácticamente deja de mejorar cuando la cota vale 8 o 16. El último caso corresponde al \textit{Replace Multiple} sin cota y es donde encontramos los mejores resultados en la instancia \textit{p7.4.t}. En la instancia \textit{p5.3.x} no se ven diferencias de beneficio entre el \textit{Replace Multiple} y los \textit{Replace Multiple} acotados con valores mayores a 8. Por otro lado si observamos los tiempos de ejecución sucede algo similar. Los tiempos promedios incrementan a medida que se incrementa la cota y a partir de que la cota vale 16 o más, se estabiliza y no sigue incrementando. Estas instancias tienen 66 y 102 clientes, superando la cota de 16 ampliamente. Por lo tanto para estas instancias el \textit{Replace Multiple} y su versión acotada por la cantidad de clientes, tienen el mismo rendimiento por más que uno tiene un orden de complejidad exponencial y el otro lineal.
+
+\bigskip
+
+La segunda prueba la realicé sobre una instancia del benchmark y una copia idéntica a la cual le alteré el beneficio de sus clientes. La idea en esta prueba es maximizar la probabilidad de que suceda el peor escenario en el método \textit{GetCandidateGroups}. Una instancia que maximice la probabilidad del peor escenario sería tal donde el beneficio de cada cliente es mayor a la sumatoria de todos los clientes ya definidos. Si el beneficio del primer cliente es 1, el siguiente será 2, luego 4, 8 y así sucesivamente. Por lo tanto el beneficio del último cliente será de $2^{clientes-1}$. Como este valor crece rápidamente, seleccioné la instancia \textit{p2.2.k} que tiene 19 clientes además de los nodos de salida y llegada. A la instancia inventada la llamé \textit{p2.2.k.DeltaProfit}. Cada instancia se ejecutó 25 veces por cada una de las variaciones del \textit{Replace Multiple} de la prueba anterior. El objetivo de este experimento es solo analizar la diferencia de tiempos de una instancia con el peor escenario del método \textit{GetCandidateGroups}, luego no muestro los resultados de los beneficios obtenidos. Los resultados se encuentran en la tabla \ref{tab:rmaDos}.
+
+\begin{table}
+\begin{center}
+\begin{tabular}
+{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D & Config & $T_{avg}$ \\
+\hline
+p2.2.k & 21/2/22.50 & OSIRs & 647 \\
+p2.2.k & 21/2/22.50 & OSIRsRma002 & 678 \\
+p2.2.k & 21/2/22.50 & OSIRsRma004 & 673 \\
+p2.2.k & 21/2/22.50 & OSIRsRma008 & 687 \\
+p2.2.k & 21/2/22.50 & OSIRsRma016 & 718 \\
+p2.2.k & 21/2/22.50 & OSIRsRma032 & 719 \\
+p2.2.k & 21/2/22.50 & OSIRsRma064 & 720 \\
+p2.2.k & 21/2/22.50 & OSIRsRma128 & 701 \\
+p2.2.k & 21/2/22.50 & OSIRsRm & 715 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRs & 602 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma002 & 639 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma004 & 661 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma008 & 860 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma016 & 997 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma032 & 994 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma064 & 992 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRma128 & 1018 \\
+p2.2.k.DeltaProfit & 21/2/22.50 & OSIRsRm & 1032 \\
+\hline
+\end{tabular}
+\end{center}
+\caption{Prueba de eficiencia temporal del \textit{Replace Multiple} en el peor escenario.}
+\label{tab:rmaDos}
+\end{table}
+
+\bigskip
+
+En la tabla \ref{tab:rmaDos} podemos observar que en ambas instancias los tiempo de ejecución van incrementando a medida que se incrementa la cota, hasta que se estabiliza cuando la cota del \textit{Replace Multiple} vale 16. En la instancia \textit{p2.2.k.DeltaProfit} los tiempors son mayores, lo que significa que efectivamente se incrementó la probabilidad de ocurrencia del peor escenario. Luego de ambas pruebas podemos justificar el uso del \textit{Replace Multiple} sin cota ya que en la practica tiene un tiempo de ejecución similar al del \textit{Replace Multiple} acotado por la cantidad de clientes y el orden de complejidad de la versión acotada es polinomial.
+
+\bigskip
+
+Entre ambas pruebas realizadas se concluye que no es necesario acotar el método \textit{GetCandidateGroups} ya que en la práctica los tiempos de ejecución son similares en ambas versiones. En cuanto al incremento de la aptitud física de la solución final obtenida, cuando comparamos los resultados en la tabla \ref{tab:rmaUno} de la configuraciones OSIRs y OSIRsRm, vemos que agregar el \textit{Replace Multiple} incrementa el $i_{eAvg}$ en 0,04 en promedio. Lo cual es bastante considerando que el $i_{eAvg}$ de OSIRs es de 0.93 para la instancia \textit{p5.3.x} y 0.90 para la instancia \textit{p7.4.t}.
+
+\bigskip
+
+\begin{minipage}{\linewidth}
+El \textit{Replace Multiple} mejoró considerablemente el $i_{eAvg}$ en instancias grandes ya que explora más opciones que el \textit{Replace Simple} y prioriza el beneficio sobre la distancia. Esto lo hace sacrificando tiempo ya que su complejidad algorítmica es mayor a la del \textit{Replace Simple}. El \textit{Replace Multiple} tiene un orden de complejidad:
 
 \begin{equation*}
-O(Replace Multiple) = O(veh\acute{\dotlessi}culos * clientesNoVisitados * 2^{clientesVisitados})
+ReplaceMultiple \in O(veh\acute{\dotlessi}culos * clientes * 2^{clientes})
 \end{equation*}
 
+En la práctica tiene un tiempo de ejecución similar al \textit{Replace Multiple} acotado por cantidad de clientes que tiene un orden de complejidad de:
+
+\begin{equation*}
+\begin{split}
+ReplaceMultipleAcotado 	& \in O(veh\acute{\dotlessi}culos * clientes * clientes^2)  \\
+					& = O(veh\acute{\dotlessi}culos * clientes^3)
+\end{split}
+\end{equation*}
+\end{minipage}
 
 \subsection{Encoder}
 
