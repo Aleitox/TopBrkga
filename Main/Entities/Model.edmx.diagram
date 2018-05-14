@@ -18,6 +18,7 @@
         <EntityTypeShape EntityType="TOPModel.ExternalSolution" Width="1.5" PointX="3.25" PointY="7.25" />
         <EntityTypeShape EntityType="TOPModel.ExternalSolutionsBDM" Width="1.5" PointX="0.875" PointY="7.25" />
         <EntityTypeShape EntityType="TOPModel.OverallResult" Width="1.5" PointX="7.875" PointY="6.25" />
+        <EntityTypeShape EntityType="TOPModel.HashTest" Width="1.5" PointX="8.375" PointY="0.75" />
         </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

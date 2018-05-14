@@ -53,11 +53,12 @@ namespace Main.GuidedLocalSearchHeuristics
         }
 
         // TODO Test IMPORTANTE
-        public static bool RemoveWorstTeamOrDefault(Vehicle vehicle, DestinationAt defaultDestinationAt)
+        public static bool RemoveWorstTeamOrDefault(Vehicle vehicle, DestinationAt defaultDestinationAt, bool acotado, int maxSize)
         {
             var toRemove = new List<Destination>();
 
             var setOfDestinationAts = new List<SetOfDestinationAt>();
+            var size = 0;
 
             for (var index = 0; index < vehicle.Route.RouteLenght(); index++)
             {
@@ -78,10 +79,12 @@ namespace Main.GuidedLocalSearchHeuristics
                 }
                 setOfDestinationAts.AddRange(temp);
                 setOfDestinationAts.Add(new SetOfDestinationAt(detinationAt));
+                size++;
+                if (acotado && size >= maxSize)
+                    break;
             }
 
             var validForRemoval = setOfDestinationAts.Where(x => vehicle.Route.GetDistanceWithout(x.DestinationsAt.Select(y => y.At).ToList()) <= vehicle.MaxDistance);
-
             var bestOption = new SetOfDestinationAt(defaultDestinationAt);
 
             foreach (var setOfDestinationAt in validForRemoval)

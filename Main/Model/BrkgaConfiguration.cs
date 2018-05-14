@@ -88,8 +88,23 @@ namespace Main.Model
                     heuristicCodes += "I";
                 else if (heuristic is ReplaceHeuristic)
                 {
-                    if(((ReplaceHeuristic)heuristic).SuperReplace)
-                        heuristicCodes += "Rm";
+                    if (((ReplaceHeuristic)heuristic).SuperReplace)
+                    {
+                        if (((ReplaceHeuristic)heuristic).Acotado)
+                        {
+                            var repeat = 3 - ((ReplaceHeuristic)heuristic).Cota.ToString().Length;
+                            var ceros = "";
+                            var i = 0;
+                            while (i < repeat)
+                            {
+                                ceros += "0";
+                                i++;
+                            }
+                            heuristicCodes += "Rma" + ceros + ((ReplaceHeuristic)heuristic).Cota.ToString();
+                        }
+                        else
+                            heuristicCodes += "Rm";
+                    }
                     else
                         heuristicCodes += "Rs";
                 }

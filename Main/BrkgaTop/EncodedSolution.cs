@@ -14,6 +14,7 @@ namespace Main.BrkgaTop
             RandomKeys = randomKeys;
             EnhancedByLocalHeuristics = false;
             SuperEnhancedByLocalHeuristics = false;
+            strongHash = true;
         }
         
         public IProblemDecoder ProblemDecoder { get; set; }
@@ -39,14 +40,31 @@ namespace Main.BrkgaTop
             return OrderedRandomKeys ?? (OrderedRandomKeys = RandomKeys.OrderBy(rk => rk.Key).ToList());
         }
 
+        public bool strongHash { get; set; }
+
         private string pseudoHash;
 
         public string GetPseudoHash()
         {
             if (string.IsNullOrEmpty(pseudoHash))
-                pseudoHash = string.Join("@", GetOrderedRandomKeys().Select(k => k.PositionIndex.ToString(CultureInfo.InvariantCulture)));
+            {
+                if (strongHash)
+                    pseudoHash = StrongHash();
+                else
+                    pseudoHash = OldHash();
+            }
 
             return pseudoHash;
+        }
+
+        public string StrongHash()
+        {
+            return GetSolution.GetHash();
+        }
+
+        public string OldHash()
+        {
+            return string.Join("@", GetOrderedRandomKeys().Select(k => k.PositionIndex.ToString(CultureInfo.InvariantCulture)));
         }
 
         public bool IsEquivalenteTo(EncodedSolution encodedSolution)

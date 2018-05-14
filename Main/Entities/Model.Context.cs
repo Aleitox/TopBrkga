@@ -33,5 +33,6 @@ namespace Main.Entities
         public virtual DbSet<ExternalSolution> ExternalSolutions { get; set; }
         public virtual DbSet<ExternalSolutionsBDM> ExternalSolutionsBDMs { get; set; }
         public virtual DbSet<OverallResult> OverallResults { get; set; }
+        public virtual DbSet<HashTest> HashTests { get; set; }
     }
 }

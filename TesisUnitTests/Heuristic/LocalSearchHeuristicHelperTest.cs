@@ -33,7 +33,7 @@ namespace TesisUnitTests.Heuristic
             vehicle.Route.AddDestinationAt(agregado, position);
             var destinationAt = new DestinationAt(agregado, position);
 
-            var algo = LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt);
+            var algo = LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt, false, 0);
 
             Assert.AreEqual(true, algo);
             Assert.AreEqual(24, vehicle.Route.GetProfit());

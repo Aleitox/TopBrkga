@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Security.AccessControl;
+using System.Linq;
 
 namespace Main.Model
 {
@@ -26,5 +27,10 @@ namespace Main.Model
         public decimal MaxDistance { get; set; }
 
         public Route Route { get; set; }
+
+        public string GetHash()
+        {
+            return string.Join("@", Route.GetDestinations.Select(x => x.PositionIndex));
+        }
     }
 }

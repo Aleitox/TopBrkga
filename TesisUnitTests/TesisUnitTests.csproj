@@ -78,6 +78,8 @@
     <Compile Include="EncoderTest.cs" />
     <Compile Include="TestCreateResults.cs" />
     <Compile Include="RunMe.cs" />
+    <Compile Include="Test_Hash.cs" />
+    <Compile Include="Test_Brkga_Puro.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Main\Main.csproj">

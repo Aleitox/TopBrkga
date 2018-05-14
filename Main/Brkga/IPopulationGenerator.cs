@@ -30,7 +30,7 @@ namespace Main.Brkga
             
             AmountOfDestinations = problemDecoder.Provider.GetAmountOfDestinations();
             
-            AllowDuplicatesOnRandomCreation = problemDecoder.Provider.GetDestinations().Count() - 2 < 7;
+            AllowDuplicatesOnRandomCreation = problemDecoder.Provider.GetDestinations().Count() - 2 < 9;
             PopulationSize = populationSize;
 
             Generation = 0;
@@ -128,7 +128,7 @@ namespace Main.Brkga
             var randomGenerator = new Random(seed);
             for (var index = 1; index < amountOfDestinations - 1; index++) // index != 0 && index != amountOfDestinations - 1 => 0 es inicio, amountOfDestinations - 1 es fin
             {
-                var nextRandom = randomGenerator.Next(0, 1000);
+                var nextRandom = randomGenerator.Next(0, 100000);
                 while (randomVector.Any(r => r.Key == nextRandom))
                     nextRandom++;
                 randomVector.Add(new RandomKey(nextRandom, index));

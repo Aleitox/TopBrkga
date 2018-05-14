@@ -6,6 +6,7 @@ using Main.Factory;
 using TesisUnitTests.Helper;
 using System.Collections.Generic;
 using Main.GuidedLocalSearchHeuristics;
+using Main.Model;
 
 namespace TesisUnitTests.FinalResults
 {
@@ -82,7 +83,7 @@ namespace TesisUnitTests.FinalResults
 
 
             var config = UltimosResultadosFactory.GetFinalResultsConfig();
-            config.Fase = 1015;
+            config.Fase = 3015; // 1015 fue el que se ejecuto con el viejo hash
             var solutions = solutionRepository.GetAll().Where(s => s.Fase == config.Fase).ToList();
             var exSolutions = exSolutionRepository.GetAll().ToList();
             var instances = instanceRepository.GetAll().ToList().Where(i => exSolutions.Any(e => e.InstanceId == i.Id) && solutions.Where(s => s.InstanceId == i.Id).Count() < 3).ToList();
@@ -121,38 +122,62 @@ namespace TesisUnitTests.FinalResults
             }
         }
 
-        //public static void Test_Local_Search_Missing()
-        //{
-        //    // Creo 200 soluciones al azar con el Greedy decoder y las persisto
-        //    // Tomo cada una de estas soluciones, le aplico una heuristica y la persisto  
-        //    // Finalmente mido en promedio cuanto mejoro la solucion. y cuanto disminuyo la ruta.
-        //    // Busqueda Local | Tiempo Promedio de ejecucion | Incremento Porcentual Beneficio | Decremento Porcentual Distancia
+        [TestMethod]
+        public void Test_Final_Results_Demo_Heuristica_Exponencial()
+        {
+            // 1. Para las 2 instancias mas grandes. Todo con deco simple. 5 configuraciones. 25 ejecuciones.
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
 
-        //    // 1. Creo las soluciones
-        //    var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
-        //    var intancesIds = Provider.GetSelectedInstancesForTesting();
-        //    //var intancesIds = new List<int>() { 628 };
-        //    var intances = new List<Main.Entities.Instance>();
-        //    foreach (var instanceId in intancesIds)
-        //    {
-        //        intances.Add(instanceRepository.GetById(instanceId));
-        //    }
+            var configs = new List<BrkgaConfiguration>();
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRs()));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(2)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(4)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(8)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(16)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(32)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(64)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRma(128)));
+            configs.Add(UltimosResultadosFactory.GetFinalResultsConfig_NoHeuristicsLong(UltimosResultadosFactory.Get_OSIRsRm()));
 
-        //    var simpleSolutions = PaperConfigsFactory.SimpleDecoderRun(intances, 1003, 200);
-        //    var greedySolutions = PaperConfigsFactory.GreedyDecoderRun(intances, 1004, 200);
+            foreach (var config in configs)
+                config.Fase = 1022;
 
-        //    //2. Tomar las soluciones
-        //    var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
+            var instances = new List<int>() { 400, 779 };
+            //var instances = new List<int>() { 777 };
 
-        //    var localSearch = new SwapHeuristic();
-        //    for (var index = 0; index < simpleSolutions.Count; index++)
-        //    {
-        //        var s = simpleSolutions[index];
-        //        s.Fase = 1004;
-        //        s.Id = 0;
-        //        localSearch.ApplyHeuristic(ref s.);
-        //        solutionRepository.SaveSolution(simpleSolutions[index]);
-        //    }
-        //}
+            foreach (var intance in instances)
+            {
+                foreach (var config in configs)
+                {
+                    for (var index = 0; index < 25; index++)
+                    {
+                        var instance = instanceRepository.GetById(intance);
+                        var brkga = BrkgaFactory.Get(instance, config);
+                        brkga.Start();
+                    }
+                }
+            }
+        }
+
+        [TestMethod]
+        public void Test_Decoders_200_Random()
+        {
+            // Creo 200 soluciones al azar con el Greedy decoder y las persisto
+            // Tomo cada una de estas soluciones, le aplico una heuristica y la persisto  
+            // Finalmente mido en promedio cuanto mejoro la solucion. y cuanto disminuyo la ruta.
+            // Busqueda Local | Tiempo Promedio de ejecucion | Incremento Porcentual Beneficio | Decremento Porcentual Distancia
+
+            // 1. Creo las soluciones
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+            var intancesIds = Provider.GetSelectedInstancesForTesting();
+
+            var intances = new List<Main.Entities.Instance>();
+            foreach (var instanceId in intancesIds)
+            {
+                intances.Add(instanceRepository.GetById(instanceId));
+            }            
+
+            var simpleSolutions = PaperConfigsFactory.DecodersRun(intances, 1025, 1026, 200);
+        }
     }
 }

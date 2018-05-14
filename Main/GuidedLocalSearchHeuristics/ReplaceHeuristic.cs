@@ -9,13 +9,23 @@ namespace Main.GuidedLocalSearchHeuristics
 {
     public class ReplaceHeuristic : ILocalSearchHeuristic
     {
-        public static ReplaceHeuristic GetSuper()
+        public bool Acotado { get; set; }
+        public int Cota { get; set; }
+
+        public static ReplaceHeuristic GetSuper(int cota = 0)
         {
-            return new ReplaceHeuristic() { SuperReplace = true };
+            var replace = new ReplaceHeuristic();
+            replace.SuperReplace = true;
+            if (cota != 0)
+            {
+                replace.Acotado = true;
+                replace.Cota = cota;
+            }
+            return replace;
         }
         public static ReplaceHeuristic GetNormal()
         {
-            return new ReplaceHeuristic() { SuperReplace = false };
+            return new ReplaceHeuristic() { SuperReplace = false, Acotado = false };
         }
 
         public bool SuperReplace { get; set; }
@@ -54,7 +64,7 @@ namespace Main.GuidedLocalSearchHeuristics
                 {
                     var destinationAt = new DestinationAt(destination, analizedInsertion.BestInsertPosition);
                     var justChange = SuperReplace ?
-                        LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt) :
+                        LocalSearchHeuristicHelper.RemoveWorstTeamOrDefault(vehicle, destinationAt, Acotado, Cota) :
                         LocalSearchHeuristicHelper.RemoveWorstOrDefault(vehicle, destinationAt);
                     changed = changed || justChange;
                 }

@@ -68,6 +68,9 @@
     <Compile Include="Entities\ExternalSolutionsBDM.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
+    <Compile Include="Entities\HashTest.cs">
+      <DependentUpon>Model.tt</DependentUpon>
+    </Compile>
     <Compile Include="Entities\OverallResult.cs">
       <DependentUpon>Model.tt</DependentUpon>
     </Compile>
@@ -133,6 +136,7 @@
     <Compile Include="Repositories\DestinyRepository.cs" />
     <Compile Include="Repositories\ExternalSolutionsRepository.cs" />
     <Compile Include="Repositories\ExternalSolutionsBdmRepository.cs" />
+    <Compile Include="Repositories\HashTestsRepository.cs" />
     <Compile Include="Repositories\InstanceRepository.cs" />
     <Compile Include="Repositories\IRepository.cs" />
     <Compile Include="Repositories\Repository.cs" />

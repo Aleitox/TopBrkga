@@ -102,5 +102,12 @@ namespace Main.Model
 
             return problemString;
         }
+
+        public string GetHash()
+        {
+            var orderedVehicles = VehicleFleet.Vehicles.Where(x => x.Route.RouteLenght() > 0).OrderBy(x => x.Route.GetDestinationAt(0).Id);
+            var hash = string.Join("#", orderedVehicles.Select(x => x.GetHash()));
+            return hash;
+        }
     }
 }

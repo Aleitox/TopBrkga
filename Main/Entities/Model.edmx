@@ -54,6 +54,20 @@
           <Property Name="Best" Type="int" />
           <Property Name="UB" Type="int" />
         </EntityType>
+        <EntityType Name="HashTests">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InstanceId" Type="int" />
+          <Property Name="SampleSize" Type="int" />
+          <Property Name="UnicidadStrongHash" Type="int" />
+          <Property Name="UnicidadWeakHash" Type="int" />
+          <Property Name="ClientesVisitadosAvg" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="ClientesTotal" Type="int" />
+          <Property Name="Decodificador" Type="varchar" MaxLength="150" />
+          <Property Name="BestProfit" Type="int" />
+        </EntityType>
         <EntityType Name="Instances">
           <Key>
             <PropertyRef Name="Id" />
@@ -180,6 +194,7 @@
           <EntitySet Name="Destinies" EntityType="Self.Destinies" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExternalSolutions" EntityType="Self.ExternalSolutions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="ExternalSolutionsBDM" EntityType="Self.ExternalSolutionsBDM" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HashTests" EntityType="Self.HashTests" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Instances" EntityType="Self.Instances" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="OverallResults" EntityType="Self.OverallResults" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Solutions" EntityType="Self.Solutions" Schema="dbo" store:Type="Tables" />
@@ -239,6 +254,7 @@
           <EntitySet Name="ExternalSolutions" EntityType="TOPModel.ExternalSolution" />
           <EntitySet Name="ExternalSolutionsBDMs" EntityType="TOPModel.ExternalSolutionsBDM" />
           <EntitySet Name="OverallResults" EntityType="TOPModel.OverallResult" />
+          <EntitySet Name="HashTests" EntityType="TOPModel.HashTest" />
           </EntityContainer>
         <EntityType Name="VehiclesDestiny">
           <Key>
@@ -421,6 +437,20 @@
           <Property Name="DeltaZMax" Type="Int32" />
           <Property Name="DeltaZ" Type="Int32" />
         </EntityType>
+        <EntityType Name="HashTest">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="InstanceId" Type="Int32" />
+          <Property Name="SampleSize" Type="Int32" />
+          <Property Name="UnicidadStrongHash" Type="Int32" />
+          <Property Name="UnicidadWeakHash" Type="Int32" />
+          <Property Name="ClientesVisitadosAvg" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="ClientesTotal" Type="Int32" />
+          <Property Name="Decodificador" Type="String" MaxLength="150" FixedLength="false" Unicode="false" />
+          <Property Name="BestProfit" Type="Int32" />
+        </EntityType>
         </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -542,6 +572,21 @@
                 <ScalarProperty Name="DeltaZMax" ColumnName="DeltaZMax" />
                 <ScalarProperty Name="DeltaZmin" ColumnName="DeltaZmin" />
                 <ScalarProperty Name="Metaheuristica" ColumnName="Metaheuristica" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HashTests">
+            <EntityTypeMapping TypeName="TOPModel.HashTest">
+              <MappingFragment StoreEntitySet="HashTests">
+                <ScalarProperty Name="BestProfit" ColumnName="BestProfit" />
+                <ScalarProperty Name="Decodificador" ColumnName="Decodificador" />
+                <ScalarProperty Name="ClientesTotal" ColumnName="ClientesTotal" />
+                <ScalarProperty Name="ClientesVisitadosAvg" ColumnName="ClientesVisitadosAvg" />
+                <ScalarProperty Name="UnicidadWeakHash" ColumnName="UnicidadWeakHash" />
+                <ScalarProperty Name="UnicidadStrongHash" ColumnName="UnicidadStrongHash" />
+                <ScalarProperty Name="SampleSize" ColumnName="SampleSize" />
+                <ScalarProperty Name="InstanceId" ColumnName="InstanceId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

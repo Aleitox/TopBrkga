@@ -106,7 +106,7 @@ namespace TesisUnitTests.FinalResults
             };
         }
 
-        internal static BrkgaConfiguration GetFinalResultsConfig()
+        public static BrkgaConfiguration GetFinalResultsConfig()
         {
             var config = new BrkgaConfiguration()
             {
@@ -136,6 +136,25 @@ namespace TesisUnitTests.FinalResults
                 },
                 ApplyHeuristicsToTop = 2,
                 DecoderType = DecoderEnum.Simple
+            };
+            config.SetDescription();
+            return config;
+        }
+
+        public static BrkgaConfiguration GetFinalResultsConfig_NoHeuristicsLong(List<ILocalSearchHeuristic> heuristics)
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 100,
+                MinNoChanges = 50,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = heuristics,
+                HeuristicsLong = new List<ILocalSearchHeuristic>() {},
+                ApplyHeuristicsToTop = 2,
+                DecoderType = DecoderEnum.Greedy
             };
             config.SetDescription();
             return config;
@@ -204,6 +223,42 @@ namespace TesisUnitTests.FinalResults
                 configDecoGreedy
             };
         }
+
+        // Para justificar la heuristica exponencial
+        public static List<ILocalSearchHeuristic> Get_OSIRs()
+        {
+            return new List<ILocalSearchHeuristic>()
+                {
+                    new TwoZeroPtSwap(),
+                    new SwapHeuristic(),
+                    new InsertHeuristic(),
+                    ReplaceHeuristic.GetNormal(),
+                };
+        }
+        public static List<ILocalSearchHeuristic> Get_OSIRsRm()
+        {
+            return new List<ILocalSearchHeuristic>()
+                {
+                    new TwoZeroPtSwap(),
+                    new SwapHeuristic(),
+                    new InsertHeuristic(),
+                    ReplaceHeuristic.GetNormal(),
+                    ReplaceHeuristic.GetSuper(0),
+                };
+        }
+
+        public static List<ILocalSearchHeuristic> Get_OSIRsRma(int cota)
+        {
+            return new List<ILocalSearchHeuristic>()
+                {
+                    new TwoZeroPtSwap(),
+                    new SwapHeuristic(),
+                    new InsertHeuristic(),
+                    ReplaceHeuristic.GetNormal(),
+                    ReplaceHeuristic.GetSuper(cota),
+                };
+        }
+
 
         #endregion
 

@@ -358,7 +358,7 @@ public class Configuration
 Como mencioné, uno de los beneficios de tener todas las variables configurables en un solo objeto es poder leer rápidamente que BRKGA estoy probando. A continuación explico las propiedades del objeto Configuración:
 
 \begin{itemize}
-  \item \textbf{Description}: Es una especie de hash descriptivo de la instancia del objeto \textit{Configuration}. Codifica los valores del resto de las propiedades utilizando su clave y valor.
+  \item \textbf{Description}: Describe la instancia del objeto \textit{Configuration} utilizando la clave y valor del resto de las propiedades.
   \item \textbf{MinIterations}: Clave \textbf{MI}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones que deben completar para cortar el BRKGA. 
   \item \textbf{MinNoChanges}: Clave \textbf{MNC}. Valor entero utilizado en la función de corte. Cantidad mínima de generaciones sin que aparezca una nueva mejor solución requerido para cortar el BRKGA.
   \item \textbf{PopulationSize}: Clave \textbf{PS}. Valor entero que denota el tamaño de la población.
@@ -541,14 +541,39 @@ private void AddMutants(int amount)
 \end{lstlisting}
 \end{minipage}
 
+\subsection{Hash de un individuo}
+
+En una primera instancia se insertaban los individuos sin verificar la existencia de otro individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce la cantidad de soluciones diferentes exploradas, por lo tanto reduce la probabilidad de encontrar una nueva mejor solución por generación. Además, si admitimos duplicados, el algoritmo repite cómputos en donde obtiene los mismos resultados.
+
 \bigskip
 
-Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten soluciones duplicadas en la población. Verificar si dos soluciones son iguales tiene un costo temporal muy bajo en BRKGA. Como mencioné anteriormente el vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a esto no es necesario comparar las rutas de dos soluciones para saber si son idénticas, es suficiente con comparar el orden en que se asignan sus clientes a las rutas. En el pseudocódigo \ref{func:GetHash} podemos ver como se crea el hash de una solución a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatena con un símbolo separador. El hash se calcula una sola vez en el momento que se instancia la solución y su complejidad es de $O(clientes * log(clientes))$. Comparar dos hashs tiene una complejidad $O(clientes)$ ya que simplemente es comparar dos \textit{strings} que tienen un largo que depende de la cantidad de clientes. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n * clientes)$. En la figura \ref{fig:RandomKeysHash} podemos ver el ejemplo del hash de un vector de \textit{RandomKeys}.
+Como mencioné en el proceso de evolución, mi implementación verifica que no se inserten individuos duplicadas en la población. Para ver si dos individuos son iguales se compara el hash de cada individuo. Implementé dos formas de obtener un hash a partir de un individuo. 
+
+\bigskip
+
+El primer método que implementé requiere conocer solamente el vector de \textit{RandomKeys} del individuo. El vector de \textit{RandomKeys} determina el orden de los clientes y para un orden de clientes determinado los decodificadores siempre generan la misma solución. Por lo tanto, para dos vectores de \textit{RandomKeys} que generen el mismo orden de clientes se obtienen la misma solución. Gracias a eso no es necesario conocer la solución que el vector de \textit{RandomKeys} codifica. En el pseudocódigo \ref{func:GetHashFromRandomKeys} podemos ver como se crea el hash de un individuo a partir de su vector de \textit{RandomKeys}. Para calcular el hash se ordena el vector de \textit{RandomKeys} por su campo \textit{Key}, después se toman los \textit{ClientId} y se los concatenan con un símbolo separador. Este método tiene un orden de complejidad de $O(clientes * log(clientes))$. En la figura \ref{fig:RandomKeysHash} podemos ver de un vector de \textit{RandomKeys} y el hash resultante.
+
+\bigskip
+
+\begin{minipage}{\textwidth}
+\begin{lstlisting} [caption={Generación del hash de un individuo.}, label={func:GetHashFromRandomKeys}]
+private string hash;
+public string GetHashFromRandomKeys()
+{
+	if (!string.IsNullOrEmpty(hash))
+		return hash;
+		
+	var ork = RandomKeys.OrderBy(r => r.Key)
+	hash = string.Join("@", ork.Select(k => k.ClientId));
+	return hash;
+}
+\end{lstlisting}
+\end{minipage}
 
 \bigskip
 
 \begin{figure}[h]
-	\caption{Vector de \textit{RandomKeys} ordenado y su hash.}
+	\caption{Vector de \textit{RandomKeys} ordenado y el hash resultante.}
 	\centering
 	\includegraphics[width=14cm]{RandomKeysHash}
 	\label{fig:RandomKeysHash}
@@ -556,28 +581,54 @@ Como mencioné en el proceso de evolución, mi implementación verifica que no s
 
 \bigskip
 
-Decidí no reintentar el apareamiento entre los dos padres que generaron la solución repetida, porque la probabilidad de generar una solución idéntica a alguna de la población es alta cuando ya sucedió una vez. Tomé la decisión de reemplazar por un mutante la solución repetida para optimizar el tiempo de ejecución del apareamiento y disminuir la cantidad de soluciones dentro de un mismo vecindario por generación.
-
-\bigskip
+El segundo método es más preciso pero requiere conocer la solución en la que el vector de \textit{RandomKeys} decodifica. En el pseudocódigo \ref{func:GetHashFromSolution} podemos ver como se crea el hash de un individuo a partir de la solución a la cual decodifica su vector de \textit{RandomKeys}. Para calcular el hash, se ordenan los vehículos de la solución por el id del primer cliente que visitan. Luego se concatenan los hashs de cada vehículo separados por un símbolo separador. El hash de cada vehículo es la concatenación de los clientes que visita en orden y separados por otro símbolo separador (ver pseudocódigo \ref{func:GetHashFromVehicle}). Este método tiene un orden de complejidad $O(vehiculos * log(vehiculos) * clientes)$. En la figura \ref{fig:SolutionHash} podemos ver un vector de \textit{RandomKeys} que codifica en una solución con dos vehículos cuyos clientes que visitan están coloreados y también podemos ver el hash resultante. 
 
 \begin{minipage}{\textwidth}
-\begin{lstlisting} [caption={Generación del hash de una solución.}, label={func:GetHash}]
-private string pseudoHash;
-public string GetHash()
+\begin{lstlisting} [caption={Generación del hash de un individuo.}, label={func:GetHashFromSolution}]
+private string hash;
+public string GetHashFromSolution()
 {
-	if (!string.IsNullOrEmpty(pseudoHash))
-		return pseudoHash;
+	if (!string.IsNullOrEmpty(hash))
+		return hash;
 		
-	var ork = RandomKeys.OrderBy(r => r.Key)
-	pseudoHash = string.Join("@", ork.Select(k => k.ClientId));
-	return pseudoHash;
+	var ov = Solution.Vehicles.OrderBy(v => v.FirstClient)
+	hash = string.Join("#", ov.Select(v => v.GetVehicleHash()));
+	return hash;
+}
+\end{lstlisting}
+\begin{lstlisting} [caption={Generación del hash de una ruta.}, label={func:GetHashFromVehicle}]
+public string GetVehicleHash()
+{		
+	return string.Join("@", Route.Select(x => x.ClientId));
 }
 \end{lstlisting}
 \end{minipage}
 
 \bigskip
 
-En una primera instancia se insertaban los individuos sin verificar la existencia de un individuo idéntico en la población. Dada una población de soluciones no repetidas, la probabilidad de generar una solución existente al evolucionar la población es baja. Aún así, una vez que se genera una solución ya existente en la población, la probabilidad de que se genere otra copia más aumenta considerablemente. Esto se debe a que bajó la diversidad dentro de la población. A partir de la existencia de duplicados existe la posibilidad de utilizar padres idénticos. Si además la solución repetida se encuentra dentro del subconjunto de elite, la probabilidad aumenta aún más. Esto genera un efecto avalancha, donde la cantidad de individuos duplicados aumenta en cada evolución de la población. He llegado a obtener una población constituida de una única solución excepto por las soluciones mutantes. La existencia de duplicados reduce la cantidad de soluciones diferentes exploradas, por lo tanto reduce la probabilidad de encontrar una nueva mejor solución por generación. Además, si admitimos duplicados, el algoritmo repite cómputos en donde obtiene los mismos resultados.
+\begin{figure}[h]
+	\caption{Solución en la que decodifica un vector de \textit{RandomKeys} y el hash resultante.}
+	\centering
+	\includegraphics[width=14cm]{SolutionHash}
+	\label{fig:SolutionHash}
+\end{figure}
+
+\bigskip
+
+El primer método tiene la ventaja de no tener que conocer la solución en la que decodifica el vector de \textit{RandomKeys}, por lo tanto es independiente del problema que se esta resolviendo. La desventaja que tiene es que existen casos donde no detecta que dos individuos son iguales, cuando lo son. Por ejemplo si intercambiamos los ids de los clientes de las últimas dos posiciones del vector de \textit{RandomKeys} de la figura \ref{fig:SolutionHash} obtenemos dos hashs distintos pero ambas vectores de \textit{RandomKeys} decodifican en la misma solución. En la figura \ref{fig:HashDiferencia}, podemos ver un ejemplo donde dos \textit{RandomKeys} diferentes decodifican en la misma solución, luego el método \textit{GetHashFromRandomKeys} falla en detectar que ambos individuos son el iguales. La desventaja del segundo método es que requiere conocer la solución, luego conoce el dominio del problema que se resuelve. En mi implementación decidí utilizar el segundo método ya que es mas preciso y no generaba ningún problema el hecho de que requiera conocer la solución para obtener el hash.
+
+\bigskip
+
+En ambos casos, el hash se calcula una sola vez en el momento que se requiere por primera vez. Comparar dos hashs tiene una complejidad $O(clientes)$ ya que simplemente es comparar dos \textit{strings} que tienen un largo que depende de la cantidad de clientes. Por lo tanto verificar que la solución que se va a insertar no existe en la población tiene un complejidad de $O(poblaci\acute{o}n * clientes)$.
+
+\bigskip
+
+\begin{figure}[H]
+	\caption{Ejemplo en donde el método \textit{GetHashFromSolution} detecta individuos idénticos mientras que el método \textit{GetHashFromRandomKeys} falla.}
+	\centering
+	\includegraphics[width=14cm]{HashDiferencia}
+	\label{fig:HashDiferencia}
+\end{figure}
 
 \subsection{Resultados de la primer versión}
 
@@ -589,7 +640,7 @@ MI.250;MNC.10;PS.100;EP.0,3;MP.0,1;EGC.70;LS.;TOP.0;D.G (ver sección \ref{sec:d
 
 \bigskip
 
-\begin{table}
+\begin{table}[H]
 \begin{center}
 \begin{tabular}{ |c|c|c|c|c|c|c|c|c|c|c| } 
 \hline
