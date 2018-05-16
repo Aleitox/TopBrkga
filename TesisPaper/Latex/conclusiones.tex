@@ -10,6 +10,10 @@ Los resultados finales obtenidos son muy buenos, con al menos un 70\% de los res
 
 \bigskip
 
+Uno de los problemas del BRKGA para TOP es que su secuencia de alelos no es utilizada de forma completa cuando se lo decodifica ya que parte del problema es que no todos los clientes pueden ser visitados. Por lo tanto, asignar todos los clientes a algún vehículo siempre generaría una solución no factible o la instancia del problema no sería del TOP. Este problema de matching entre alelos y clientes visitados quizá puede ser resuelto modificando lo que representa un gen. 
+
+\bigskip
+
 Al iniciar el desarrollo, se esperaba obtener buenos resultados del BRKGA puro en base a las características de los algoritmos genéticos tales como la supervivencia del mas apto, la herencia de las características del padre de elite, una población de mejora monotónica, etc. Sin embargo los resultados durante el desarrollo dejaron en claro que el BRKGA puro no obtuvo buenos resultados y que los resultados finales dependieron demasiado de las búsquedas locales. De todos modos este trabajo deja algunos aportes e ideas de como resolver ciertos problemas cuando se implementa un BRKGA. Tales como:
 
 \bigskip
@@ -22,17 +26,14 @@ Al iniciar el desarrollo, se esperaba obtener buenos resultados del BRKGA puro e
 	\item A lo largo de toda la implementación el objetivo de llegar a la mejor solución posible se mantuvo sin dejar de lado la optimización temporal algorítmica. Como fue el caso de calcular el centro de gravedad de una ruta de modo de seleccionar primero los clientes mas cercanos a la ruta al intentar insertarlos pero solo calcularlo en el momento que es necesario y mantenerlo de un modo eficiente. También en el caso de la búsqueda local de reemplazo de múltiples clientes a la vez. Esta búsqueda tiene un orden de complejidad alto pero en la practica es muy bueno, por lo tanto se hicieron pruebas para verificar que en la practica no era tan costoso y se realizaron pruebas para medir cuanto aportaba a la solución final.
 \end{itemize}
 
-\bigskip
-
-Considero que uno de los problemas del BRKGA para TOP es que su secuencia de alelos no es utilizada completamente ya que parte del problema es que no todos los clientes pueden ser visitados. Asignar todos los clientes a algún vehículo siempre generaría una solución no factible o la instancia del problema no sería del TOP. Este problema de matching entre alelos y clientes visitados quizá puede ser resuelto modificando lo que representa un gen. 
 
 \section{Trabajos Futuros}
 
-Sería útil tener una herramienta para visualizar las soluciones en un plano cartesiano, pudiendo ver rápidamente qué clientes se quedaron sin ser visitados y así poder idear alternativas para que los clientes cercanos sean incluidos. También para poder ver la similitud entre un individuo y los individuos descendientes, a modo de tener una idea clara de qué tan parecidos son. De todos modos, para un análisis más preciso de la correlación entre padres e hijos, sería más eficiente idear una función que analizando las rutas de ambas soluciones genere un índice de parentesco.
+Sería útil tener una herramienta para visualizar las soluciones en un plano cartesiano, pudiendo ver rápidamente qué clientes se quedaron sin ser visitados y así poder idear alternativas para que los clientes cercanos sean incluidos. También para poder ver la similitud entre un individuo y los individuos descendientes, a modo de tener una idea clara de qué tan parecidos son. De todos modos, para un análisis más preciso de la correlación entre padres e hijos, sería más eficiente idear una función que analizando las rutas de ambas soluciones genere un índice de parentesco. 
 
 \bigskip
 
-El BRKGA puro para TOP necesita mejoras, los resultados obtenidos utilizando solo el BRKGA están lejos de ser competitivos. Si continuara mi desarrollo del BRKGA sin búsquedas locales exploraría cambios en el decodificador y en el método de \textit{crossover}. 
+El BRKGA puro para TOP necesita mejoras, los resultados obtenidos utilizando solo el BRKGA están lejos de ser competitivos. Si continuara el desarrollo del BRKGA sin búsquedas locales exploraría cambios en el decodificador y en el método de \textit{crossover}. 
 
 \bigskip
 
@@ -41,6 +42,15 @@ En el decodificador buscaría alguna manera de que su secuencia de alelos se use
 \bigskip
 
 El segundo punto por el que intentaría mejorar los resultados del BRKGA es modificando el algoritmo de apareamiento. Quizá, el individuo resultante deba heredar rutas enteras. Entonces el individuo descendiente herede dos rutas de un padre y la tercer ruta del otro. Finalmente, con algún proceso de limpieza se muevan los clientes que se visitan de forma repetida y se incluyen otros. En este contexto, la cantidad de alelos que tendría una solución estaría dictaminado por la cantidad de vehículos. Esto podría representar un problema ya que existen muchos menos vehículos que clientes, generando baja diversidad de soluciones, es decir explorando muy poco el dominio de soluciones posibles.
+
+\bigskip
+
+Como vimos en los resultados parciales durante el desarrollo de la implementación, el algoritmo BRKGA puro no tuvo éxito resolviendo TOP. En instancias grandes el $i_eAvg$ apenas llegó a obtener valores de 0.50 aproximadamente. Es bastante probable que esto se deba a una baja correlación entre padres e hijos. Es decir, que las soluciones generadas a partir del \textit{crossover} sean soluciones muy distintas a sus padres. Si este fuera el caso, no habría mucha diferencia entre generar una solución al azar y el método de \textit{crossover} que se implementó. Por lo tanto, como potencial trabajo futuro se podría hacer una investigación exhaustiva para determinar si existe combinación de método de \textit{crossover} y decodificador tal que el BRKGA puro llegue a valores de $i_eAvg$ de 0.80 o más. Para esta investigación habría que plantear diversos combinaciones de métodos de \textit{crossover} y de decodificadores soluciones. Luego formular distintos índices de similitud entre soluciones para medir parentesco. Finalmente realizar un test estadístico para determinar si existe correlación entre las implementaciones con un alto índice de parentesco y buenos resultados finales. En otras palabras tales trabajos futuros deberían poder responder las siguientes preguntas:
+
+\begin{itemize}
+	\item ¿Existe combinación de método de \textit{crossover} y de decodificador de soluciones tal que el BRKGA puro obtenga un  $i_eAvg > 0.80$?
+	\item ¿Existe correlación entre buenos resultados del BRKGA y una alta similitud entre padres e hijos?
+\end{itemize}
 
 \bigskip
 
