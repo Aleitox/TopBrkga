@@ -160,6 +160,25 @@ namespace TesisUnitTests.FinalResults
             return config;
         }
 
+        public static BrkgaConfiguration GetFinalResultsConfig_BrkgaPuro(DecoderEnum deco)
+        {
+            var config = new BrkgaConfiguration()
+            {
+                MinIterations = 250,
+                MinNoChanges = 100,
+                PopulationSize = 100,
+                ElitePercentage = 0.3m,
+                MutantPercentage = 0.1m,
+                EliteGenChance = 70,
+                Heuristics = new List<ILocalSearchHeuristic>(),
+                HeuristicsLong = new List<ILocalSearchHeuristic>(),
+                ApplyHeuristicsToTop = 0,
+                DecoderType = deco
+            };
+            config.SetDescription();
+            return config;
+        }
+
         public static BrkgaConfiguration GetBaseConfig(List<ILocalSearchHeuristic> heuristics)
         {
             var config = new BrkgaConfiguration()

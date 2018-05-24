@@ -179,5 +179,77 @@ namespace TesisUnitTests.FinalResults
 
             var simpleSolutions = PaperConfigsFactory.DecodersRun(intances, 1025, 1026, 200);
         }
+
+
+        [TestMethod]
+        public void Test_Defensa_6_Instances_Brkga_Puro_Y_BL()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+            var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
+
+            var instanceIds = Provider.GetSelectedInstancesForTesting();
+            var instances = instanceRepository.GetAll().ToList().Where(i => instanceIds.Any(x => x == i.Id)).ToList();
+
+            var config = UltimosResultadosFactory.GetFinalResultsConfig_BrkgaPuro(Main.BrkgaTop.Decoders.DecoderEnum.Greedy);
+            config.Fase = 3030;             
+
+            foreach (var instance in instances)
+            {
+                while (solutionRepository.GetAll().Where(s => s.Fase == config.Fase && s.InstanceId == instance.Id).Count() < 10)
+                {
+                    var brkga = BrkgaFactory.Get(instance, config);
+                    brkga.Start();
+                }
+            }
+
+            config = UltimosResultadosFactory.GetFinalResultsConfig_BrkgaPuro(Main.BrkgaTop.Decoders.DecoderEnum.Simple);
+            config.Fase = 3031;
+
+            foreach (var instance in instances)
+            {
+                while (solutionRepository.GetAll().Where(s => s.Fase == config.Fase && s.InstanceId == instance.Id).Count() < 10)
+                {
+                    var brkga = BrkgaFactory.Get(instance, config);
+                    brkga.Start();
+                }
+            }
+
+            config = UltimosResultadosFactory.GetFinalResultsConfig();
+            config.Fase = 3032;
+
+            foreach (var instance in instances)
+            {
+                while (solutionRepository.GetAll().Where(s => s.Fase == config.Fase && s.InstanceId == instance.Id).Count() < 10)
+                {
+                    var brkga = BrkgaFactory.Get(instance, config);
+                    brkga.Start();
+                }
+            }
+        }
+
+        //[TestMethod]
+        //public void Test_Defensa_6_Instances_Brkga_With_BL()
+        //{
+        //    var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+        //    var solutionRepository = new SolutionRepository(TopEntitiesManager.GetContext());
+
+
+        //    var config = UltimosResultadosFactory.GetFinalResultsConfig();
+        //    config.Fase = 3032;
+
+        //    var solutions = solutionRepository.GetAll().Where(s => s.Fase == config.Fase).ToList();
+
+        //    var instanceIds = Provider.GetSelectedInstancesForTesting();
+        //    var instances = instanceRepository.GetAll().ToList().Where(i => instanceIds.Any(x => x == i.Id)).ToList();
+
+        //    foreach (var instance in instances)
+        //    {
+        //        while (solutionRepository.GetAll().Where(s => s.Fase == config.Fase && s.InstanceId == instance.Id).Count() < 10)
+        //        {
+        //            var brkga = BrkgaFactory.Get(instance, config);
+        //            brkga.Start();
+        //        }
+        //    }
+        //}
     }
 }
