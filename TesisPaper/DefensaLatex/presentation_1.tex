@@ -80,6 +80,8 @@
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage[utf8]{inputenc}
 
+\setbeamertemplate{caption}{\raggedright\insertcaption\par}
+
 \graphicspath{ {images/} }
 
 %----------------------------------------------------------------------------------------
@@ -139,6 +141,8 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Team Orienteering Problem}
 
 \begin{frame}
@@ -160,6 +164,8 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Ejemplo de solución de TOP}
 
 \begin{frame}
@@ -175,6 +181,8 @@ La instancia tiene dos vehículos con un $d_{max}$ = 22,50. Hay 19 clientes adem
 
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Metaheurísticas}
 
@@ -206,6 +214,8 @@ Caracter\'isticas:
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
 \frametitle{Metaheurísticas}
 
@@ -229,6 +239,8 @@ Algunas técnicas:
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Algoritmos Genéticos (GA)}
 
 \begin{frame}
@@ -247,6 +259,8 @@ Algunas técnicas:
 \end{itemize}
 
 \end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \section{Random Key Genetic Algorithm (RKGA)}
 
@@ -269,6 +283,8 @@ Algunas técnicas:
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Biased Random Key Genetic Algorithm (RKGA)}
 
 \begin{frame}
@@ -281,16 +297,12 @@ Algunas técnicas:
     \pause
 \end{itemize}
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=8cm]{BiasCrossover}
-	\label{fig:BiasCrossover}
-\end{figure}
-
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
-\frametitle{BRKGA Flow Chart}
+\frametitle{Diagrama de Flujo del BRKGA}
 
 \begin{figure}[h]
 	\centering
@@ -300,19 +312,191 @@ Algunas técnicas:
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
-\frametitle{BRKGA Evolución de la Población}
+\frametitle{Generación de la Población Inicial}
+
+\begin{itemize}
+    \item Se crea una cantidad de vectores de enteros aleatorios igual a la cantidad de soluciones por generación que se desea.
+    \pause
+    \item Los vectores tienen un tamaño igual a la cantidad de clientes de la instancia.
+    \pause
+    \item Cada entero aleatorio del vector esta asociado a un identificador de cliente.
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Ejemplo de un nuevo vector de enteros aleatorios.}
+	\centering
+	\includegraphics[width=9cm]{RandomKeysInicializado}
+	\label{fig:RandomKeysInicializado}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Decodificación de los vectores en soluciones validas del problema}
+
+\begin{itemize}
+    \item Se ordena el vector de enteros aleatorios por el valor de la clave aleatoria de forma ascendente.
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Ejemplo del vector de enteros aleatorios ordenado.}
+	\centering
+	\includegraphics[width=9cm]{RandomKeysOrdenado}
+	\label{fig:RandomKeysOrdenado}
+\end{figure}
+
+\begin{itemize}
+    \pause
+    \item Implementé dos decodificadores cada uno con su estrategia para generar soluciones.
+    \pause
+    \item Ambos decodificadores generan una solución válidas del problema a partir de un vector de enteros aleatorios ordenado.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Decodificador Simple}
+
+\begin{itemize}
+    \item Los vehículos están ordenados de forma ascendente según su identificador.
+    \pause
+    \item Toma el primer cliente e intenta agregarlo en la ruta del primer vehículo disponible.
+    \pause
+    \item Si logra insertarlo repite el proceso con el siguiente cliente para el mismo vehículo.
+    \pause
+    \item Si no lo logra, considera que la ruta del vehículo actual esta completa e intenta agregar el mismo cliente en el siguiente vehículo disponible.
+    \pause
+    \item Repite hasta completar la ruta de todos los vehículos disponibles.
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Ejemplo de la solución generada por el decodificador simple}
+	\centering
+	\includegraphics[width=9cm]{DistribucionClientesDecoSimple}
+	\label{fig:DistribucionClientesDecoSimple}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Decodificador Goloso}
+
+\begin{itemize}
+    \item Se diferencia del decodificador simple en el momento en que encuentra un cliente que no entra en la ruta del vehículo actual.
+    \pause
+    \item En vez de pasar al siguiente vehículo, prueba con el siguiente cliente.
+    \pause
+    \item Por lo tanto por cada vehículo prueba todos los clientes en el orden dado.
+    \pause
+    \item No prueba con los clientes que ya fueron asignados a otro vehículo
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Ejemplo de la solución generada por el decodificador goloso}
+	\centering
+	\includegraphics[width=9cm]{DistribucionClientesDecoGoloso}
+	\label{fig:DistribucionClientesDecoGoloso}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Comparación entre Decodificadores}
+
+\begin{itemize}
+    \item Se realizó una prueba para comparar los tiempos de ejecución y aptitud de las soluciones generadas por ambos decodificadores.
+    \pause
+    \item Se crearon 200 vectores de enteros aleatorios y se decodificaron utilizando ambos decodificadores.
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Ejemplo de la solución generada por el decodificador goloso}
+	\centering
+	\includegraphics[width=9cm]{DistribucionClientesDecoGoloso}
+	\label{fig:DistribucionClientesDecoGoloso}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Biased Crossover}
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=8cm]{EvolucionPoblacion}
+	\includegraphics[width=8cm]{BiasCrossover}
+	\label{fig:BiasCrossover}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Evolución de la Población}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=10cm]{EvolucionPoblacion}
 	\label{fig:EvolucionPoblacion}
 \end{figure}
 
 \end{frame}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \begin{frame}
-\frametitle{BRKGA Flow Chart}
+\frametitle{Flow Chart del BRKGA con Búsqueda Local}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{BRKGA_Flow_Chart_Implementado}
+	\label{fig:BRKGA_Flow_Chart_Implementado}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Flow Chart del BRKGA con Búsqueda Local}
+
+\begin{itemize}
+    \item 
+    \pause
+    \item 
+    \pause
+    \item 
+    \pause
+    \item 
+    \pause
+    \item 
+    \pause
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Flow Chart del BRKGA con Búsqueda Local}
 
 \begin{itemize}
     \item 
