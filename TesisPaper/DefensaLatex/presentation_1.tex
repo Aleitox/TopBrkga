@@ -416,6 +416,37 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
+\frametitle{Descripción de las columnas 1}
+
+\begin{itemize}
+	\item \textbf{$Instancia$}: Nombre de la instancia utilizada.
+	\item \textbf{$N/V/D$}: Cantidad de \textbf{N}odos / Cantidad de \textbf{V}ehículos / \textbf{D}istancia máxima de la ruta del vehículo
+	\item \textbf{$Config$}: La configuración utilizada de mi BRKGA al ejecutar la prueba. Es un código que sintetiza la configuración global del algoritmo.
+	\item \textbf{$T_{avg}$}: El \textbf{T}iempo promedio en milisegundos de la ejecución del algoritmo para la instancia mencionada sobre $n$ ejecuciones.
+	\item \textbf{$D$}: El \textbf{D}ecodificador utilizado.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Descripción de las columnas 2}
+
+\begin{itemize}
+	\item \textbf{$B_{max}$}: El \textbf{B}eneficio máximo que obtuve para la instancia mencionada sobre $n$ ejecuciones.
+	\item \textbf{$B_{min}$}: El \textbf{B}eneficio mínimo que obtuve para la instancia mencionada sobre $n$ ejecuciones.
+	\item \textbf{$B_{avg}$}: El \textbf{B}eneficio promedio que obtuve para la instancia mencionada sobre $n$ ejecuciones.
+	\item \textbf{$i_{eMax}$}: Indice de efectividad máximo. $i_{eMax}=B_{max}/Best$
+	\item \textbf{$i_{eAvg}$}: Indice de efectividad promedio. $i_{eAvg}=B_{avg}/Best$
+	\item \textbf{$Best$}: Máximo beneficio obtenido por algún trabajo previo sobre la misma instancia mencionada.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
 \frametitle{Comparación entre Decodificadores}
 
 \begin{itemize}
@@ -425,25 +456,62 @@ Algunas técnicas:
     \pause
 \end{itemize}
 
-\begin{figure}[h]
-	\caption{Ejemplo de la solución generada por el decodificador goloso}
-	\centering
-	\includegraphics[width=9cm]{DistribucionClientesDecoGoloso}
-	\label{fig:DistribucionClientesDecoGoloso}
-\end{figure}
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D & D & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $Best$ \\
+\hline
+p2.2.k & 21/2/22.50 & S & 50 & 101 & 170 & 0.37 & 275 \\
+p2.2.k & 21/2/22.50 & G & 105 & 166 & 230 & 0.60 & 275 \\
+p2.3.g & 21/3/10.70 & S & 45 & 84 & 140 & 0.58 & 145 \\
+p2.3.g & 21/3/10.70 & G & 90 & 122 & 145 & 0.84 & 145 \\
+p5.3.x & 66/3/40.00 & S & 195 & 301 & 425 & 0.19 & 1555 \\
+p5.3.x & 66/3/40.00 & G & 305 & 412 & 560 & 0.26 & 1555 \\
+p7.2.e & 102/2/50.00 & S & 8 & 39 & 113 & 0.13 & 290 \\
+p7.2.e & 102/2/50.00 & G & 37 & 95 & 171 & 0.33 & 290 \\
+p7.4.t & 102/4/100.00 & S & 38 & 114 & 238 & 0.11 & 1077 \\
+p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:resultadosDecoSimple}
+\end{table}
+
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Biased Crossover}
+\frametitle{Condición de parada}
 
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=8cm]{BiasCrossover}
-	\label{fig:BiasCrossover}
-\end{figure}
+\begin{itemize}
+    \item Cantidad de iteraciones.
+    \pause
+    \item \'Ultimas X generaciónes sin que haya mejorado el beneficio de la mejor solución.
+    \pause
+    \item Ambas condiciones deben ser válidas a la vez para que termine el algoritmo.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Evolución de la Población}
+
+\begin{itemize}
+    \item Se ordenan los soluciones por su aptitud física. (vectores decodificados)
+    \pause
+    \item Las mejores $X$ soluciones se agregan al conjunto elite y pasan directamente a la siguiente generación.
+    \pause
+    \item El resto de las $\#Poblacion-X$ soluciones, se agregan al conjunto no elite.
+    \pause
+    \item Se generan $Y$ soluciones mutantes del mismo modo que se generaron las soluciones iniciales que se agregan a la nueva generación.
+    \pause
+    \item Se completa la nueva generación mediante el proceso de \textit{crossover}. Proceso por el cual a partir de dos individuos se genera un tercer individuo.
+\end{itemize}
 
 \end{frame}
 
@@ -454,9 +522,158 @@ Algunas técnicas:
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=10cm]{EvolucionPoblacion}
+	\includegraphics[width=12cm]{EvolucionPoblacion}
 	\label{fig:EvolucionPoblacion}
 \end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Crossover}
+
+\begin{itemize}
+    \item Se toma un cromosoma del conjunto de elite y otro del conjunto de no elite.
+    \pause
+    \item Se crea un vector de números reales al azar en el intervalo [0, 1] del mismo tamaño que los cromosomas.
+    \pause
+    \item Si el valor en la posición $i$ del vector de números reales es menor a $\rho_e$, el cromosoma hijo hereda el alelo de la posición $i$ del padre elite. En caso contrario el cromosoma hijo hereda el alelo de la posición $i$ del padre no elite.
+    \pause
+    \item El valor de $\rho_e$ suele ser $0.70$, favoreciendo los alelos del cromosoma elite.
+    \pause
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Crossover}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=12cm]{BiasCrossover}
+	\label{fig:BiasCrossover}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Hash de un individuo}
+
+\begin{itemize}
+    \item Dos individuos son iguales si representan la misma solución.
+    \pause
+    \item Tener individuos repetidos en la población reduce el dominio de soluciones exploradas.
+    \pause
+    \item Tener individuos repetidos en la población genera cálculos repetidos.
+    \pause
+    \item Un individuo se inserta en la población si no existe algún individuo en la población con el mismo valor de hash.
+    \pause
+    \item Se implementaron dos formas de calcular el hash de un individuo.
+    \pause
+    \item La primer forma que implemente calcula el hash sin conocer el problema que se esta resolviendo, luego mantiene la evolución de la población independiente del problema que se esta resolviendo.
+    \pause
+    \item La segunda forma de calcular es optimo detectando repetidos y requiere conocer el problema que se esta resolviendo.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Método independiente del problema para calcular el hash}
+
+\begin{itemize}
+    \item Se toma el vector de claves aleatorias del individuo y se lo ordena por su clave aleatoria. El valor de su hash es la concatenación de los identificadores de clientes separados con un símbolo.
+    \pause
+\end{itemize}
+
+\begin{figure}[h]
+	%\caption{Vector de enteros aleatorios del individuo.}
+	\centering
+	\includegraphics[width=8cm]{RandomKeysInicializado}
+	\label{fig:RandomKeysInicializado2}
+\end{figure}
+
+\begin{figure}[h]
+	%\caption{Vector de enteros aleatorios ordenado.}
+	\centering
+	\includegraphics[width=8cm]{RandomKeysOrdenado}
+	\label{fig:RandomKeysOrdenado2}
+\end{figure}
+
+\begin{itemize}
+    \item Hash resultante del vector de enteros de la imagen: 6@2@5@1@4@8@3@7
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Método óptimo para calcular el hash}
+
+\begin{itemize}
+    \item Se toman los recorridos de los vehículos y se los ordena por el identificador del primer cliente que visitan. 
+    \pause
+    \item Se calcula el hash de cada vehículo y se concatenan todos los hash utilizando otro símbolo separador.
+\end{itemize}
+
+\begin{figure}[h]
+	\caption{Vector de enteros aleatorios ordenado y la solución en la que decodifica.}
+	\centering
+	\includegraphics[width=8cm]{DistribucionClientesDecoSimple}
+	\label{fig:DistribucionClientesDecoSimple2}
+\end{figure}
+
+\begin{itemize}
+    \item Hash resultante de la solución de la imagen: 5@1\#6@2
+    \pause
+    \item Si cambiamos la posición de los ClientId 8, 3 y 7 obtenemos la misma solución al decodificarla. El hash con este método no cambia y el hash con el método anterior cambia.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Pruebas sobre el BRKGA sin Búsqueda Local}
+
+\begin{itemize}
+    \item Se realizaron varias pruebas sobre el BRKGA modificando las variables de su configuración. Tales variables:
+    \pause
+    \item Iteraciones. (Entre 200 y 300).
+    \pause
+    \item Cantidad de iteraciones sin cambios en la mejor solución. (Entre 50 y 100).
+    \pause
+    \item Tamaño de la población. (Entre 100 y 200).
+    \pause
+    \item Porcentaje de la poblacion elite. (Entre el 20\% y el 30\%)
+    \pause
+    \item Porcentaje de mutantes. (Entre el 5\% y el 10\%)
+    \pause
+    \item Probabilidad de heredar alelo del padre elite ($\rho_e \in [0.5,0.7]$)
+    \pause
+    \item Tipo de decodificador. (El simple o el goloso).
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{La configuración que mejor resulto para el BRKGA sin Búsqueda Local}
+
+\begin{itemize}
+    \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración que mejores resultados obtenía era:
+    \pause
+    \item Iteraciones: 250; Sin cambios: 50; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso.
+    \pause
+\end{itemize}
 
 \end{frame}
 
