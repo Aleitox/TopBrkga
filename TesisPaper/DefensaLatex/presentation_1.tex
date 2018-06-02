@@ -80,6 +80,7 @@
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
 \usepackage[utf8]{inputenc}
 
+
 \setbeamertemplate{caption}{\raggedright\insertcaption\par}
 
 \graphicspath{ {images/} }
@@ -106,9 +107,13 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 \titlepage % Print the title page as the first slide
 \end{frame}
 
-\begin{frame}
+\begin{frame}[allowframebreaks]
 \frametitle{Contenido} % Table of contents slide, comment this block out to remove it
-\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
+
+\tableofcontents[sections={1-2}]
+    \framebreak
+  \tableofcontents[sections={3-6}]
+%\tableofcontents % Throughout your presentation, if you choose to use \section{} and \subsection{} commands, these will automatically be printed on this slide as an overview of your presentation
 \end{frame}
 
 %----------------------------------------------------------------------------------------
@@ -116,7 +121,9 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 %----------------------------------------------------------------------------------------
 
 %------------------------------------------------
-\section{Orienteering Problem} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
+
+\section{El Problema}
+\subsection{Orienteering Problem} % Sections can be created in order to organize your presentation into discrete blocks, all sections and subsections are automatically printed in the table of contents as an overview of the talk
 %------------------------------------------------
 
 %\subsection{Historia} % A subsection can be created just before a set of slides with a common theme to further break down your presentation into chunks
@@ -143,8 +150,7 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Team Orienteering Problem}
-
+\subsection{Team Orienteering Problem}
 \begin{frame}
 \frametitle{Team Orienteering Problem}
 
@@ -166,7 +172,7 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Ejemplo de solución de TOP}
+\subsection{Ejemplo de solución de TOP}
 
 \begin{frame}
 \frametitle{Instancia p2.2.k del benchmark de Tsiligirides}
@@ -184,7 +190,21 @@ La instancia tiene dos vehículos con un $d_{max}$ = 22,50. Hay 19 clientes adem
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Aplicaciones}
+
+\begin{frame}
+\frametitle{Aplicaciones}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Metaheurísticas}
+\subsection{Descripción}
 
 \begin{frame}
 \frametitle{Metaheurísticas}
@@ -241,7 +261,7 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Algoritmos Genéticos (GA)}
+\subsection{Algoritmos Genéticos (GA)}
 
 \begin{frame}
 \frametitle{Algoritmos Genéticos (GA)}
@@ -262,7 +282,7 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Random Key Genetic Algorithm (RKGA)}
+\subsection{Random Key Genetic Algorithm (RKGA)}
 
 \begin{frame}
 \frametitle{Random Key Genetic Algorithm (RKGA)}
@@ -285,7 +305,7 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\section{Biased Random Key Genetic Algorithm (RKGA)}
+\subsection{Biased Random Key Genetic Algorithm (RKGA)}
 
 \begin{frame}
 \frametitle{Biased Random Key Genetic Algorithm (BRKGA)}
@@ -301,6 +321,8 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\section{Algoritmo Propuesto}
+
 \begin{frame}
 \frametitle{Diagrama de Flujo del BRKGA}
 
@@ -313,6 +335,8 @@ Algunas técnicas:
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Generación de la Población Inicial}
 
 \begin{frame}
 \frametitle{Generación de la Población Inicial}
@@ -337,8 +361,10 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Decodificadores}
+
 \begin{frame}
-\frametitle{Decodificación de los vectores en soluciones validas del problema}
+\frametitle{Decodificación de los vectores en soluciones válidas del problema}
 
 \begin{itemize}
     \item Se ordena el vector de enteros aleatorios por el valor de la clave aleatoria de forma ascendente.
@@ -483,6 +509,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Condición de parada}
+
 \begin{frame}
 \frametitle{Condición de parada}
 
@@ -497,6 +525,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Evolución de la Población}
 
 \begin{frame}
 \frametitle{Evolución de la Población}
@@ -530,6 +560,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Crossover}
+
 \begin{frame}
 \frametitle{Crossover}
 
@@ -560,6 +592,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Hash de un individuo}
 
 \begin{frame}
 \frametitle{Hash de un individuo}
@@ -640,6 +674,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\subsection{Pruebas sobre el BRKGA sin Búsqueda Local}
+
 \begin{frame}
 \frametitle{Pruebas sobre el BRKGA sin Búsqueda Local}
 
@@ -669,15 +705,36 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \frametitle{La configuración que mejor resulto para el BRKGA sin Búsqueda Local}
 
 \begin{itemize}
-    \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración que mejores resultados obtenía era:
+    \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración con los mejores resultados obtenía fue:
     \pause
-    \item Iteraciones: 250; Sin cambios: 50; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso.
+    \item Iteraciones: 250; Sin cambios: 100; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso. (cantidad de ejecuciones: 10).
     \pause
+    \item Cantidad de ejecuciones: 10.
 \end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D& $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p2.2.k & 21/2/22.50 & 240 & 253 & 260 & 0.92 & 0.95 & 275 \\
+p2.3.g & 21/3/10.70 & 145 & 145 & 145 & 1.00 & 1.00 & 145 \\
+p3.4.p & 33/4/22.50 & 420 & 435 & 450 & 0.78 & 0.80 & 560 \\
+p5.3.x & 66/3/40.00 & 735 & 735 & 735 & 0.47 & 0.47 & 1555 \\
+p7.2.e & 102/2/50.00 & 200 & 209 & 222 & 0.72 & 0.77 & 290 \\
+p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:resultadosBrkgaSinBL}
+\end{table}
 
 \end{frame}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Búsqueda Local}
 
 \begin{frame}
 \frametitle{Flow Chart del BRKGA con Búsqueda Local}
@@ -693,19 +750,105 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Flow Chart del BRKGA con Búsqueda Local}
+\frametitle{Búsqueda Local: Swap}
 
 \begin{itemize}
-    \item 
-    \pause
-    \item 
-    \pause
-    \item 
-    \pause
-    \item 
-    \pause
-    \item 
-    \pause
+    \item Dados dos vehículos, busca intercambiar clientes entre sus rutas con el objetivo de reducir la suma de las distancias recorridas por ambos vehículos.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{blswap}
+	\label{fig:blswap}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Búsqueda Local: 2-Opt}
+
+\begin{itemize}
+    \item Dado un vehículo, cambia el orden de los clientes visitados con el objetivo de reducir la distancia recorrida.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{bl2opt}
+	\label{fig:bl2opt}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Búsqueda Local: Insert}
+
+\begin{itemize}
+    \item Intenta insertar un cliente no visitado en la ruta de un vehículo.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=9cm]{blinsert}
+	\label{fig:blinsert}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Búsqueda Local: Replace Simple}
+
+\begin{itemize}
+    \item Dado un vehículo, intenta reemplazar un cliente visitado por un cliente no visitado en su ruta.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=9cm]{blreplaceSimple}
+	\label{fig:blreplaceSimple}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Búsqueda Local: Replace Multiple}
+
+\begin{itemize}
+    \item Dado un vehículo, intenta reemplazar uno o varios clientes visitados por un cliente no visitado en su ruta.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=9cm]{blreplaceMultiple}
+	\label{fig:blreplaceMultiple}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Centro de Gravedad}
+
+\begin{frame}
+\frametitle{Centro de Gravedad (COG)}
+
+\begin{itemize}
+    \item En las búsquedas locales que buscan clientes candidatos a agregar entre los no visitados, se priorizan aquellos más cercanos al centro de gravedad de la ruta.
+    \pause 
+    \item El COG es un punto en el plano, por lo tanto tiene una coordenada $x$ y una coordenada $y$.
+    \pause 
+    \item La coordenada $x_{COG}$ es el promedio de todas las coordenadas $x$ de los clientes de la ruta ponderados por el beneficio del cliente. (Idem $y_{COG}$).
+    \pause 
+    \item $x_{cog} = (\sum_{\forall i \in ruta} x_i * B_i) / \sum_{\forall i \in ruta} B_i$
+    \pause 
+    \item $y_{cog} = (\sum_{\forall i \in ruta} y_i * B_i) / \sum_{\forall i \in ruta} B_i$
 \end{itemize}
 
 \end{frame}
@@ -713,19 +856,198 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Flow Chart del BRKGA con Búsqueda Local}
+\frametitle{Centro de Gravedad (COG)}
 
 \begin{itemize}
-    \item 
+    \item La figura muestra el centro de gravedad asumiendo que todos los clientes en la ruta tienen el mismo beneficio. Orden de los clientes según su cercanía al COG: $c_7$, $c_5$, $c_8$ y $c_6$.
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=9cm]{COG}
+	\label{fig:COG}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Codificación de las soluciones}
+
+\begin{frame}
+\frametitle{Codificación de las soluciones mejoradas}
+
+\begin{itemize}
+    \item Una vez que se modifican las soluciones, debemos actualizar su codificación de modo tal que al decodificarla obtengamos la solución mejorada en vez de su versión anterior.
     \pause
-    \item 
+    \item Si no actualizamos su codificación (vector de enteros aleatorios), cuando se utilice la solución mejorada como padre en el \textit{crossover} sus características viejas serán las que heredara la solución resultante.
     \pause
-    \item 
+\end{itemize}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{codificacionDeSolucionParteUno}
+	\label{fig:codificacionDeSolucionParteUno}
+\end{figure}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Codificación de las soluciones mejoradas}
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=8cm]{codificacionDeSolucionParteDos}
+	\label{fig:codificacionDeSolucionParteDos}
+\end{figure}
+
+\begin{itemize}
+    \item En la figura podemos ver que no se modificaron los \textit{keys} ni los \textit{ClientId}, lo que se modifico fueron las asociaciones entre ellos. De forma tal que cuando se ordena el vector de enteros aleatorios según los \textit{keys}, obtenemos los clientes ordenados por vehículo y luego el orden en que serán visitados.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{Orden en que se aplican las búsquedas locales}
+
+\begin{frame}
+\frametitle{Orden en que se aplican las búsquedas locales}
+
+\begin{itemize}
+    \item En cada nueva generación se le aplican las búsquedas locales a la mejor solución (que no haya sido mejorada en una generación anterior).
     \pause
-    \item 
+    \item El orden en que aplicamos las estrategias de búsqueda local es importante.
     \pause
-    \item 
+    \item Por ejemplo, el \textit{2-Opt} busca reducir la distancia recorrida de un vehículo. Por lo tanto si aplicamos el \textit{2-Opt} al final, no hacemos uso de la distancia ahorrada y la aptitud de la solución resultante no incrementa.
     \pause
+    \item Realice varias pruebas modificando el orden en que se aplican las búsquedas locales, medí sus tiempos y los resultados finales.
+    \pause
+    \item Para tales pruebas mantuve constante el resto de la configuración del BRKGA de modo que no influya en el resultado.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Orden en que se aplican las búsquedas locales}
+
+\begin{itemize}
+    \item Siglas de las búsquedas locales.
+    \pause
+    \item Swap: \textbf{S}
+    \pause
+    \item 2-Opt: \textbf{O}
+    \pause
+    \item Insert: \textbf{I}
+    \pause
+    \item Replace Simple: \textbf{Rs}
+    \pause
+    \item Replace Múltiple: \textbf{Rm}
+    \pause
+    \item Por lo tanto si en la fila dice \textbf{SRsOIRm} significa que las búsquedas aplicaron en el siguiente orden: Swap, Replace Simple, 2-Opt, Insert y Raplace Multiple.    
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Orden en que se aplican las búsquedas locales}
+
+\begin{itemize}
+    \item Resultados de 25 ejecuciones sobre la instancia \textit{p5.3.x}. En la siguiente tabla se ven 7 posibles combinaciones de las búsquedas.
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c| } 
+\hline
+Orden BL & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+IRmRsOS & 49397 & 1460 & 1485 & 1540 & 0.95 & 0.99 & 1555  \\
+ORsSIRm & 39576 & 1485 & 1509 & 1525 & 0.97 & 0.98 & 1555  \\
+SIORsSORm & 43556 & 1495 & 1512 & 1535 & 0.97 & 0.99 & 1555  \\
+SOIORsRmSORm & 49449 & 1505 & 1522 & 1545 & 0.98 & 0.99 & 1555  \\
+SOIRsRm & 36595 & 1500 & 1512 & 1525 & 0.97 & 0.98 & 1555  \\
+SOSIRsSORm & 40375 & 1505 & 1521 & 1535 & 0.98 & 0.99 & 1555  \\
+SRsOIRm & 43423 & 1480 & 1510 & 1535 & 0.97 & 0.99 & 1555  \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:resultadosListaLS1}
+\end{table}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Orden en que se aplican las búsquedas locales}
+
+\begin{itemize}
+    \item Resultados de 25 ejecuciones sobre la instancia \textit{p7.4.t}. En la siguiente tabla se ven 7 posibles combinaciones de las búsquedas.
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c| } 
+\hline
+Orden BL & $T_{avg}$ & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+IRmRsOS & 81876 & 1004 & 1038 & 1064 & 0.96 & 0.99 & 1077  \\
+ORsSIRm & 86537 & 1024 & 1038 & 1063 & 0.96 & 0.99 & 1077  \\
+SIORsSORm & 91839 & 1033 & 1049 & 1077 & 0.97 & 1.00 & 1077  \\
+SOIORsRmSORm & 126705 & 1042 & 1055 & 1069 & 0.98 & 0.99 & 1077  \\
+SOIRsRm & 82889 & 1032 & 1047 & 1071 & 0.97 & 0.99 & 1077  \\
+SOSIRsSORm & 94731 & 1038 & 1055 & 1071 & 0.98 & 0.99 & 1077  \\
+SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:resultadosListaLS2}
+\end{table}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Resultados}
+
+\begin{frame}
+\frametitle{Resultados}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Concluciones}
+
+\begin{frame}
+\frametitle{Concluciones}
+
+\begin{itemize}
+    \item
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Trabajos Futuros}
+
+\begin{frame}
+\frametitle{Trabajos Futuros}
+
+\begin{itemize}
+    \item
 \end{itemize}
 
 \end{frame}

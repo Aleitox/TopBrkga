@@ -182,6 +182,13 @@ namespace TesisUnitTests.FinalResults
 
 
         [TestMethod]
+        public void Test_Defensa_7_Instances_Brkga_Puro_5_Instancias()
+        {
+            var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
+            var instanceIds = Provider.GetSelectedInstancesForTesting();
+        }
+
+        [TestMethod]
         public void Test_Defensa_6_Instances_Brkga_Puro_Y_BL()
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
