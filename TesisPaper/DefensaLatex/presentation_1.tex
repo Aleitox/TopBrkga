@@ -196,7 +196,13 @@ La instancia tiene dos vehículos con un $d_{max}$ = 22,50. Hay 19 clientes adem
 \frametitle{Aplicaciones}
 
 \begin{itemize}
-    \item
+	\item El deporte de orientación de equipo explicado anteriormente (que también se puede jugar en equipo).
+	\pause
+	\item Tsiligirides hace mención del caso del Travelling Sales Person (TSP) sin tiempo suficiente para visitar a todos los clientes y que conoce de antemano el valor aproximado de las ventas que realizará en cada ciudad.
+	\pause
+	\item El reclutamiento de jugadores de fútbol americano universitario descrito en el trabajo de Butt y Cavalier. Los representante de las pequeñas ligas deben visitar la maxima cantidad de escuelas en un radio de 100 km, de antemano saben que no llegan a visitar a todas las escuelas.
+	\pause
+	\item El problema de entrega de combustible con múltiples vehículos descrito en el trabajo Golden, Levy y Vohra. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. El suministro de combustible del cliente debe mantenerse en un nivel adecuado en todo momento. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
 \end{itemize}
 
 \end{frame}
@@ -305,7 +311,7 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Biased Random Key Genetic Algorithm (RKGA)}
+\subsection{Biased Random Key Genetic Algorithm (BRKGA)}
 
 \begin{frame}
 \frametitle{Biased Random Key Genetic Algorithm (BRKGA)}
@@ -1003,7 +1009,7 @@ ORsSIRm & 86537 & 1024 & 1038 & 1063 & 0.96 & 0.99 & 1077  \\
 SIORsSORm & 91839 & 1033 & 1049 & 1077 & 0.97 & 1.00 & 1077  \\
 SOIORsRmSORm & 126705 & 1042 & 1055 & 1069 & 0.98 & 0.99 & 1077  \\
 SOIRsRm & 82889 & 1032 & 1047 & 1071 & 0.97 & 0.99 & 1077  \\
-SOSIRsSORm & 94731 & 1038 & 1055 & 1071 & 0.98 & 0.99 & 1077  \\
+\textbf{SOSIRsSORm} & 94731 & 1038 & 1055 & 1071 & 0.98 & 0.99 & 1077  \\
 SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \hline
 \end{tabular}
@@ -1020,9 +1026,96 @@ SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \begin{frame}
 \frametitle{Resultados}
 
+Se compararon los resultados con los de los siguientes trabajos:
+
 \begin{itemize}
-    \item
+	\item \textit{The team orienteering problem}. Implementaron una optimización multinivel. (CGW) Chao I-M., Golden B.L. yWasil E.A. European Journal of Operational Research, 88:464-474, (1996).
+	\pause
+	\item \textit{A tabu search heuristic for the team orienteering problem}. (TMH) Tang H. y Miller-Hooks E. Computers and Operations Research, 32:1379-1407, (2005).
 \end{itemize}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Resultados}
+
+\begin{itemize}
+	\item \textit{Metaheuristics for the team orienteering problem}. Propusieron 2 Variable Neighborhood Search y dos Busquedas Tabu, los mejores resultados los obtuvieron en su VNS slow. ($VNS_{slow}$) Archetti C., Hertz A. y M.G. Speranza. Journal of Heuristics, 13:49-76, (2007).
+	\pause
+	\item \textit{Ants can solve the team orienteering problem}. ($ACO_{seq}$) Ke L., Archetti C. y Feng Z. Computers and Industrial Engineering, 54:648-665, (2008).
+	\pause
+	\item \textit{A memetic algorithm for the team orienteering problem}. (MA) Bouly H., Dang D.-C. y Moukrim A. A Quarterly Journal of Operations Research, 8:49-70, (2010).
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Resultados}
+
+\begin{itemize}
+    \item Se ejecutó 3 veces la versión final sobre cada una de las 345 instancias del benchmarck.
+    \pause
+    \item La tabla muestra el resultado para 6 instancias representativas del benchmark.
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c| } 
+\hline
+Instancia & N/V/D & $B_{min}$ & $B_{avg}$ & $B_{max}$ & $i_{eAvg}$ & $i_{eMax}$ & $Best$ \\
+\hline
+p2.2.k & 21/2/22.50 & 270 & 274 & 275 & 1.00 & 1.00 & 275 \\
+p2.3.g & 21/3/10.70 & 145 & 145 & 145 & 1.00 & 1.00 & 145 \\
+p3.4.p & 33/4/22.50 & 560 & 560 & 560 & 1.00 & 1.00 & 560 \\
+p5.3.x & 66/3/40.00 & 1515 & 1524 & 1550 & 0.98 & 1.00 & 1555 \\
+p7.2.e & 102/2/50.00 & 290 & 290 & 290 & 1.00 & 1.00 & 290 \\
+p7.4.t & 102/4/100.00 & 1047 & 1054 & 1064 & 0.98 & 0.99 & 1077 \\
+\hline
+\end{tabular}
+\end{center}
+\label{tab:resultados}
+\end{table}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{frame}
+\frametitle{Resultados}
+
+\begin{itemize}
+    \item $\delta Z_{min} = \sum_{i \in instance} Best_i - B_{min}$
+    \pause
+    \item $\delta Z_{max} = \sum_{i \in instance} Best_i - B_{max}$
+    \pause
+    \item $\delta Z = \delta Z_{min} - \delta Z_{max}$
+    \pause
+\end{itemize}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{ |c|c|c|c|c|c|c|c|c| } 
+\hline
+Algoritmo & $\delta Z_{min}$ & $\delta Z_{max}$ & $\delta Z$  \\
+\hline
+CGW & 4340 & - & -  \\
+BRKGA\textsubscript{bl} & 3054 & 1636 & 1418  \\
+TMH & 2404 & - & -  \\
+TS\textsubscript{penalty} & 2376 & 981 & 1395  \\
+TS\textsubscript{feasible} & 1184 & 399 & 785  \\
+VNS\textsubscript{fast} & 1436 & 352 & 1084  \\
+VNS\textsubscript{slow} & 427 & 84 & 343  \\
+ACO\textsubscript{seq} & - & 204 & -  \\
+MA & 434 & 80 & 354  \\
+\hline
+\end{tabular}
+\end{center}
+%\caption{Síntesis de los resultados.}
+\label{tab:resultadosSintesis}
+\end{table}
 
 \end{frame}
 
@@ -1034,7 +1127,19 @@ SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \frametitle{Concluciones}
 
 \begin{itemize}
-    \item
+    \item Un 70\% de los resultados llegaron a la mejor solución conocida de la instancia testeada.
+    \pause
+    \item El restante 30\% obtuvo valores competitivos con los mejores trabajos previos.
+    \pause
+    \item El BRKGA sin búsqueda local no dió buenos resultados para instancias grandes del problema.
+    \pause
+    \item Se implementaron variantes de decodificadores.
+    \pause
+    \item Se implementaron dos formas de calcular el hash para resolver el problema de individuos repetidos.
+    \pause
+    \item Se implementaron diversas búsquedas locales y un codificador de soluciones para mantener la consistencia entre los individuos y sus genes.
+    \pause
+    \item Se realizaron múltiples pruebas de eficiencia variando las configuraciones generales.
 \end{itemize}
 
 \end{frame}
@@ -1047,151 +1152,23 @@ SRsOIRm & 90306 & 1024 & 1042 & 1067 & 0.97 & 0.99 & 1077  \\
 \frametitle{Trabajos Futuros}
 
 \begin{itemize}
-    \item
+    \item Seria útil una herramienta para visualizar los caminos generados.
+    \pause
+    \item Investigar otras variantes de decodificadores. Ej, particionar los clientes según su centro de gravedad, asigna vehículo a cada centro y asignar desde ahí.
+    \pause
+    \item Investigar otros métodos de \textit{crossover}. Ej, Que cada alelo represente un vehículo con su ruta en vez de un cliente.
+    \pause
+    \item Analizar si existe alguna otra variante del BRKGA que genere buenos resultados sin depender de las búsquedas locales.
 \end{itemize}
 
 \end{frame}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%% EJEMPLOS %%%%%%%%%%%%%%%%
-
-\begin{frame}
-
-\frametitle{Paragraphs of Text}
-Sed iaculis dapibus gravida. Morbi sed tortor erat, nec interdum arcu. Sed id lorem lectus. Quisque viverra augue id sem ornare non aliquam nibh tristique. Aenean in ligula nisl. Nulla sed tellus ipsum. Donec vestibulum ligula non lorem vulputate fermentum accumsan neque mollis.\\~\\
-
-Sed diam enim, sagittis nec condimentum sit amet, ullamcorper sit amet libero. Aliquam vel dui orci, a porta odio. Nullam id suscipit ipsum. Aenean lobortis commodo sem, ut commodo leo gravida vitae. Pellentesque vehicula ante iaculis arcu pretium rutrum eget sit amet purus. Integer ornare nulla quis neque ultrices lobortis. Vestibulum ultrices tincidunt libero, quis commodo erat ullamcorper id.
-\end{frame}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %------------------------------------------------
 
 \begin{frame}
-\frametitle{Bullet Points}
-\begin{itemize}
-\item Lorem ipsum dolor sit amet, consectetur adipiscing elit
-\item Aliquam blandit faucibus nisi, sit amet dapibus enim tempus eu
-\item Nulla commodo, erat quis gravida posuere, elit lacus lobortis est, quis porttitor odio mauris at libero
-\item Nam cursus est eget velit posuere pellentesque
-\item Vestibulum faucibus velit a augue condimentum quis convallis nulla gravida
-\end{itemize}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Blocks of Highlighted Text}
-\begin{block}{Block 1}
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-\end{block}
-
-\begin{block}{Block 2}
-Pellentesque sed tellus purus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Vestibulum quis magna at risus dictum tempor eu vitae velit.
-\end{block}
-
-\begin{block}{Block 3}
-Suspendisse tincidunt sagittis gravida. Curabitur condimentum, enim sed venenatis rutrum, ipsum neque consectetur orci, sed blandit justo nisi ac lacus.
-\end{block}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Multiple Columns}
-\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
-
-\column{.45\textwidth} % Left column and width
-\textbf{Heading}
-\begin{enumerate}
-\item Statement
-\item Explanation
-\item Example
-\end{enumerate}
-
-\column{.5\textwidth} % Right column and width
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer lectus nisl, ultricies in feugiat rutrum, porttitor sit amet augue. Aliquam ut tortor mauris. Sed volutpat ante purus, quis accumsan dolor.
-
-\end{columns}
-\end{frame}
-
-%------------------------------------------------
-\section{Second Section}
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Table}
-\begin{table}
-\begin{tabular}{l l l}
-\toprule
-\textbf{Treatments} & \textbf{Response 1} & \textbf{Response 2}\\
-\midrule
-Treatment 1 & 0.0003262 & 0.562 \\
-Treatment 2 & 0.0015681 & 0.910 \\
-Treatment 3 & 0.0009271 & 0.296 \\
-\bottomrule
-\end{tabular}
-\caption{Table caption}
-\end{table}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Verbatim}
-\begin{example}[Theorem Slide Code]
-\begin{verbatim}
-\begin{frame}
-\frametitle{Theorem}
-\begin{theorem}[Mass--energy equivalence]
-$E = mc^2$
-\end{theorem}
-\end{frame}\end{verbatim}
-\end{example}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{Figure}
-Uncomment the code on this slide to include your own image from the same directory as the template .TeX file.
-%\begin{figure}
-%\includegraphics[width=0.8\linewidth]{test}
-%\end{figure}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}[fragile] % Need to use the fragile option when verbatim is used in the slide
-\frametitle{Citation}
-An example of the \verb|\cite| command to cite within the presentation:\\~
-
-This statement requires citation \cite{p1}.
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\frametitle{References}
-\footnotesize{
-\begin{thebibliography}{99} % Beamer does not support BibTeX so references must be inserted manually as below
-\bibitem[Smith, 2012]{p1} John Smith (2012)
-\newblock Title of the publication
-\newblock \emph{Journal Name} 12(3), 45 -- 678.
-\end{thebibliography}
-}
-\end{frame}
-
-%------------------------------------------------
-
-\begin{frame}
-\Huge{\centerline{The End}}
+\Huge{\centerline{Gracias!}}
 \end{frame}
 
 %----------------------------------------------------------------------------------------

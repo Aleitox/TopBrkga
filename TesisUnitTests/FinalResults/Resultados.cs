@@ -186,6 +186,8 @@ namespace TesisUnitTests.FinalResults
         {
             var instanceRepository = new InstanceRepository(TopEntitiesManager.GetContext());
             var instanceIds = Provider.GetSelectedInstancesForTesting();
+            var config = UltimosResultadosFactory.GetFinalResultsConfig_BrkgaPuro(Main.BrkgaTop.Decoders.DecoderEnum.Greedy);
+            config.Fase = 3040;
         }
 
         [TestMethod]
