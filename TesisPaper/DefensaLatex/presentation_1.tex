@@ -135,7 +135,7 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 \begin{itemize}
     \item Orientaci\'on es un deporte originario de Escandinavia
     \pause
-    \item Cada jugador comienza en un punto de control y debe visitar tantos otros puntos de control como le sea posible dentro de un tiempo limite preespecificado. 
+    \item Cada jugador comienza en un punto de control y debe visitar tantos otros puntos de control como le sea posible dentro de un tiempo límite preespecificado. 
     \pause
     \item Cada punto de control tiene un puntaje.
     \pause
@@ -200,7 +200,7 @@ La instancia tiene dos vehículos con un $d_{max}$ = 22,50. Hay 19 clientes adem
 	\pause
 	\item Tsiligirides hace mención del caso del Travelling Sales Person (TSP) sin tiempo suficiente para visitar a todos los clientes y que conoce de antemano el valor aproximado de las ventas que realizará en cada ciudad.
 	\pause
-	\item El reclutamiento de jugadores de fútbol americano universitario descrito en el trabajo de Butt y Cavalier. Los representante de las pequeñas ligas deben visitar la maxima cantidad de escuelas en un radio de 100 km, de antemano saben que no llegan a visitar a todas las escuelas.
+	\item El reclutamiento de jugadores de fútbol americano universitario descrito en el trabajo de Butt y Cavalier. Los representante de las pequeñas ligas deben visitar la máxima cantidad de escuelas en un radio de 100 km, de antemano saben que no llegan a visitar a todas las escuelas.
 	\pause
 	\item El problema de entrega de combustible con múltiples vehículos descrito en el trabajo Golden, Levy y Vohra. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. El suministro de combustible del cliente debe mantenerse en un nivel adecuado en todo momento. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
 \end{itemize}
@@ -250,7 +250,7 @@ Algunas técnicas:
 \begin{itemize}
     \item Simulated Annealing
     \pause
-    \item Tabu Search
+    \item Búsqueda Tabú
     \pause
     \item Algoritmos evolutivos
     \pause
@@ -267,10 +267,10 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Algoritmos Genéticos (GA)}
+\subsection{Algoritmos genéticos (GA)}
 
 \begin{frame}
-\frametitle{Algoritmos Genéticos (GA)}
+\frametitle{Algoritmos genéticos (GA)}
 
 \begin{itemize}
     \item Motivados en el concepto de supervivencia del más apto.
@@ -317,10 +317,9 @@ Algunas técnicas:
 \frametitle{Biased Random Key Genetic Algorithm (BRKGA)}
 
 \begin{itemize}
-    \item Cada individuo se genera combinando un elemento seleccionado al azar del conjunto de elite y el otro de la conjunto no-elite.
+    \item Cada individuo se genera combinando un elemento seleccionado al azar del conjunto de elite y el otro de la conjunto no elite.
     \pause
-    \item Parameterized Uniform Crossover. La probabilidad de que se trasmita el alelo del padre de elite es mayor que la del padre de no-elte.
-    \pause
+    \item Parameterized Uniform Crossover. La probabilidad de que se trasmita el alelo del padre de elite es mayor que la del padre de no elite.
 \end{itemize}
 
 \end{frame}
@@ -330,7 +329,7 @@ Algunas técnicas:
 \section{Algoritmo Propuesto}
 
 \begin{frame}
-\frametitle{Diagrama de Flujo del BRKGA}
+\frametitle{Diagrama de flujo del BRKGA}
 
 \begin{figure}[h]
 	\centering
@@ -342,10 +341,10 @@ Algunas técnicas:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Generación de la Población Inicial}
+\subsection{Generación de la población inicial}
 
 \begin{frame}
-\frametitle{Generación de la Población Inicial}
+\frametitle{Generación de la población inicial}
 
 \begin{itemize}
     \item Se crea una cantidad de vectores de enteros aleatorios igual a la cantidad de soluciones por generación que se desea.
@@ -388,7 +387,7 @@ Algunas técnicas:
     \pause
     \item Implementé dos decodificadores cada uno con su estrategia para generar soluciones.
     \pause
-    \item Ambos decodificadores generan una solución válidas del problema a partir de un vector de enteros aleatorios ordenado.
+    \item Ambos decodificadores generan una solución válida del problema a partir de un vector de enteros aleatorios ordenado.
 \end{itemize}
 
 \end{frame}
@@ -396,7 +395,7 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Decodificador Simple}
+\frametitle{Decodificador simple}
 
 \begin{itemize}
     \item Los vehículos están ordenados de forma ascendente según su identificador.
@@ -423,7 +422,7 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Decodificador Goloso}
+\frametitle{Decodificador goloso}
 
 \begin{itemize}
     \item Se diferencia del decodificador simple en el momento en que encuentra un cliente que no entra en la ruta del vehículo actual.
@@ -432,7 +431,7 @@ Algunas técnicas:
     \pause
     \item Por lo tanto por cada vehículo prueba todos los clientes en el orden dado.
     \pause
-    \item No prueba con los clientes que ya fueron asignados a otro vehículo
+    \item No prueba con los clientes que ya fueron asignados a otro vehículo.
     \pause
 \end{itemize}
 
@@ -448,12 +447,11 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Descripción de las columnas 1}
+\frametitle{Descripción de las columnas de resultados}
 
 \begin{itemize}
 	\item \textbf{$Instancia$}: Nombre de la instancia utilizada.
 	\item \textbf{$N/V/D$}: Cantidad de \textbf{N}odos / Cantidad de \textbf{V}ehículos / \textbf{D}istancia máxima de la ruta del vehículo
-	\item \textbf{$Config$}: La configuración utilizada de mi BRKGA al ejecutar la prueba. Es un código que sintetiza la configuración global del algoritmo.
 	\item \textbf{$T_{avg}$}: El \textbf{T}iempo promedio en milisegundos de la ejecución del algoritmo para la instancia mencionada sobre $n$ ejecuciones.
 	\item \textbf{$D$}: El \textbf{D}ecodificador utilizado.
 \end{itemize}
@@ -463,7 +461,7 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Descripción de las columnas 2}
+\frametitle{Descripción de las columnas de resultados}
 
 \begin{itemize}
 	\item \textbf{$B_{max}$}: El \textbf{B}eneficio máximo que obtuve para la instancia mencionada sobre $n$ ejecuciones.
@@ -479,7 +477,7 @@ Algunas técnicas:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Comparación entre Decodificadores}
+\frametitle{Comparación entre decodificadores}
 
 \begin{itemize}
     \item Se realizó una prueba para comparar los tiempos de ejecución y aptitud de las soluciones generadas por ambos decodificadores.
@@ -532,10 +530,10 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Evolución de la Población}
+\subsection{Evolución de la población}
 
 \begin{frame}
-\frametitle{Evolución de la Población}
+\frametitle{Evolución de la población}
 
 \begin{itemize}
     \item Se ordenan los soluciones por su aptitud física. (vectores decodificados)
@@ -554,7 +552,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Evolución de la Población}
+\frametitle{Evolución de la población}
 
 \begin{figure}[h]
 	\centering
@@ -579,7 +577,6 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
     \item Si el valor en la posición $i$ del vector de números reales es menor a $\rho_e$, el cromosoma hijo hereda el alelo de la posición $i$ del padre elite. En caso contrario el cromosoma hijo hereda el alelo de la posición $i$ del padre no elite.
     \pause
     \item El valor de $\rho_e$ suele ser $0.70$, favoreciendo los alelos del cromosoma elite.
-    \pause
 \end{itemize}
 
 \end{frame}
@@ -617,7 +614,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
     \pause
     \item La primer forma que implemente calcula el hash sin conocer el problema que se esta resolviendo, luego mantiene la evolución de la población independiente del problema que se esta resolviendo.
     \pause
-    \item La segunda forma de calcular es optimo detectando repetidos y requiere conocer el problema que se esta resolviendo.
+    \item La segunda forma de calcular es óptimo detectando repetidos y requiere conocer el problema que se esta resolviendo.
 \end{itemize}
 
 \end{frame}
@@ -647,6 +644,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \end{figure}
 
 \begin{itemize}
+    \pause
     \item Hash resultante del vector de enteros de la imagen: 6@2@5@1@4@8@3@7
 \end{itemize}
 
@@ -660,7 +658,8 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \begin{itemize}
     \item Se toman los recorridos de los vehículos y se los ordena por el identificador del primer cliente que visitan. 
     \pause
-    \item Se calcula el hash de cada vehículo y se concatenan todos los hash utilizando otro símbolo separador.
+    \item Se calcula el hash de cada vehículo y se concatenan utilizando otro símbolo separador.
+    \pause
 \end{itemize}
 
 \begin{figure}[h]
@@ -671,6 +670,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \end{figure}
 
 \begin{itemize}
+    \pause
     \item Hash resultante de la solución de la imagen: 5@1\#6@2
     \pause
     \item Si cambiamos la posición de los ClientId 8, 3 y 7 obtenemos la misma solución al decodificarla. El hash con este método no cambia y el hash con el método anterior cambia.
@@ -680,10 +680,10 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Pruebas sobre el BRKGA sin Búsqueda Local}
+\subsection{Pruebas sobre el BRKGA sin búsqueda local}
 
 \begin{frame}
-\frametitle{Pruebas sobre el BRKGA sin Búsqueda Local}
+\frametitle{Pruebas sobre el BRKGA sin búsqueda local}
 
 \begin{itemize}
     \item Se realizaron varias pruebas sobre el BRKGA modificando las variables de su configuración. Tales variables:
@@ -694,7 +694,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
     \pause
     \item Tamaño de la población. (Entre 100 y 200).
     \pause
-    \item Porcentaje de la poblacion elite. (Entre el 20\% y el 30\%)
+    \item Porcentaje de la población elite. (Entre el 20\% y el 30\%)
     \pause
     \item Porcentaje de mutantes. (Entre el 5\% y el 10\%)
     \pause
@@ -713,9 +713,9 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \begin{itemize}
     \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración con los mejores resultados obtenía fue:
     \pause
-    \item Iteraciones: 250; Sin cambios: 100; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso. (cantidad de ejecuciones: 10).
+    \item Iteraciones: 250; Sin cambios: 50; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso.
     \pause
-    \item Cantidad de ejecuciones: 10.
+    \item La tabla muestra los resultados de 10 ejecuciones por instancia.
 \end{itemize}
 
 \begin{table}
@@ -740,10 +740,10 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Búsqueda Local}
+\subsection{Búsqueda local}
 
 \begin{frame}
-\frametitle{Flow Chart del BRKGA con Búsqueda Local}
+\frametitle{Flow chart del BRKGA con búsqueda local}
 
 \begin{figure}[h]
 	\centering
@@ -756,7 +756,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Búsqueda Local: Swap}
+\frametitle{Búsqueda local: Swap}
 
 \begin{itemize}
     \item Dados dos vehículos, busca intercambiar clientes entre sus rutas con el objetivo de reducir la suma de las distancias recorridas por ambos vehículos.
@@ -773,7 +773,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Búsqueda Local: 2-Opt}
+\frametitle{Búsqueda local: 2-Opt}
 
 \begin{itemize}
     \item Dado un vehículo, cambia el orden de los clientes visitados con el objetivo de reducir la distancia recorrida.
@@ -790,7 +790,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Búsqueda Local: Insert}
+\frametitle{Búsqueda local: Insert}
 
 \begin{itemize}
     \item Intenta insertar un cliente no visitado en la ruta de un vehículo.
@@ -807,7 +807,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Búsqueda Local: Replace Simple}
+\frametitle{Búsqueda local: Replace Simple}
 
 \begin{itemize}
     \item Dado un vehículo, intenta reemplazar un cliente visitado por un cliente no visitado en su ruta.
@@ -824,7 +824,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Búsqueda Local: Replace Multiple}
+\frametitle{Búsqueda local: Replace Multiple}
 
 \begin{itemize}
     \item Dado un vehículo, intenta reemplazar uno o varios clientes visitados por un cliente no visitado en su ruta.
@@ -840,10 +840,10 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Centro de Gravedad}
+\subsection{Centro de gravedad}
 
 \begin{frame}
-\frametitle{Centro de Gravedad (COG)}
+\frametitle{Centro de gravedad (COG)}
 
 \begin{itemize}
     \item En las búsquedas locales que buscan clientes candidatos a agregar entre los no visitados, se priorizan aquellos más cercanos al centro de gravedad de la ruta.
@@ -862,7 +862,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{frame}
-\frametitle{Centro de Gravedad (COG)}
+\frametitle{Centro de gravedad (COG)}
 
 \begin{itemize}
     \item La figura muestra el centro de gravedad asumiendo que todos los clientes en la ruta tienen el mismo beneficio. Orden de los clientes según su cercanía al COG: $c_7$, $c_5$, $c_8$ y $c_6$.
@@ -910,7 +910,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 \end{figure}
 
 \begin{itemize}
-    \item En la figura podemos ver que no se modificaron los \textit{keys} ni los \textit{ClientId}, lo que se modifico fueron las asociaciones entre ellos. De forma tal que cuando se ordena el vector de enteros aleatorios según los \textit{keys}, obtenemos los clientes ordenados por vehículo y luego el orden en que serán visitados.
+    \item En la figura podemos ver que no se modificaron los \textit{keys} ni los \textit{ClientId}, lo que se modificó fueron las asociaciones entre ellos. De forma tal que cuando se ordena el vector de enteros aleatorios según los \textit{keys}, obtenemos los clientes ordenados por vehículo y luego el orden en que serán visitados.
 \end{itemize}
 
 \end{frame}
@@ -925,11 +925,11 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 \begin{itemize}
     \item En cada nueva generación se le aplican las búsquedas locales a la mejor solución (que no haya sido mejorada en una generación anterior).
     \pause
-    \item El orden en que aplicamos las estrategias de búsqueda local es importante.
+    \item El orden en que se aplican las estrategias de búsqueda local es importante.
     \pause
     \item Por ejemplo, el \textit{2-Opt} busca reducir la distancia recorrida de un vehículo. Por lo tanto si aplicamos el \textit{2-Opt} al final, no hacemos uso de la distancia ahorrada y la aptitud de la solución resultante no incrementa.
     \pause
-    \item Realice varias pruebas modificando el orden en que se aplican las búsquedas locales, medí sus tiempos y los resultados finales.
+    \item Realicé varias pruebas modificando el orden en que se aplican las búsquedas locales, medí sus tiempos y los resultados finales.
     \pause
     \item Para tales pruebas mantuve constante el resto de la configuración del BRKGA de modo que no influya en el resultado.
 \end{itemize}
@@ -979,7 +979,7 @@ ORsSIRm & 39576 & 1485 & 1509 & 1525 & 0.97 & 0.98 & 1555  \\
 SIORsSORm & 43556 & 1495 & 1512 & 1535 & 0.97 & 0.99 & 1555  \\
 SOIORsRmSORm & 49449 & 1505 & 1522 & 1545 & 0.98 & 0.99 & 1555  \\
 SOIRsRm & 36595 & 1500 & 1512 & 1525 & 0.97 & 0.98 & 1555  \\
-SOSIRsSORm & 40375 & 1505 & 1521 & 1535 & 0.98 & 0.99 & 1555  \\
+\textbf{SOSIRsSORm} & 40375 & 1505 & 1521 & 1535 & 0.98 & 0.99 & 1555  \\
 SRsOIRm & 43423 & 1480 & 1510 & 1535 & 0.97 & 0.99 & 1555  \\
 \hline
 \end{tabular}
@@ -1041,7 +1041,7 @@ Se compararon los resultados con los de los siguientes trabajos:
 \frametitle{Resultados}
 
 \begin{itemize}
-	\item \textit{Metaheuristics for the team orienteering problem}. Propusieron 2 Variable Neighborhood Search y dos Busquedas Tabu, los mejores resultados los obtuvieron en su VNS slow. ($VNS_{slow}$) Archetti C., Hertz A. y M.G. Speranza. Journal of Heuristics, 13:49-76, (2007).
+	\item \textit{Metaheuristics for the team orienteering problem}. Propusieron 2 Variable Neighborhood Search y 2 Búsquedas Tabú, los mejores resultados los obtuvieron en su VNS slow. ($VNS_{slow}$) Archetti C., Hertz A. y M.G. Speranza. Journal of Heuristics, 13:49-76, (2007).
 	\pause
 	\item \textit{Ants can solve the team orienteering problem}. ($ACO_{seq}$) Ke L., Archetti C. y Feng Z. Computers and Industrial Engineering, 54:648-665, (2008).
 	\pause
@@ -1152,9 +1152,9 @@ MA & 434 & 80 & 354  \\
 \frametitle{Trabajos Futuros}
 
 \begin{itemize}
-    \item Seria útil una herramienta para visualizar los caminos generados.
+    \item Sería útil una herramienta para visualizar los caminos generados.
     \pause
-    \item Investigar otras variantes de decodificadores. Ej, particionar los clientes según su centro de gravedad, asigna vehículo a cada centro y asignar desde ahí.
+    \item Investigar otras variantes de decodificadores. Ej, particionar los clientes según su centro de gravedad, asignar un vehículo a cada centro y seleccionar un orden de clientes por centro de gravedad según un vector de enteros aleatorios.
     \pause
     \item Investigar otros métodos de \textit{crossover}. Ej, Que cada alelo represente un vehículo con su ruta en vez de un cliente.
     \pause
