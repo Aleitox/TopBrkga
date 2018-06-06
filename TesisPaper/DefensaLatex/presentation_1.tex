@@ -201,8 +201,18 @@ La instancia tiene dos vehículos con un $d_{max}$ = 22,50. Hay 19 clientes adem
 	\item Tsiligirides hace mención del caso del Travelling Sales Person (TSP) sin tiempo suficiente para visitar a todos los clientes y que conoce de antemano el valor aproximado de las ventas que realizará en cada ciudad.
 	\pause
 	\item El reclutamiento de jugadores de fútbol americano universitario descrito en el trabajo de Butt y Cavalier. Los representante de las pequeñas ligas deben visitar la máxima cantidad de escuelas en un radio de 100 km, de antemano saben que no llegan a visitar a todas las escuelas.
-	\pause
-	\item El problema de entrega de combustible con múltiples vehículos descrito en el trabajo Golden, Levy y Vohra. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. El suministro de combustible del cliente debe mantenerse en un nivel adecuado en todo momento. Los desabastecimientos son costosos y deben evitarse cuando sea posible.
+\end{itemize}
+
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\begin{frame}
+\frametitle{Aplicaciones}
+
+\begin{itemize}
+	\item El problema de entrega de combustible con múltiples vehículos descrito en el trabajo Golden, Levy y Vohra. Una flota de camiones debe entregar combustible a una gran cantidad de clientes diariamente. El suministro de combustible del cliente debe mantenerse en un nivel adecuado en todo momento. Los desabastecimientos son costosos y deben evitarse en tanto sea posible.
 \end{itemize}
 
 \end{frame}
@@ -279,7 +289,7 @@ Algunas técnicas:
     \pause
     \item Cada individuo es un cromosoma que codifica una solución.
     \pause
-    \item Cada cromosoma tienen asociado un nivel de condición física que está correlacionado con el correspondiente valor de la función objetivo de la solución que codifica.
+    \item Cada cromosoma tiene asociado un nivel de condición física que está correlacionado con el correspondiente valor de la función objetivo de la solución que codifica.
     \pause
     \item En cada generación se crea una nueva población con individuos provenientes de tres fuentes distintas: crossover, elites y mutantes.
 \end{itemize}
@@ -429,7 +439,7 @@ Algunas técnicas:
     \pause
     \item En vez de pasar al siguiente vehículo, prueba con el siguiente cliente.
     \pause
-    \item Por lo tanto por cada vehículo prueba todos los clientes en el orden dado.
+    \item Por lo tanto, por cada vehículo prueba todos los clientes en el orden dado.
     \pause
     \item No prueba con los clientes que ya fueron asignados a otro vehículo.
     \pause
@@ -536,7 +546,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \frametitle{Evolución de la población}
 
 \begin{itemize}
-    \item Se ordenan los soluciones por su aptitud física. (vectores decodificados)
+    \item Se ordenan las soluciones por su aptitud física. (vectores decodificados)
     \pause
     \item Las mejores $X$ soluciones se agregan al conjunto elite y pasan directamente a la siguiente generación.
     \pause
@@ -614,7 +624,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
     \pause
     \item La primer forma que implemente calcula el hash sin conocer el problema que se esta resolviendo, luego mantiene la evolución de la población independiente del problema que se esta resolviendo.
     \pause
-    \item La segunda forma de calcular es óptimo detectando repetidos y requiere conocer el problema que se esta resolviendo.
+    \item La segunda forma de calcular es óptima detectando repetidos y requiere conocer el problema que se esta resolviendo.
 \end{itemize}
 
 \end{frame}
@@ -711,7 +721,7 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 \frametitle{La configuración que mejor resulto para el BRKGA sin Búsqueda Local}
 
 \begin{itemize}
-    \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración con los mejores resultados obtenía fue:
+    \item Luego de varias pruebas, evaluando los resultados obtenidos y el tiempo de ejecución, la configuración que obtuvo los mejores resultados:
     \pause
     \item Iteraciones: 250; Sin cambios: 50; Población.100; Porcentaje elite: 30\%; Porcentaje mutante: 10\%; $\rho_e$: 0.70; Deco: Goloso.
     \pause
@@ -848,7 +858,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 \begin{itemize}
     \item En las búsquedas locales que buscan clientes candidatos a agregar entre los no visitados, se priorizan aquellos más cercanos al centro de gravedad de la ruta.
     \pause 
-    \item El COG es un punto en el plano, por lo tanto tiene una coordenada $x$ y una coordenada $y$.
+    \item El COG es un punto en el plano, por lo tanto, tiene una coordenada $x$ y una coordenada $y$.
     \pause 
     \item La coordenada $x_{COG}$ es el promedio de todas las coordenadas $x$ de los clientes de la ruta ponderados por el beneficio del cliente. (Idem $y_{COG}$).
     \pause 
@@ -886,7 +896,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 \begin{itemize}
     \item Una vez que se modifican las soluciones, debemos actualizar su codificación de modo tal que al decodificarla obtengamos la solución mejorada en vez de su versión anterior.
     \pause
-    \item Si no actualizamos su codificación (vector de enteros aleatorios), cuando se utilice la solución mejorada como padre en el \textit{crossover} sus características viejas serán las que heredara la solución resultante.
+    \item Si no actualizamos su codificación (vector de enteros aleatorios), cuando se utilice la solución mejorada como padre en el \textit{crossover} sus características viejas serán las que heredará la solución resultante.
     \pause
 \end{itemize}
 
@@ -927,7 +937,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
     \pause
     \item El orden en que se aplican las estrategias de búsqueda local es importante.
     \pause
-    \item Por ejemplo, el \textit{2-Opt} busca reducir la distancia recorrida de un vehículo. Por lo tanto si aplicamos el \textit{2-Opt} al final, no hacemos uso de la distancia ahorrada y la aptitud de la solución resultante no incrementa.
+    \item Por ejemplo, el \textit{2-Opt} busca reducir la distancia recorrida de un vehículo. Por lo tanto, si aplicamos el \textit{2-Opt} al final, no hacemos uso de la distancia ahorrada y la aptitud de la solución resultante no incrementa.
     \pause
     \item Realicé varias pruebas modificando el orden en que se aplican las búsquedas locales, medí sus tiempos y los resultados finales.
     \pause
@@ -954,7 +964,7 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
     \pause
     \item Replace Múltiple: \textbf{Rm}
     \pause
-    \item Por lo tanto si en la fila dice \textbf{SRsOIRm} significa que las búsquedas aplicaron en el siguiente orden: Swap, Replace Simple, 2-Opt, Insert y Raplace Multiple.    
+    \item Por lo tanto, si en la fila dice \textbf{SRsOIRm} significa que las búsquedas aplicaron en el siguiente orden: Swap, Replace Simple, 2-Opt, Insert y Raplace Multiple.    
 \end{itemize}
 
 \end{frame}
