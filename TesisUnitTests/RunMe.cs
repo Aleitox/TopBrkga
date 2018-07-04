@@ -18,7 +18,7 @@ namespace TesisUnitTests
             for (var index = 0; index < 10; index++)
             {
                 var config = PaperConfigsFactory.GetSimpleTestConfig();
-                var instance = instanceRepository.GetById(Provider.GetBigInstanceId());
+                var instance = instanceRepository.GetById(Provider.GetSmallInstanceId());
                 var brkga = BrkgaFactory.Get(instance, config);
                 brkga.Start();
             }

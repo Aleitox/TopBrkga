@@ -136,9 +136,7 @@ Departamento de Computaci\'on\\ % Your institution for the title page
     \item Orientaci\'on es un deporte originario de Escandinavia
     \pause
     \item Cada jugador comienza en un punto de control y debe visitar tantos otros puntos de control como le sea posible dentro de un tiempo límite preespecificado. 
-    \pause
     \item Cada punto de control tiene un puntaje.
-    \pause
     \item Cada punto de control puede ser visitado una sola vez a lo sumo.
     \pause
     \item El objetivo es maximizar el puntaje total.
@@ -156,9 +154,7 @@ Departamento de Computaci\'on\\ % Your institution for the title page
 
 \begin{itemize}
     \item Hay \textit{M} clientes, cada uno tiene un beneficio $b_i$ y una coordenada en el plano.
-    \pause
     \item Los puntos de salida y llegada tienen beneficio cero
-    \pause    
     \item Hay \textit{N} veh\'iculos
     \pause
     \item El beneficio de los clientes solo puede ser recolectado una vez.
@@ -236,15 +232,10 @@ Caracter\'isticas:
 
 \begin{itemize}
     \item Son estrategias que gu\'ian procesos de búsqueda.
-    \pause
     \item Sus conceptos se pueden describir con un gran nivel de abstracción. No son para un problema específico.
-    \pause
     \item En muchos casos son algoritmos no-determin\'isticos.
-    \pause
     \item Sus desarrollos y diseños suelen estar motivados por comportamientos naturales.
-    \pause
     \item No garantizan que una soluci\'on \'optima sea encontrada.
-    \pause
     \item Las t\'ecnicas metaheur\'isticas van desde algoritmos simples de b\'usqueda local a complejos procesos de aprendizaje.
 \end{itemize}
 
@@ -259,17 +250,11 @@ Algunas técnicas:
 
 \begin{itemize}
     \item Simulated Annealing
-    \pause
     \item Búsqueda Tabú
-    \pause
     \item Algoritmos evolutivos
-    \pause
     \item Colonia de hormigas
-    \pause
     \item Variable Neighborhood Search
-    \pause
     \item Iterated Local Search
-    \pause
     \item Etc
 \end{itemize}
 
@@ -409,13 +394,9 @@ Algunas técnicas:
 
 \begin{itemize}
     \item Los vehículos están ordenados de forma ascendente según su identificador.
-    \pause
     \item Toma el primer cliente e intenta agregarlo en la ruta del primer vehículo disponible.
-    \pause
     \item Si logra insertarlo repite el proceso con el siguiente cliente para el mismo vehículo.
-    \pause
     \item Si no lo logra, considera que la ruta del vehículo actual esta completa e intenta agregar el mismo cliente en el siguiente vehículo disponible.
-    \pause
     \item Repite hasta completar la ruta de todos los vehículos disponibles.
     \pause
 \end{itemize}
@@ -436,11 +417,8 @@ Algunas técnicas:
 
 \begin{itemize}
     \item Se diferencia del decodificador simple en el momento en que encuentra un cliente que no entra en la ruta del vehículo actual.
-    \pause
     \item En vez de pasar al siguiente vehículo, prueba con el siguiente cliente.
-    \pause
     \item Por lo tanto, por cada vehículo prueba todos los clientes en el orden dado.
-    \pause
     \item No prueba con los clientes que ya fueron asignados a otro vehículo.
     \pause
 \end{itemize}
@@ -491,7 +469,6 @@ Algunas técnicas:
 
 \begin{itemize}
     \item Se realizó una prueba para comparar los tiempos de ejecución y aptitud de las soluciones generadas por ambos decodificadores.
-    \pause
     \item Se crearon 200 vectores de enteros aleatorios y se decodificaron utilizando ambos decodificadores.
     \pause
 \end{itemize}
@@ -613,17 +590,13 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 \begin{itemize}
     \item Dos individuos son iguales si representan la misma solución.
-    \pause
     \item Tener individuos repetidos en la población reduce el dominio de soluciones exploradas.
-    \pause
     \item Tener individuos repetidos en la población genera cálculos repetidos.
     \pause
     \item Un individuo se inserta en la población si no existe algún individuo en la población con el mismo valor de hash.
     \pause
     \item Se implementaron dos formas de calcular el hash de un individuo.
-    \pause
     \item La primer forma que implemente calcula el hash sin conocer el problema que se esta resolviendo, luego mantiene la evolución de la población independiente del problema que se esta resolviendo.
-    \pause
     \item La segunda forma de calcular es óptima detectando repetidos y requiere conocer el problema que se esta resolviendo.
 \end{itemize}
 
@@ -667,7 +640,6 @@ p7.4.t & 102/4/100.00 & G & 165 & 273 & 439 & 0.25 & 1077 \\
 
 \begin{itemize}
     \item Se toman los recorridos de los vehículos y se los ordena por el identificador del primer cliente que visitan. 
-    \pause
     \item Se calcula el hash de cada vehículo y se concatenan utilizando otro símbolo separador.
     \pause
 \end{itemize}
@@ -936,11 +908,9 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
     \item En cada nueva generación se le aplican las búsquedas locales a la mejor solución (que no haya sido mejorada en una generación anterior).
     \pause
     \item El orden en que se aplican las estrategias de búsqueda local es importante.
-    \pause
     \item Por ejemplo, el \textit{2-Opt} busca reducir la distancia recorrida de un vehículo. Por lo tanto, si aplicamos el \textit{2-Opt} al final, no hacemos uso de la distancia ahorrada y la aptitud de la solución resultante no incrementa.
     \pause
     \item Realicé varias pruebas modificando el orden en que se aplican las búsquedas locales, medí sus tiempos y los resultados finales.
-    \pause
     \item Para tales pruebas mantuve constante el resto de la configuración del BRKGA de modo que no influya en el resultado.
 \end{itemize}
 
@@ -952,16 +922,11 @@ p7.4.t & 102/4/100.00 & 461 & 478 & 505 & 0.44 & 0.47 & 1077 \\
 \frametitle{Orden en que se aplican las búsquedas locales}
 
 \begin{itemize}
-    \item Siglas de las búsquedas locales.
-    \pause
+    \item Siglas de las búsquedas locales:
     \item Swap: \textbf{S}
-    \pause
     \item 2-Opt: \textbf{O}
-    \pause
     \item Insert: \textbf{I}
-    \pause
     \item Replace Simple: \textbf{Rs}
-    \pause
     \item Replace Múltiple: \textbf{Rm}
     \pause
     \item Por lo tanto, si en la fila dice \textbf{SRsOIRm} significa que las búsquedas aplicaron en el siguiente orden: Swap, Replace Simple, 2-Opt, Insert y Raplace Multiple.    
